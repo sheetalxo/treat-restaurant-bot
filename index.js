@@ -1,5 +1,4 @@
 const http = require("http");
-const qrcode = require("qrcode-terminal");
 
 const {
   default: makeWASocket,
@@ -32,123 +31,223 @@ server.listen(PORT, "0.0.0.0", () => {
 // --------------------------------------------------
 
 async function startBot() {
+
   const { state, saveCreds } =
     await useMultiFileAuthState("auth_info_baileys");
 
   const sock = makeWASocket({
-    auth: state
+    auth: state,
+    printQRInTerminal: false
   });
 
-  // Save WhatsApp authentication credentials
+  // Save WhatsApp credentials
   sock.ev.on("creds.update", saveCreds);
 
-  // WhatsApp connection updates
+  let pairingCodeRequested = false;
+
+  // ------------------------------------------------
+  // CONNECTION UPDATE
+  // ------------------------------------------------
+
   sock.ev.on("connection.update", async (update) => {
+
     const {
       connection,
-      lastDisconnect,
-      qr
+      lastDisconnect
     } = update;
 
-    // Show QR code
-    if (qr) {
-      console.log("Scan this QR code with WhatsApp:");
-      qrcode.generate(qr, {
-        small: true
-      });
+    // ----------------------------------------------
+    // REQUEST PAIRING CODE
+    // ----------------------------------------------
+
+    if (
+      connection === "connecting" &&
+      !state.creds.registered &&
+      !pairingCodeRequested
+    ) {
+
+      pairingCodeRequested = true;
+
+      try {
+
+        const phoneNumber =
+          process.env.WHATSAPP_PHONE_NUMBER;
+
+        if (!phoneNumber) {
+          throw new Error(
+            "WHATSAPP_PHONE_NUMBER is missing in Render."
+          );
+        }
+
+        console.log(
+          "Requesting WhatsApp pairing code..."
+        );
+
+        // Small delay before requesting code
+        await new Promise(resolve =>
+          setTimeout(resolve, 1500)
+        );
+
+        const code =
+          await sock.requestPairingCode(
+            phoneNumber
+          );
+
+        console.log("");
+        console.log("================================");
+        console.log(" WHATSAPP PAIRING CODE");
+        console.log("================================");
+        console.log(code);
+        console.log("================================");
+        console.log("");
+
+        console.log(
+          "On phone: WhatsApp → Settings → Linked Devices → Link a Device → Link with phone number instead"
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Pairing code error:",
+          error
+        );
+
+        pairingCodeRequested = false;
+      }
     }
 
-    // Connected
+    // ----------------------------------------------
+    // CONNECTED
+    // ----------------------------------------------
+
     if (connection === "open") {
+
+      console.log("");
       console.log("================================");
-      console.log("TREAT RESTAURANT BOT CONNECTED");
+      console.log(
+        " TREAT RESTAURANT BOT CONNECTED"
+      );
       console.log("================================");
+      console.log("");
+
     }
 
-    // Connection closed
+    // ----------------------------------------------
+    // CONNECTION CLOSED
+    // ----------------------------------------------
+
     if (connection === "close") {
+
       const statusCode =
         lastDisconnect?.error?.output?.statusCode ||
-        new Boom(lastDisconnect?.error)?.output?.statusCode;
+        new Boom(
+          lastDisconnect?.error
+        )?.output?.statusCode;
 
+      // WhatsApp sometimes requires a fresh socket
+      // after pairing/restart.
       const shouldReconnect =
         statusCode !== DisconnectReason.loggedOut;
 
+      console.log(
+        `WhatsApp connection closed. Status: ${statusCode}`
+      );
+
       if (shouldReconnect) {
+
         console.log(
-          "WhatsApp connection closed. Reconnecting..."
+          "Restarting WhatsApp connection..."
         );
 
-        startBot();
+        setTimeout(() => {
+          startBot();
+        }, 3000);
+
       } else {
+
         console.log(
           "WhatsApp logged out. Fresh login required."
         );
+
       }
     }
   });
 
-  // --------------------------------------------------
-  // Incoming WhatsApp Messages
-  // --------------------------------------------------
+  // ------------------------------------------------
+  // INCOMING MESSAGES
+  // ------------------------------------------------
 
-  sock.ev.on("messages.upsert", async ({ messages }) => {
-    try {
-      const message = messages[0];
+  sock.ev.on(
+    "messages.upsert",
+    async ({ messages }) => {
 
-      if (!message?.message) return;
+      try {
 
-      // Ignore messages sent by the bot itself
-      if (message.key.fromMe) return;
+        const message = messages[0];
 
-      const jid = message.key.remoteJid;
+        if (!message?.message) return;
 
-      // Ignore WhatsApp status updates
-      if (jid === "status@broadcast") return;
+        // Ignore bot's own messages
+        if (message.key.fromMe) return;
 
-      const text =
-        message.message.conversation ||
-        message.message.extendedTextMessage?.text ||
-        "";
+        const jid =
+          message.key.remoteJid;
 
-      const userMessage = text.trim().toLowerCase();
+        // Ignore WhatsApp status
+        if (jid === "status@broadcast") return;
 
-      console.log(
-        `Message received: ${userMessage}`
-      );
+        const text =
+          message.message.conversation ||
+          message.message.extendedTextMessage?.text ||
+          "";
 
-      // ------------------------------------------------
-      // TEST COMMAND
-      // ------------------------------------------------
+        const userMessage =
+          text.trim().toLowerCase();
 
-      if (userMessage === "hi") {
-        await sock.sendMessage(jid, {
-          text:
-            "Hey! Welcome to TREAT RESTAURANT\n\n" +
-            "Choose your preference:\n\n" +
-            "VEG\n" +
-            "NON-VEG"
-        });
+        console.log(
+          `Message received: ${userMessage}`
+        );
 
-        console.log("Welcome message sent.");
+        // ------------------------------------------
+        // TEST: HI
+        // ------------------------------------------
+
+        if (userMessage === "hi") {
+
+          await sock.sendMessage(jid, {
+            text:
+              "Hey! Welcome to TREAT RESTAURANT\n\n" +
+              "Choose your preference:\n\n" +
+              "VEG\n" +
+              "NON-VEG"
+          });
+
+          console.log(
+            "Welcome message sent."
+          );
+        }
+
+      } catch (error) {
+
+        console.error(
+          "Message handling error:",
+          error
+        );
+
       }
-
-    } catch (error) {
-      console.error(
-        "Message handling error:",
-        error
-      );
     }
-  });
+  );
 }
 
 // --------------------------------------------------
-// Start Bot
+// START BOT
 // --------------------------------------------------
 
-startBot().catch((error) => {
+startBot().catch(error => {
+
   console.error(
-    "Failed to start WhatsApp bot:",
+    "Failed to start bot:",
     error
   );
+
 });
