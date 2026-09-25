@@ -11,7 +11,7 @@ const { Boom } = require("@hapi/boom");
 const PORT = process.env.PORT || 10000;
 
 // --------------------------------------------------
-// Render Health Check Server
+// RENDER HEALTH CHECK
 // --------------------------------------------------
 
 const server = http.createServer((req, res) => {
@@ -27,7 +27,119 @@ server.listen(PORT, "0.0.0.0", () => {
 });
 
 // --------------------------------------------------
-// WhatsApp Bot
+// RESTAURANT CATEGORIES
+// --------------------------------------------------
+
+const VEG_CATEGORIES = [
+  "MOMOS",
+  "NOODLES",
+  "CHINESE SNACKS",
+  "TANDOORI SNACKS",
+  "MAIN COURSE",
+  "RICE",
+  "BURGERS",
+  "PIZZA",
+  "PASTA",
+  "ROLLS",
+  "SOUPS",
+  "MOCKTAILS",
+  "SHAKES",
+  "COFFEE & DESSERTS"
+];
+
+const NON_VEG_CATEGORIES = [
+  "MOMOS",
+  "CHICKEN SNACKS",
+  "NOODLES",
+  "MAIN COURSE",
+  "RICE",
+  "SOUPS",
+  "BREADS",
+  "TANDOORI",
+  "ROLLS"
+];
+
+// --------------------------------------------------
+// SEND PREFERENCE BUTTONS
+// --------------------------------------------------
+
+async function sendPreferenceButtons(sock, jid) {
+  await sock.sendMessage(jid, {
+    text: "Hey! Welcome to TREAT RESTAURANT\n\nChoose your preference:",
+    footer: "TREAT RESTAURANT",
+    buttons: [
+      {
+        buttonId: "veg",
+        buttonText: {
+          displayText: "VEG"
+        },
+        type: 1
+      },
+      {
+        buttonId: "nonveg",
+        buttonText: {
+          displayText: "NON-VEG"
+        },
+        type: 1
+      }
+    ],
+    headerType: 1
+  });
+}
+
+// --------------------------------------------------
+// SEND CATEGORY LIST
+// --------------------------------------------------
+
+async function sendCategoryList(sock, jid, type) {
+  const categories =
+    type === "veg"
+      ? VEG_CATEGORIES
+      : NON_VEG_CATEGORIES;
+
+  const rows = categories.map((category) => ({
+    title: category,
+    rowId: `${type}_category_${category
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "_")}`
+  }));
+
+  rows.push({
+    title: "BACK",
+    rowId: "back_to_preference"
+  });
+
+  await sock.sendMessage(jid, {
+    text:
+      `Great! You selected ${type === "veg" ? "VEG" : "NON-VEG"}.\n\n` +
+      "Choose a category:",
+    footer: "TREAT RESTAURANT",
+    title: "MENU",
+    buttonText: "VIEW CATEGORIES",
+    sections: [
+      {
+        title:
+          type === "veg"
+            ? "VEG MENU"
+            : "NON-VEG MENU",
+        rows
+      }
+    ]
+  });
+}
+
+// --------------------------------------------------
+// SEND SIMPLE TEXT
+// --------------------------------------------------
+
+async function sendText(sock, jid, text) {
+  await sock.sendMessage(jid, {
+    text
+  });
+}
+
+// --------------------------------------------------
+// WHATSAPP BOT
 // --------------------------------------------------
 
 async function startBot() {
@@ -39,7 +151,7 @@ async function startBot() {
     printQRInTerminal: false
   });
 
-  // Save WhatsApp credentials
+  // Save credentials
   sock.ev.on("creds.update", saveCreds);
 
   let pairingCodeRequested = false;
@@ -56,7 +168,7 @@ async function startBot() {
     } = update;
 
     // ----------------------------------------------
-    // REQUEST PAIRING CODE
+    // PAIRING CODE
     // ----------------------------------------------
 
     if (
@@ -76,17 +188,11 @@ async function startBot() {
           );
         }
 
-        // Make sure number contains digits only.
-        // Example: 919876543210
         const cleanPhoneNumber =
           phoneNumber.replace(/\D/g, "");
 
         console.log(
           "WhatsApp is connecting..."
-        );
-
-        console.log(
-          "Waiting before requesting pairing code..."
         );
 
         await new Promise((resolve) => {
@@ -110,22 +216,12 @@ async function startBot() {
         console.log("================================");
         console.log("");
 
-        console.log(
-          "On your phone:"
-        );
-
-        console.log(
-          "WhatsApp → Settings → Linked Devices → Link a Device → Link with phone number instead"
-        );
-
       } catch (error) {
         console.error(
           "PAIRING CODE ERROR:",
           error
         );
 
-        // Allow another attempt only if the socket
-        // is still alive and connecting.
         pairingCodeRequested = false;
       }
     }
@@ -179,7 +275,7 @@ async function startBot() {
   });
 
   // ------------------------------------------------
-  // INCOMING WHATSAPP MESSAGES
+  // INCOMING MESSAGES
   // ------------------------------------------------
 
   sock.ev.on(
@@ -190,14 +286,18 @@ async function startBot() {
 
         if (!message?.message) return;
 
-        // Ignore messages sent by the bot itself
+        // Ignore own messages
         if (message.key.fromMe) return;
 
         const jid =
           message.key.remoteJid;
 
-        // Ignore WhatsApp status
+        // Ignore status
         if (jid === "status@broadcast") return;
+
+        // ------------------------------------------
+        // NORMAL TEXT
+        // ------------------------------------------
 
         const text =
           message.message.conversation ||
@@ -207,25 +307,131 @@ async function startBot() {
         const userMessage =
           text.trim().toLowerCase();
 
+        // ------------------------------------------
+        // BUTTON RESPONSE
+        // ------------------------------------------
+
+        const buttonId =
+          message.message.buttonsResponseMessage
+            ?.selectedButtonId ||
+          message.message.templateButtonReplyMessage
+            ?.selectedId ||
+          "";
+
+        // ------------------------------------------
+        // LIST RESPONSE
+        // ------------------------------------------
+
+        const listId =
+          message.message.listResponseMessage
+            ?.singleSelectReply?.selectedRowId ||
+          "";
+
+        // ------------------------------------------
+        // FINAL USER ACTION
+        // ------------------------------------------
+
+        const action =
+          buttonId ||
+          listId ||
+          userMessage;
+
         console.log(
-          `Message received: ${userMessage}`
+          `User action: ${action}`
         );
 
         // ------------------------------------------
-        // TEST COMMAND
+        // HI / HELLO
         // ------------------------------------------
 
-        if (userMessage === "hi") {
-          await sock.sendMessage(jid, {
-            text:
-              "Hey! Welcome to TREAT RESTAURANT\n\n" +
-              "Choose your preference:\n\n" +
-              "VEG\n" +
-              "NON-VEG"
-          });
+        if (
+          userMessage === "hi" ||
+          userMessage === "hello" ||
+          userMessage === "hey" ||
+          userMessage === "start"
+        ) {
+          await sendPreferenceButtons(
+            sock,
+            jid
+          );
 
-          console.log(
-            "Welcome message sent."
+          return;
+        }
+
+        // ------------------------------------------
+        // VEG BUTTON
+        // ------------------------------------------
+
+        if (action === "veg") {
+          await sendCategoryList(
+            sock,
+            jid,
+            "veg"
+          );
+
+          return;
+        }
+
+        // ------------------------------------------
+        // NON-VEG BUTTON
+        // ------------------------------------------
+
+        if (action === "nonveg") {
+          await sendCategoryList(
+            sock,
+            jid,
+            "nonveg"
+          );
+
+          return;
+        }
+
+        // ------------------------------------------
+        // BACK TO PREFERENCE
+        // ------------------------------------------
+
+        if (
+          action === "back_to_preference"
+        ) {
+          await sendPreferenceButtons(
+            sock,
+            jid
+          );
+
+          return;
+        }
+
+        // ------------------------------------------
+        // CATEGORY SELECTED
+        // ------------------------------------------
+
+        if (
+          action.includes("_category_")
+        ) {
+          const category =
+            action
+              .split("_category_")[1]
+              ?.replace(/_/g, " ")
+              .toUpperCase();
+
+          await sendText(
+            sock,
+            jid,
+            `You selected ${category}.\n\n` +
+            "Items for this category will appear here next."
+          );
+
+          return;
+        }
+
+        // ------------------------------------------
+        // FALLBACK
+        // ------------------------------------------
+
+        if (userMessage) {
+          await sendPreferenceButtons(
+            sock,
+            jid
           );
         }
 
