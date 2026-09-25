@@ -4,27 +4,25 @@ const QRCode = require("qrcode");
 const {
   default: makeWASocket,
   useMultiFileAuthState,
-  DisconnectReason
+  DisconnectReason,
+  proto,
+  generateWAMessageFromContent
 } = require("@whiskeysockets/baileys");
 
 const { Boom } = require("@hapi/boom");
 
 const PORT = process.env.PORT || 10000;
 
-// --------------------------------------------------
-// QR CODE STORAGE
-// --------------------------------------------------
-
 let latestQR = null;
 
-// --------------------------------------------------
-// RENDER WEB SERVER
-// --------------------------------------------------
+// ==================================================
+// RENDER SERVER
+// ==================================================
 
 const server = http.createServer(async (req, res) => {
 
-  // Health check
   if (req.url === "/" || req.url === "/health") {
+
     res.writeHead(200, {
       "Content-Type": "text/html; charset=utf-8"
     });
@@ -34,7 +32,7 @@ const server = http.createServer(async (req, res) => {
       <html>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>TREAT RESTAURANT BOT</title>
+        <title>TREAT RESTAURANT</title>
         <style>
           body {
             margin: 0;
@@ -44,7 +42,7 @@ const server = http.createServer(async (req, res) => {
             justify-content: center;
             background: #111;
             color: white;
-            font-family: Arial, sans-serif;
+            font-family: Arial;
             text-align: center;
           }
 
@@ -52,18 +50,10 @@ const server = http.createServer(async (req, res) => {
             padding: 30px;
           }
 
-          h1 {
-            margin-bottom: 10px;
-          }
-
-          p {
-            color: #aaa;
-          }
-
           a {
             display: inline-block;
             margin-top: 20px;
-            padding: 14px 22px;
+            padding: 14px 25px;
             background: #25D366;
             color: white;
             text-decoration: none;
@@ -78,9 +68,7 @@ const server = http.createServer(async (req, res) => {
           <h1>TREAT RESTAURANT</h1>
           <p>WhatsApp Ordering Bot</p>
 
-          <a href="/qr">
-            OPEN WHATSAPP QR
-          </a>
+          <a href="/qr">OPEN WHATSAPP QR</a>
         </div>
       </body>
       </html>
@@ -89,13 +77,14 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // --------------------------------------------------
+  // ==================================================
   // QR PAGE
-  // --------------------------------------------------
+  // ==================================================
 
   if (req.url === "/qr") {
 
     if (!latestQR) {
+
       res.writeHead(200, {
         "Content-Type": "text/html; charset=utf-8"
       });
@@ -107,52 +96,25 @@ const server = http.createServer(async (req, res) => {
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <meta http-equiv="refresh" content="3">
           <title>WhatsApp QR</title>
-
-          <style>
-            body {
-              margin: 0;
-              min-height: 100vh;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              background: #111;
-              color: white;
-              font-family: Arial, sans-serif;
-              text-align: center;
-            }
-
-            .box {
-              padding: 30px;
-            }
-
-            .loader {
-              width: 40px;
-              height: 40px;
-              border: 4px solid #333;
-              border-top: 4px solid #25D366;
-              border-radius: 50%;
-              animation: spin 1s linear infinite;
-              margin: 25px auto;
-            }
-
-            @keyframes spin {
-              100% {
-                transform: rotate(360deg);
-              }
-            }
-
-            p {
-              color: #aaa;
-            }
-          </style>
         </head>
 
-        <body>
-          <div class="box">
+        <body style="
+          margin:0;
+          min-height:100vh;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background:#111;
+          color:white;
+          font-family:Arial;
+          text-align:center;
+        ">
+
+          <div>
             <h2>Generating WhatsApp QR...</h2>
-            <div class="loader"></div>
             <p>Please wait...</p>
           </div>
+
         </body>
         </html>
       `);
@@ -162,10 +124,13 @@ const server = http.createServer(async (req, res) => {
 
     try {
 
-      const qrDataURL = await QRCode.toDataURL(latestQR, {
-        width: 320,
-        margin: 2
-      });
+      const qrImage = await QRCode.toDataURL(
+        latestQR,
+        {
+          width: 350,
+          margin: 2
+        }
+      );
 
       res.writeHead(200, {
         "Content-Type": "text/html; charset=utf-8"
@@ -183,13 +148,9 @@ const server = http.createServer(async (req, res) => {
 
           <meta http-equiv="refresh" content="15">
 
-          <title>TREAT RESTAURANT - WhatsApp QR</title>
+          <title>TREAT RESTAURANT QR</title>
 
           <style>
-
-            * {
-              box-sizing: border-box;
-            }
 
             body {
               margin: 0;
@@ -198,32 +159,17 @@ const server = http.createServer(async (req, res) => {
               justify-content: center;
               align-items: center;
               background: #111;
-              font-family: Arial, sans-serif;
               color: white;
+              font-family: Arial;
               text-align: center;
             }
 
-            .container {
-              width: 100%;
-              max-width: 450px;
-              padding: 25px;
-            }
-
             .card {
-              background: #1b1b1b;
-              border-radius: 18px;
+              background: #1c1c1c;
               padding: 25px;
-              box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            }
-
-            h1 {
-              margin: 0 0 8px;
-              font-size: 25px;
-            }
-
-            .subtitle {
-              color: #aaa;
-              margin-bottom: 22px;
+              border-radius: 18px;
+              max-width: 420px;
+              width: 90%;
             }
 
             .qr {
@@ -236,67 +182,55 @@ const server = http.createServer(async (req, res) => {
             .qr img {
               width: 320px;
               max-width: 75vw;
-              height: auto;
               display: block;
             }
 
             .steps {
-              margin-top: 25px;
               text-align: left;
-              line-height: 1.6;
+              margin-top: 20px;
+              line-height: 1.7;
               color: #ddd;
             }
 
-            .steps strong {
-              color: #25D366;
-            }
-
-            .warning {
-              margin-top: 18px;
-              font-size: 13px;
-              color: #888;
-            }
-
           </style>
+
         </head>
 
         <body>
 
-          <div class="container">
+          <div class="card">
 
-            <div class="card">
+            <h1>TREAT RESTAURANT</h1>
 
-              <h1>TREAT RESTAURANT</h1>
+            <p>Scan to connect WhatsApp</p>
 
-              <div class="subtitle">
-                WhatsApp Bot Connection
-              </div>
+            <div class="qr">
+              <img src="${qrImage}">
+            </div>
 
-              <div class="qr">
-                <img src="${qrDataURL}" alt="WhatsApp QR Code">
-              </div>
+            <div class="steps">
 
-              <div class="steps">
+              <b>Phone:</b>
 
-                <strong>Scan this QR from your phone:</strong>
+              <br>
 
-                <br><br>
+              1. Open WhatsApp
 
-                1. Open WhatsApp<br>
+              <br>
 
-                2. Go to <b>Settings</b><br>
+              2. Settings
 
-                3. Open <b>Linked Devices</b><br>
+              <br>
 
-                4. Tap <b>Link a Device</b><br>
+              3. Linked Devices
 
-                5. Scan the QR code above
+              <br>
 
-              </div>
+              4. Link a Device
 
-              <div class="warning">
-                QR automatically refreshes when WhatsApp generates a new one.
-              </div>
+              <br>
+
+              5. Scan this QR
 
             </div>
 
@@ -311,23 +245,16 @@ const server = http.createServer(async (req, res) => {
 
     } catch (error) {
 
-      console.error("QR PAGE ERROR:", error);
+      console.error("QR ERROR:", error);
 
-      res.writeHead(500, {
-        "Content-Type": "text/plain"
-      });
-
-      res.end("Unable to generate QR");
+      res.writeHead(500);
+      res.end("QR generation error");
 
       return;
     }
   }
 
-  // 404
-  res.writeHead(404, {
-    "Content-Type": "text/plain"
-  });
-
+  res.writeHead(404);
   res.end("Not Found");
 });
 
@@ -335,9 +262,9 @@ server.listen(PORT, "0.0.0.0", () => {
   console.log(`HTTP server running on port ${PORT}`);
 });
 
-// --------------------------------------------------
-// RESTAURANT CATEGORIES
-// --------------------------------------------------
+// ==================================================
+// CATEGORIES
+// ==================================================
 
 const VEG_CATEGORIES = [
   "MOMOS",
@@ -368,51 +295,91 @@ const NON_VEG_CATEGORIES = [
   "ROLLS"
 ];
 
-// --------------------------------------------------
-// SEND PREFERENCE BUTTONS
-// --------------------------------------------------
+// ==================================================
+// MODERN WHATSAPP QUICK REPLY BUTTONS
+// ==================================================
 
 async function sendPreferenceButtons(sock, jid) {
 
-  await sock.sendMessage(jid, {
+  const message = generateWAMessageFromContent(
+    jid,
 
-    text:
-      "Hey! Welcome to TREAT RESTAURANT\n\n" +
-      "Choose your preference:",
+    {
+      viewOnceMessage: {
+        message: {
 
-    footer: "TREAT RESTAURANT",
+          messageContextInfo: {
+            deviceListMetadata: {},
+            deviceListMetadataVersion: 2
+          },
 
-    buttons: [
+          interactiveMessage:
+            proto.Message.InteractiveMessage.create({
 
-      {
-        buttonId: "veg",
+              body:
+                proto.Message.InteractiveMessage.Body.create({
+                  text:
+                    "Hey! Welcome to TREAT RESTAURANT\n\n" +
+                    "Choose your preference:"
+                }),
 
-        buttonText: {
-          displayText: "VEG"
-        },
+              footer:
+                proto.Message.InteractiveMessage.Footer.create({
+                  text: "TREAT RESTAURANT"
+                }),
 
-        type: 1
-      },
+              nativeFlowMessage:
+                proto.Message.InteractiveMessage
+                  .NativeFlowMessage.create({
 
-      {
-        buttonId: "nonveg",
+                    buttons: [
 
-        buttonText: {
-          displayText: "NON-VEG"
-        },
+                      {
+                        name: "quick_reply",
 
-        type: 1
+                        buttonParamsJson:
+                          JSON.stringify({
+                            display_text: "VEG",
+                            id: "veg"
+                          })
+                      },
+
+                      {
+                        name: "quick_reply",
+
+                        buttonParamsJson:
+                          JSON.stringify({
+                            display_text: "NON-VEG",
+                            id: "nonveg"
+                          })
+                      }
+
+                    ],
+
+                    messageParamsJson: ""
+                  })
+
+            })
+
+        }
       }
+    },
 
-    ],
+    {}
+  );
 
-    headerType: 1
-  });
+  await sock.relayMessage(
+    jid,
+    message.message,
+    {
+      messageId: message.key.id
+    }
+  );
 }
 
-// --------------------------------------------------
-// SEND CATEGORY LIST
-// --------------------------------------------------
+// ==================================================
+// CATEGORY LIST
+// ==================================================
 
 async function sendCategoryList(sock, jid, type) {
 
@@ -422,39 +389,28 @@ async function sendCategoryList(sock, jid, type) {
       : NON_VEG_CATEGORIES;
 
   const rows = categories.map((category) => ({
-
+    header: "",
     title: category,
-
-    rowId:
+    description: "",
+    id:
       `${type}_category_` +
       category
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "_")
-
   }));
 
   rows.push({
+    header: "",
     title: "BACK",
-    rowId: "back_to_preference"
+    description: "",
+    id: "back_to_preference"
   });
 
-  await sock.sendMessage(jid, {
+  const params = {
 
-    text:
-      `Great! You selected ${
-        type === "veg"
-          ? "VEG"
-          : "NON-VEG"
-      }.\n\nChoose a category:`,
-
-    footer: "TREAT RESTAURANT",
-
-    title: "MENU",
-
-    buttonText: "VIEW CATEGORIES",
+    title: "VIEW CATEGORIES",
 
     sections: [
-
       {
         title:
           type === "veg"
@@ -463,14 +419,79 @@ async function sendCategoryList(sock, jid, type) {
 
         rows
       }
-
     ]
-  });
+
+  };
+
+  const message = generateWAMessageFromContent(
+    jid,
+
+    {
+      viewOnceMessage: {
+        message: {
+
+          messageContextInfo: {
+            deviceListMetadata: {},
+            deviceListMetadataVersion: 2
+          },
+
+          interactiveMessage:
+            proto.Message.InteractiveMessage.create({
+
+              body:
+                proto.Message.InteractiveMessage.Body.create({
+                  text:
+                    `Great! You selected ${
+                      type === "veg"
+                        ? "VEG"
+                        : "NON-VEG"
+                    }.\n\nChoose a category:`
+                }),
+
+              footer:
+                proto.Message.InteractiveMessage.Footer.create({
+                  text: "TREAT RESTAURANT"
+                }),
+
+              nativeFlowMessage:
+                proto.Message.InteractiveMessage
+                  .NativeFlowMessage.create({
+
+                    buttons: [
+
+                      {
+                        name: "single_select",
+
+                        buttonParamsJson:
+                          JSON.stringify(params)
+                      }
+
+                    ],
+
+                    messageParamsJson: ""
+                  })
+
+            })
+
+        }
+      }
+    },
+
+    {}
+  );
+
+  await sock.relayMessage(
+    jid,
+    message.message,
+    {
+      messageId: message.key.id
+    }
+  );
 }
 
-// --------------------------------------------------
-// SEND SIMPLE TEXT
-// --------------------------------------------------
+// ==================================================
+// SIMPLE TEXT
+// ==================================================
 
 async function sendText(sock, jid, text) {
 
@@ -480,9 +501,9 @@ async function sendText(sock, jid, text) {
 
 }
 
-// --------------------------------------------------
-// WHATSAPP BOT
-// --------------------------------------------------
+// ==================================================
+// BOT
+// ==================================================
 
 async function startBot() {
 
@@ -501,18 +522,14 @@ async function startBot() {
 
   });
 
-  // ------------------------------------------------
-  // SAVE CREDENTIALS
-  // ------------------------------------------------
-
   sock.ev.on(
     "creds.update",
     saveCreds
   );
 
-  // ------------------------------------------------
-  // CONNECTION UPDATE
-  // ------------------------------------------------
+  // ==================================================
+  // CONNECTION
+  // ==================================================
 
   sock.ev.on(
     "connection.update",
@@ -524,9 +541,9 @@ async function startBot() {
         qr
       } = update;
 
-      // --------------------------------------------
-      // NEW QR CODE
-      // --------------------------------------------
+      // ----------------------------------------------
+      // QR
+      // ----------------------------------------------
 
       if (qr) {
 
@@ -534,28 +551,26 @@ async function startBot() {
 
         console.log("");
         console.log(
-          "================================"
+          "======================================"
         );
 
         console.log(
-          " NEW WHATSAPP QR CODE GENERATED"
+          " WHATSAPP QR GENERATED"
         );
 
         console.log(
-          "Open /qr on your Render URL"
+          " OPEN /qr ON RENDER"
         );
 
         console.log(
-          "================================"
+          "======================================"
         );
-
-        console.log("");
 
       }
 
-      // --------------------------------------------
+      // ----------------------------------------------
       // CONNECTED
-      // --------------------------------------------
+      // ----------------------------------------------
 
       if (connection === "open") {
 
@@ -563,7 +578,7 @@ async function startBot() {
 
         console.log("");
         console.log(
-          "================================"
+          "======================================"
         );
 
         console.log(
@@ -571,16 +586,14 @@ async function startBot() {
         );
 
         console.log(
-          "================================"
+          "======================================"
         );
-
-        console.log("");
 
       }
 
-      // --------------------------------------------
-      // CONNECTION CLOSED
-      // --------------------------------------------
+      // ----------------------------------------------
+      // CLOSED
+      // ----------------------------------------------
 
       if (connection === "close") {
 
@@ -603,19 +616,17 @@ async function startBot() {
         if (shouldReconnect) {
 
           console.log(
-            "Restarting WhatsApp connection in 5 seconds..."
+            "Restarting in 5 seconds..."
           );
 
           setTimeout(() => {
-
             startBot();
-
           }, 5000);
 
         } else {
 
           console.log(
-            "WhatsApp logged out. Fresh login required."
+            "WhatsApp logged out."
           );
 
         }
@@ -625,9 +636,9 @@ async function startBot() {
     }
   );
 
-  // --------------------------------------------------
-  // INCOMING MESSAGES
-  // --------------------------------------------------
+  // ==================================================
+  // MESSAGES
+  // ==================================================
 
   sock.ev.on(
     "messages.upsert",
@@ -641,7 +652,6 @@ async function startBot() {
           return;
         }
 
-        // Ignore own messages
         if (message.key.fromMe) {
           return;
         }
@@ -649,15 +659,12 @@ async function startBot() {
         const jid =
           message.key.remoteJid;
 
-        // Ignore status
-        if (
-          jid === "status@broadcast"
-        ) {
+        if (jid === "status@broadcast") {
           return;
         }
 
         // ------------------------------------------
-        // NORMAL TEXT
+        // TEXT
         // ------------------------------------------
 
         const text =
@@ -669,10 +676,10 @@ async function startBot() {
           text.trim().toLowerCase();
 
         // ------------------------------------------
-        // BUTTON RESPONSE
+        // OLD BUTTON RESPONSE
         // ------------------------------------------
 
-        const buttonId =
+        const oldButtonId =
           message.message.buttonsResponseMessage
             ?.selectedButtonId ||
           message.message.templateButtonReplyMessage
@@ -680,21 +687,59 @@ async function startBot() {
           "";
 
         // ------------------------------------------
-        // LIST RESPONSE
+        // OLD LIST RESPONSE
         // ------------------------------------------
 
-        const listId =
+        const oldListId =
           message.message.listResponseMessage
-            ?.singleSelectReply?.selectedRowId ||
+            ?.singleSelectReply
+            ?.selectedRowId ||
           "";
 
         // ------------------------------------------
-        // FINAL USER ACTION
+        // MODERN NATIVE FLOW RESPONSE
+        // ------------------------------------------
+
+        let modernButtonId = "";
+
+        const nativeFlowResponse =
+          message.message
+            .interactiveResponseMessage
+            ?.nativeFlowResponseMessage;
+
+        if (nativeFlowResponse?.paramsJson) {
+
+          try {
+
+            const params =
+              JSON.parse(
+                nativeFlowResponse.paramsJson
+              );
+
+            modernButtonId =
+              params.id ||
+              params.selected_id ||
+              params.row_id ||
+              "";
+
+          } catch (error) {
+
+            console.log(
+              "Could not parse interactive response"
+            );
+
+          }
+
+        }
+
+        // ------------------------------------------
+        // FINAL ACTION
         // ------------------------------------------
 
         const action =
-          buttonId ||
-          listId ||
+          modernButtonId ||
+          oldButtonId ||
+          oldListId ||
           userMessage;
 
         console.log(
@@ -702,7 +747,7 @@ async function startBot() {
         );
 
         // ------------------------------------------
-        // HI / HELLO
+        // HI
         // ------------------------------------------
 
         if (
@@ -736,7 +781,7 @@ async function startBot() {
         }
 
         // ------------------------------------------
-        // NON-VEG
+        // NON VEG
         // ------------------------------------------
 
         if (action === "nonveg") {
@@ -767,7 +812,7 @@ async function startBot() {
         }
 
         // ------------------------------------------
-        // CATEGORY SELECTED
+        // CATEGORY
         // ------------------------------------------
 
         if (
@@ -783,7 +828,6 @@ async function startBot() {
           await sendText(
             sock,
             jid,
-
             `You selected ${category}.\n\n` +
             "Items for this category will appear here next."
           );
@@ -818,9 +862,9 @@ async function startBot() {
 
 }
 
-// --------------------------------------------------
-// START BOT
-// --------------------------------------------------
+// ==================================================
+// START
+// ==================================================
 
 startBot().catch((error) => {
 
