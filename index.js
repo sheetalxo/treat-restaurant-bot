@@ -31,7 +31,6 @@ server.listen(PORT, "0.0.0.0", () => {
 // --------------------------------------------------
 
 async function startBot() {
-
   const { state, saveCreds } =
     await useMultiFileAuthState("auth_info_baileys");
 
@@ -50,10 +49,10 @@ async function startBot() {
   // ------------------------------------------------
 
   sock.ev.on("connection.update", async (update) => {
-
     const {
       connection,
-      lastDisconnect
+      lastDisconnect,
+      qr
     } = update;
 
     // ----------------------------------------------
@@ -61,15 +60,13 @@ async function startBot() {
     // ----------------------------------------------
 
     if (
-      connection === "connecting" &&
       !state.creds.registered &&
-      !pairingCodeRequested
+      !pairingCodeRequested &&
+      (connection === "connecting" || !!qr)
     ) {
-
       pairingCodeRequested = true;
 
       try {
-
         const phoneNumber =
           process.env.WHATSAPP_PHONE_NUMBER;
 
@@ -79,18 +76,30 @@ async function startBot() {
           );
         }
 
+        // Make sure number contains digits only.
+        // Example: 919876543210
+        const cleanPhoneNumber =
+          phoneNumber.replace(/\D/g, "");
+
+        console.log(
+          "WhatsApp is connecting..."
+        );
+
+        console.log(
+          "Waiting before requesting pairing code..."
+        );
+
+        await new Promise((resolve) => {
+          setTimeout(resolve, 3000);
+        });
+
         console.log(
           "Requesting WhatsApp pairing code..."
         );
 
-        // Small delay before requesting code
-        await new Promise(resolve =>
-          setTimeout(resolve, 1500)
-        );
-
         const code =
           await sock.requestPairingCode(
-            phoneNumber
+            cleanPhoneNumber
           );
 
         console.log("");
@@ -102,16 +111,21 @@ async function startBot() {
         console.log("");
 
         console.log(
-          "On phone: WhatsApp → Settings → Linked Devices → Link a Device → Link with phone number instead"
+          "On your phone:"
+        );
+
+        console.log(
+          "WhatsApp → Settings → Linked Devices → Link a Device → Link with phone number instead"
         );
 
       } catch (error) {
-
         console.error(
-          "Pairing code error:",
+          "PAIRING CODE ERROR:",
           error
         );
 
+        // Allow another attempt only if the socket
+        // is still alive and connecting.
         pairingCodeRequested = false;
       }
     }
@@ -121,7 +135,6 @@ async function startBot() {
     // ----------------------------------------------
 
     if (connection === "open") {
-
       console.log("");
       console.log("================================");
       console.log(
@@ -129,7 +142,6 @@ async function startBot() {
       );
       console.log("================================");
       console.log("");
-
     }
 
     // ----------------------------------------------
@@ -137,57 +149,48 @@ async function startBot() {
     // ----------------------------------------------
 
     if (connection === "close") {
-
       const statusCode =
         lastDisconnect?.error?.output?.statusCode ||
         new Boom(
           lastDisconnect?.error
         )?.output?.statusCode;
 
-      // WhatsApp sometimes requires a fresh socket
-      // after pairing/restart.
-      const shouldReconnect =
-        statusCode !== DisconnectReason.loggedOut;
-
       console.log(
         `WhatsApp connection closed. Status: ${statusCode}`
       );
 
-      if (shouldReconnect) {
+      const shouldReconnect =
+        statusCode !== DisconnectReason.loggedOut;
 
+      if (shouldReconnect) {
         console.log(
-          "Restarting WhatsApp connection..."
+          "Restarting WhatsApp connection in 5 seconds..."
         );
 
         setTimeout(() => {
           startBot();
-        }, 3000);
-
+        }, 5000);
       } else {
-
         console.log(
           "WhatsApp logged out. Fresh login required."
         );
-
       }
     }
   });
 
   // ------------------------------------------------
-  // INCOMING MESSAGES
+  // INCOMING WHATSAPP MESSAGES
   // ------------------------------------------------
 
   sock.ev.on(
     "messages.upsert",
     async ({ messages }) => {
-
       try {
-
         const message = messages[0];
 
         if (!message?.message) return;
 
-        // Ignore bot's own messages
+        // Ignore messages sent by the bot itself
         if (message.key.fromMe) return;
 
         const jid =
@@ -209,11 +212,10 @@ async function startBot() {
         );
 
         // ------------------------------------------
-        // TEST: HI
+        // TEST COMMAND
         // ------------------------------------------
 
         if (userMessage === "hi") {
-
           await sock.sendMessage(jid, {
             text:
               "Hey! Welcome to TREAT RESTAURANT\n\n" +
@@ -228,12 +230,10 @@ async function startBot() {
         }
 
       } catch (error) {
-
         console.error(
           "Message handling error:",
           error
         );
-
       }
     }
   );
@@ -243,11 +243,9 @@ async function startBot() {
 // START BOT
 // --------------------------------------------------
 
-startBot().catch(error => {
-
+startBot().catch((error) => {
   console.error(
     "Failed to start bot:",
     error
   );
-
 });
