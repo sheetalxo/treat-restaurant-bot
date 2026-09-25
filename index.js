@@ -4,9 +4,7 @@ const QRCode = require("qrcode");
 const {
   default: makeWASocket,
   useMultiFileAuthState,
-  DisconnectReason,
-  proto,
-  generateWAMessageFromContent
+  DisconnectReason
 } = require("@whiskeysockets/baileys");
 
 const { Boom } = require("@hapi/boom");
@@ -16,11 +14,12 @@ const PORT = process.env.PORT || 10000;
 let latestQR = null;
 
 // ==================================================
-// RENDER SERVER
+// RENDER WEB SERVER
 // ==================================================
 
 const server = http.createServer(async (req, res) => {
 
+  // HOME
   if (req.url === "/" || req.url === "/health") {
 
     res.writeHead(200, {
@@ -28,51 +27,52 @@ const server = http.createServer(async (req, res) => {
     });
 
     res.end(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>TREAT RESTAURANT</title>
-        <style>
-          body {
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #111;
-            color: white;
-            font-family: Arial;
-            text-align: center;
-          }
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TREAT RESTAURANT BOT</title>
 
-          .box {
-            padding: 30px;
-          }
+<style>
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#111;
+  color:#fff;
+  font-family:Arial,sans-serif;
+  text-align:center;
+}
+.box{
+  padding:30px;
+}
+a{
+  display:inline-block;
+  margin-top:20px;
+  padding:14px 24px;
+  background:#25D366;
+  color:#fff;
+  text-decoration:none;
+  border-radius:8px;
+  font-weight:bold;
+}
+</style>
+</head>
 
-          a {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 14px 25px;
-            background: #25D366;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-          }
-        </style>
-      </head>
+<body>
 
-      <body>
-        <div class="box">
-          <h1>TREAT RESTAURANT</h1>
-          <p>WhatsApp Ordering Bot</p>
+<div class="box">
+<h1>TREAT RESTAURANT</h1>
+<p>WhatsApp Ordering Bot</p>
 
-          <a href="/qr">OPEN WHATSAPP QR</a>
-        </div>
-      </body>
-      </html>
-    `);
+<a href="/qr">OPEN WHATSAPP QR</a>
+</div>
+
+</body>
+</html>
+`);
 
     return;
   }
@@ -90,34 +90,34 @@ const server = http.createServer(async (req, res) => {
       });
 
       res.end(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <meta http-equiv="refresh" content="3">
-          <title>WhatsApp QR</title>
-        </head>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="refresh" content="3">
+<title>WhatsApp QR</title>
+</head>
 
-        <body style="
-          margin:0;
-          min-height:100vh;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          background:#111;
-          color:white;
-          font-family:Arial;
-          text-align:center;
-        ">
+<body style="
+margin:0;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#111;
+color:white;
+font-family:Arial;
+text-align:center;
+">
 
-          <div>
-            <h2>Generating WhatsApp QR...</h2>
-            <p>Please wait...</p>
-          </div>
+<div>
+<h2>Generating WhatsApp QR...</h2>
+<p>Please wait...</p>
+</div>
 
-        </body>
-        </html>
-      `);
+</body>
+</html>
+`);
 
       return;
     }
@@ -127,8 +127,8 @@ const server = http.createServer(async (req, res) => {
       const qrImage = await QRCode.toDataURL(
         latestQR,
         {
-          width: 350,
-          margin: 2
+          width:350,
+          margin:2
         }
       );
 
@@ -137,115 +137,101 @@ const server = http.createServer(async (req, res) => {
       });
 
       res.end(`
-        <!DOCTYPE html>
-        <html>
+<!DOCTYPE html>
+<html>
 
-        <head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1"
-          >
+<head>
 
-          <meta http-equiv="refresh" content="15">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1"
+>
 
-          <title>TREAT RESTAURANT QR</title>
+<meta http-equiv="refresh" content="15">
 
-          <style>
+<title>TREAT RESTAURANT QR</title>
 
-            body {
-              margin: 0;
-              min-height: 100vh;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              background: #111;
-              color: white;
-              font-family: Arial;
-              text-align: center;
-            }
+<style>
 
-            .card {
-              background: #1c1c1c;
-              padding: 25px;
-              border-radius: 18px;
-              max-width: 420px;
-              width: 90%;
-            }
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#111;
+  color:#fff;
+  font-family:Arial;
+  text-align:center;
+}
 
-            .qr {
-              background: white;
-              padding: 15px;
-              border-radius: 12px;
-              display: inline-block;
-            }
+.card{
+  background:#1b1b1b;
+  padding:25px;
+  border-radius:18px;
+  width:90%;
+  max-width:420px;
+}
 
-            .qr img {
-              width: 320px;
-              max-width: 75vw;
-              display: block;
-            }
+.qr{
+  background:white;
+  padding:15px;
+  border-radius:12px;
+  display:inline-block;
+}
 
-            .steps {
-              text-align: left;
-              margin-top: 20px;
-              line-height: 1.7;
-              color: #ddd;
-            }
+.qr img{
+  width:320px;
+  max-width:75vw;
+  display:block;
+}
 
-          </style>
+.steps{
+  text-align:left;
+  margin-top:20px;
+  line-height:1.7;
+  color:#ddd;
+}
 
-        </head>
+</style>
 
-        <body>
+</head>
 
-          <div class="card">
+<body>
 
-            <h1>TREAT RESTAURANT</h1>
+<div class="card">
 
-            <p>Scan to connect WhatsApp</p>
+<h1>TREAT RESTAURANT</h1>
 
-            <div class="qr">
-              <img src="${qrImage}">
-            </div>
+<p>Scan QR to connect WhatsApp</p>
 
-            <div class="steps">
+<div class="qr">
+<img src="${qrImage}">
+</div>
 
-              <b>Phone:</b>
+<div class="steps">
 
-              <br>
+<b>Phone:</b><br><br>
 
-              1. Open WhatsApp
+1. Open WhatsApp<br>
+2. Settings<br>
+3. Linked Devices<br>
+4. Link a Device<br>
+5. Scan this QR
 
-              <br>
+</div>
 
-              2. Settings
+</div>
 
-              <br>
-
-              3. Linked Devices
-
-              <br>
-
-              4. Link a Device
-
-              <br>
-
-              5. Scan this QR
-
-            </div>
-
-          </div>
-
-        </body>
-
-        </html>
-      `);
+</body>
+</html>
+`);
 
       return;
 
     } catch (error) {
 
-      console.error("QR ERROR:", error);
+      console.error("QR PAGE ERROR:", error);
 
       res.writeHead(500);
       res.end("QR generation error");
@@ -263,7 +249,7 @@ server.listen(PORT, "0.0.0.0", () => {
 });
 
 // ==================================================
-// CATEGORIES
+// MENU CATEGORIES
 // ==================================================
 
 const VEG_CATEGORIES = [
@@ -296,85 +282,47 @@ const NON_VEG_CATEGORIES = [
 ];
 
 // ==================================================
-// MODERN WHATSAPP QUICK REPLY BUTTONS
+// MODERN INTERACTIVE BUTTONS
 // ==================================================
 
 async function sendPreferenceButtons(sock, jid) {
 
-  const message = generateWAMessageFromContent(
+  await sock.sendMessage(
     jid,
-
     {
-      viewOnceMessage: {
-        message: {
+      text:
+        "Hey! Welcome to TREAT RESTAURANT\n\n" +
+        "Choose your preference:",
 
-          messageContextInfo: {
-            deviceListMetadata: {},
-            deviceListMetadataVersion: 2
-          },
+      footer:
+        "TREAT RESTAURANT",
 
-          interactiveMessage:
-            proto.Message.InteractiveMessage.create({
+      interactiveButtons: [
 
-              body:
-                proto.Message.InteractiveMessage.Body.create({
-                  text:
-                    "Hey! Welcome to TREAT RESTAURANT\n\n" +
-                    "Choose your preference:"
-                }),
+        {
+          name: "quick_reply",
 
-              footer:
-                proto.Message.InteractiveMessage.Footer.create({
-                  text: "TREAT RESTAURANT"
-                }),
-
-              nativeFlowMessage:
-                proto.Message.InteractiveMessage
-                  .NativeFlowMessage.create({
-
-                    buttons: [
-
-                      {
-                        name: "quick_reply",
-
-                        buttonParamsJson:
-                          JSON.stringify({
-                            display_text: "VEG",
-                            id: "veg"
-                          })
-                      },
-
-                      {
-                        name: "quick_reply",
-
-                        buttonParamsJson:
-                          JSON.stringify({
-                            display_text: "NON-VEG",
-                            id: "nonveg"
-                          })
-                      }
-
-                    ],
-
-                    messageParamsJson: ""
-                  })
-
+          buttonParamsJson:
+            JSON.stringify({
+              display_text: "VEG",
+              id: "veg"
             })
+        },
 
+        {
+          name: "quick_reply",
+
+          buttonParamsJson:
+            JSON.stringify({
+              display_text: "NON-VEG",
+              id: "nonveg"
+            })
         }
-      }
-    },
 
-    {}
-  );
-
-  await sock.relayMessage(
-    jid,
-    message.message,
-    {
-      messageId: message.key.id
+      ]
     }
   );
+
 }
 
 // ==================================================
@@ -388,105 +336,63 @@ async function sendCategoryList(sock, jid, type) {
       ? VEG_CATEGORIES
       : NON_VEG_CATEGORIES;
 
-  const rows = categories.map((category) => ({
-    header: "",
-    title: category,
-    description: "",
-    id:
-      `${type}_category_` +
-      category
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "_")
-  }));
+  const rows = categories.map(
+    (category) => ({
+      title: category,
+      description: "View items",
+      id:
+        `${type}_category_` +
+        category
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "_")
+    })
+  );
 
   rows.push({
-    header: "",
     title: "BACK",
-    description: "",
+    description: "Go back",
     id: "back_to_preference"
   });
 
-  const params = {
-
-    title: "VIEW CATEGORIES",
-
-    sections: [
-      {
-        title:
+  await sock.sendMessage(
+    jid,
+    {
+      text:
+        `Great! You selected ${
           type === "veg"
-            ? "VEG MENU"
-            : "NON-VEG MENU",
+            ? "VEG"
+            : "NON-VEG"
+        }.\n\nChoose a category:`,
 
-        rows
-      }
-    ]
+      footer:
+        "TREAT RESTAURANT",
 
-  };
+      interactiveButtons: [
 
-  const message = generateWAMessageFromContent(
-    jid,
+        {
+          name: "single_select",
 
-    {
-      viewOnceMessage: {
-        message: {
+          buttonParamsJson:
+            JSON.stringify({
+              title: "VIEW CATEGORIES",
 
-          messageContextInfo: {
-            deviceListMetadata: {},
-            deviceListMetadataVersion: 2
-          },
+              sections: [
+                {
+                  title:
+                    type === "veg"
+                      ? "VEG MENU"
+                      : "NON-VEG MENU",
 
-          interactiveMessage:
-            proto.Message.InteractiveMessage.create({
-
-              body:
-                proto.Message.InteractiveMessage.Body.create({
-                  text:
-                    `Great! You selected ${
-                      type === "veg"
-                        ? "VEG"
-                        : "NON-VEG"
-                    }.\n\nChoose a category:`
-                }),
-
-              footer:
-                proto.Message.InteractiveMessage.Footer.create({
-                  text: "TREAT RESTAURANT"
-                }),
-
-              nativeFlowMessage:
-                proto.Message.InteractiveMessage
-                  .NativeFlowMessage.create({
-
-                    buttons: [
-
-                      {
-                        name: "single_select",
-
-                        buttonParamsJson:
-                          JSON.stringify(params)
-                      }
-
-                    ],
-
-                    messageParamsJson: ""
-                  })
-
+                  rows
+                }
+              ]
             })
-
         }
-      }
-    },
 
-    {}
-  );
-
-  await sock.relayMessage(
-    jid,
-    message.message,
-    {
-      messageId: message.key.id
+      ]
     }
   );
+
 }
 
 // ==================================================
@@ -495,14 +401,17 @@ async function sendCategoryList(sock, jid, type) {
 
 async function sendText(sock, jid, text) {
 
-  await sock.sendMessage(jid, {
-    text
-  });
+  await sock.sendMessage(
+    jid,
+    {
+      text
+    }
+  );
 
 }
 
 // ==================================================
-// BOT
+// WHATSAPP BOT
 // ==================================================
 
 async function startBot() {
@@ -510,9 +419,10 @@ async function startBot() {
   const {
     state,
     saveCreds
-  } = await useMultiFileAuthState(
-    "auth_info_baileys"
-  );
+  } =
+    await useMultiFileAuthState(
+      "auth_info_baileys"
+    );
 
   const sock = makeWASocket({
 
@@ -521,6 +431,10 @@ async function startBot() {
     printQRInTerminal: false
 
   });
+
+  // ==================================================
+  // SAVE CREDENTIALS
+  // ==================================================
 
   sock.ev.on(
     "creds.update",
@@ -542,7 +456,7 @@ async function startBot() {
       } = update;
 
       // ----------------------------------------------
-      // QR
+      // QR GENERATED
       // ----------------------------------------------
 
       if (qr) {
@@ -555,7 +469,7 @@ async function startBot() {
         );
 
         console.log(
-          " WHATSAPP QR GENERATED"
+          " WHATSAPP QR CODE GENERATED"
         );
 
         console.log(
@@ -597,10 +511,11 @@ async function startBot() {
 
       if (connection === "close") {
 
-        latestQR = null;
-
         const statusCode =
-          lastDisconnect?.error?.output?.statusCode ||
+          lastDisconnect
+            ?.error
+            ?.output
+            ?.statusCode ||
           new Boom(
             lastDisconnect?.error
           )?.output?.statusCode;
@@ -616,14 +531,19 @@ async function startBot() {
         if (shouldReconnect) {
 
           console.log(
-            "Restarting in 5 seconds..."
+            "Restarting WhatsApp connection in 5 seconds..."
           );
 
-          setTimeout(() => {
-            startBot();
-          }, 5000);
+          setTimeout(
+            () => {
+              startBot();
+            },
+            5000
+          );
 
         } else {
+
+          latestQR = null;
 
           console.log(
             "WhatsApp logged out."
@@ -637,7 +557,7 @@ async function startBot() {
   );
 
   // ==================================================
-  // MESSAGES
+  // INCOMING MESSAGES
   // ==================================================
 
   sock.ev.on(
@@ -659,30 +579,39 @@ async function startBot() {
         const jid =
           message.key.remoteJid;
 
-        if (jid === "status@broadcast") {
+        if (
+          jid === "status@broadcast"
+        ) {
           return;
         }
 
         // ------------------------------------------
-        // TEXT
+        // NORMAL TEXT
         // ------------------------------------------
 
         const text =
-          message.message.conversation ||
-          message.message.extendedTextMessage?.text ||
+          message.message
+            .conversation ||
+          message.message
+            .extendedTextMessage
+            ?.text ||
           "";
 
         const userMessage =
-          text.trim().toLowerCase();
+          text
+            .trim()
+            .toLowerCase();
 
         // ------------------------------------------
         // OLD BUTTON RESPONSE
         // ------------------------------------------
 
         const oldButtonId =
-          message.message.buttonsResponseMessage
+          message.message
+            .buttonsResponseMessage
             ?.selectedButtonId ||
-          message.message.templateButtonReplyMessage
+          message.message
+            .templateButtonReplyMessage
             ?.selectedId ||
           "";
 
@@ -691,29 +620,33 @@ async function startBot() {
         // ------------------------------------------
 
         const oldListId =
-          message.message.listResponseMessage
+          message.message
+            .listResponseMessage
             ?.singleSelectReply
             ?.selectedRowId ||
           "";
 
         // ------------------------------------------
-        // MODERN NATIVE FLOW RESPONSE
+        // MODERN INTERACTIVE RESPONSE
         // ------------------------------------------
 
         let modernButtonId = "";
 
-        const nativeFlowResponse =
+        const interactiveResponse =
           message.message
             .interactiveResponseMessage
             ?.nativeFlowResponseMessage;
 
-        if (nativeFlowResponse?.paramsJson) {
+        if (
+          interactiveResponse?.paramsJson
+        ) {
 
           try {
 
             const params =
               JSON.parse(
-                nativeFlowResponse.paramsJson
+                interactiveResponse
+                  .paramsJson
               );
 
             modernButtonId =
@@ -725,7 +658,7 @@ async function startBot() {
           } catch (error) {
 
             console.log(
-              "Could not parse interactive response"
+              "Interactive response parse error"
             );
 
           }
@@ -769,7 +702,9 @@ async function startBot() {
         // VEG
         // ------------------------------------------
 
-        if (action === "veg") {
+        if (
+          action === "veg"
+        ) {
 
           await sendCategoryList(
             sock,
@@ -781,10 +716,12 @@ async function startBot() {
         }
 
         // ------------------------------------------
-        // NON VEG
+        // NON-VEG
         // ------------------------------------------
 
-        if (action === "nonveg") {
+        if (
+          action === "nonveg"
+        ) {
 
           await sendCategoryList(
             sock,
@@ -800,7 +737,8 @@ async function startBot() {
         // ------------------------------------------
 
         if (
-          action === "back_to_preference"
+          action ===
+          "back_to_preference"
         ) {
 
           await sendPreferenceButtons(
@@ -816,18 +754,26 @@ async function startBot() {
         // ------------------------------------------
 
         if (
-          action.includes("_category_")
+          action.includes(
+            "_category_"
+          )
         ) {
 
           const category =
             action
-              .split("_category_")[1]
-              ?.replace(/_/g, " ")
+              .split(
+                "_category_"
+              )[1]
+              ?.replace(
+                /_/g,
+                " "
+              )
               .toUpperCase();
 
           await sendText(
             sock,
             jid,
+
             `You selected ${category}.\n\n` +
             "Items for this category will appear here next."
           );
@@ -866,11 +812,13 @@ async function startBot() {
 // START
 // ==================================================
 
-startBot().catch((error) => {
+startBot().catch(
+  (error) => {
 
-  console.error(
-    "Failed to start bot:",
-    error
-  );
+    console.error(
+      "Failed to start bot:",
+      error
+    );
 
-});
+  }
+);
