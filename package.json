@@ -1,0 +1,16 @@
+{
+  "name": "treat-restaurant-bot",
+  "version": "1.0.0",
+  "description": "WhatsApp ordering bot for Treat Restaurant",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "latest",
+    "pino": "latest"
+  }
+}
