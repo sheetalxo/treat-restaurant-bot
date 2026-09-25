@@ -10,7 +10,9 @@
     "node": ">=20"
   },
   "dependencies": {
+    "@hapi/boom": "latest",
     "@whiskeysockets/baileys": "latest",
-    "pino": "latest"
+    "pino": "latest",
+    "qrcode-terminal": "latest"
   }
 }
