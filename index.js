@@ -1,824 +1,167 @@
-const http = require("http");
-const QRCode = require("qrcode");
+const express = require("express");
 
-const {
-  default: makeWASocket,
-  useMultiFileAuthState,
-  DisconnectReason
-} = require("@whiskeysockets/baileys");
+const app = express();
+app.use(express.json());
 
-const { Boom } = require("@hapi/boom");
+const PORT = process.env.PORT || 3000;
 
-const PORT = process.env.PORT || 10000;
+// Render Environment Variables
+const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN;
+const ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
+const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
-let latestQR = null;
-
-// ==================================================
-// RENDER WEB SERVER
-// ==================================================
-
-const server = http.createServer(async (req, res) => {
-
-  // HOME
-  if (req.url === "/" || req.url === "/health") {
-
-    res.writeHead(200, {
-      "Content-Type": "text/html; charset=utf-8"
-    });
-
-    res.end(`
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TREAT RESTAURANT BOT</title>
-
-<style>
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#111;
-  color:#fff;
-  font-family:Arial,sans-serif;
-  text-align:center;
-}
-.box{
-  padding:30px;
-}
-a{
-  display:inline-block;
-  margin-top:20px;
-  padding:14px 24px;
-  background:#25D366;
-  color:#fff;
-  text-decoration:none;
-  border-radius:8px;
-  font-weight:bold;
-}
-</style>
-</head>
-
-<body>
-
-<div class="box">
-<h1>TREAT RESTAURANT</h1>
-<p>WhatsApp Ordering Bot</p>
-
-<a href="/qr">OPEN WHATSAPP QR</a>
-</div>
-
-</body>
-</html>
-`);
-
-    return;
-  }
-
-  // ==================================================
-  // QR PAGE
-  // ==================================================
-
-  if (req.url === "/qr") {
-
-    if (!latestQR) {
-
-      res.writeHead(200, {
-        "Content-Type": "text/html; charset=utf-8"
-      });
-
-      res.end(`
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="refresh" content="3">
-<title>WhatsApp QR</title>
-</head>
-
-<body style="
-margin:0;
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-background:#111;
-color:white;
-font-family:Arial;
-text-align:center;
-">
-
-<div>
-<h2>Generating WhatsApp QR...</h2>
-<p>Please wait...</p>
-</div>
-
-</body>
-</html>
-`);
-
-      return;
-    }
-
-    try {
-
-      const qrImage = await QRCode.toDataURL(
-        latestQR,
-        {
-          width:350,
-          margin:2
-        }
-      );
-
-      res.writeHead(200, {
-        "Content-Type": "text/html; charset=utf-8"
-      });
-
-      res.end(`
-<!DOCTYPE html>
-<html>
-
-<head>
-
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1"
->
-
-<meta http-equiv="refresh" content="15">
-
-<title>TREAT RESTAURANT QR</title>
-
-<style>
-
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:#111;
-  color:#fff;
-  font-family:Arial;
-  text-align:center;
-}
-
-.card{
-  background:#1b1b1b;
-  padding:25px;
-  border-radius:18px;
-  width:90%;
-  max-width:420px;
-}
-
-.qr{
-  background:white;
-  padding:15px;
-  border-radius:12px;
-  display:inline-block;
-}
-
-.qr img{
-  width:320px;
-  max-width:75vw;
-  display:block;
-}
-
-.steps{
-  text-align:left;
-  margin-top:20px;
-  line-height:1.7;
-  color:#ddd;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="card">
-
-<h1>TREAT RESTAURANT</h1>
-
-<p>Scan QR to connect WhatsApp</p>
-
-<div class="qr">
-<img src="${qrImage}">
-</div>
-
-<div class="steps">
-
-<b>Phone:</b><br><br>
-
-1. Open WhatsApp<br>
-2. Settings<br>
-3. Linked Devices<br>
-4. Link a Device<br>
-5. Scan this QR
-
-</div>
-
-</div>
-
-</body>
-</html>
-`);
-
-      return;
-
-    } catch (error) {
-
-      console.error("QR PAGE ERROR:", error);
-
-      res.writeHead(500);
-      res.end("QR generation error");
-
-      return;
-    }
-  }
-
-  res.writeHead(404);
-  res.end("Not Found");
+// Health check
+app.get("/", (req, res) => {
+  res.status(200).send("TREAT RESTAURANT WhatsApp Bot is running");
 });
 
-server.listen(PORT, "0.0.0.0", () => {
-  console.log(`HTTP server running on port ${PORT}`);
+// Meta webhook verification
+app.get("/webhook", (req, res) => {
+  const mode = req.query["hub.mode"];
+  const token = req.query["hub.verify_token"];
+  const challenge = req.query["hub.challenge"];
+
+  if (mode === "subscribe" && token === VERIFY_TOKEN) {
+    console.log("Webhook verified successfully");
+    return res.status(200).send(challenge);
+  }
+
+  console.log("Webhook verification failed");
+  return res.sendStatus(403);
 });
 
-// ==================================================
-// MENU CATEGORIES
-// ==================================================
+// Receive WhatsApp messages
+app.post("/webhook", async (req, res) => {
+  try {
+    console.log("Incoming WhatsApp webhook:");
+    console.log(JSON.stringify(req.body, null, 2));
 
-const VEG_CATEGORIES = [
-  "MOMOS",
-  "NOODLES",
-  "CHINESE SNACKS",
-  "TANDOORI SNACKS",
-  "MAIN COURSE",
-  "RICE",
-  "BURGERS",
-  "PIZZA",
-  "PASTA",
-  "ROLLS",
-  "SOUPS",
-  "MOCKTAILS",
-  "SHAKES",
-  "COFFEE & DESSERTS"
-];
+    const message = req.body.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
 
-const NON_VEG_CATEGORIES = [
-  "MOMOS",
-  "CHICKEN SNACKS",
-  "NOODLES",
-  "MAIN COURSE",
-  "RICE",
-  "SOUPS",
-  "BREADS",
-  "TANDOORI",
-  "ROLLS"
-];
-
-// ==================================================
-// MODERN INTERACTIVE BUTTONS
-// ==================================================
-
-async function sendPreferenceButtons(sock, jid) {
-
-  await sock.sendMessage(
-    jid,
-    {
-      text:
-        "Hey! Welcome to TREAT RESTAURANT\n\n" +
-        "Choose your preference:",
-
-      footer:
-        "TREAT RESTAURANT",
-
-      interactiveButtons: [
-
-        {
-          name: "quick_reply",
-
-          buttonParamsJson:
-            JSON.stringify({
-              display_text: "VEG",
-              id: "veg"
-            })
-        },
-
-        {
-          name: "quick_reply",
-
-          buttonParamsJson:
-            JSON.stringify({
-              display_text: "NON-VEG",
-              id: "nonveg"
-            })
-        }
-
-      ]
+    // Ignore status updates and other events
+    if (!message) {
+      return res.sendStatus(200);
     }
-  );
 
-}
+    const from = message.from;
 
-// ==================================================
-// CATEGORY LIST
-// ==================================================
+    // Normal text messages
+    if (message.type === "text") {
+      const text = message.text?.body?.trim().toLowerCase();
 
-async function sendCategoryList(sock, jid, type) {
-
-  const categories =
-    type === "veg"
-      ? VEG_CATEGORIES
-      : NON_VEG_CATEGORIES;
-
-  const rows = categories.map(
-    (category) => ({
-      title: category,
-      description: "View items",
-      id:
-        `${type}_category_` +
-        category
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "_")
-    })
-  );
-
-  rows.push({
-    title: "BACK",
-    description: "Go back",
-    id: "back_to_preference"
-  });
-
-  await sock.sendMessage(
-    jid,
-    {
-      text:
-        `Great! You selected ${
-          type === "veg"
-            ? "VEG"
-            : "NON-VEG"
-        }.\n\nChoose a category:`,
-
-      footer:
-        "TREAT RESTAURANT",
-
-      interactiveButtons: [
-
-        {
-          name: "single_select",
-
-          buttonParamsJson:
-            JSON.stringify({
-              title: "VIEW CATEGORIES",
-
-              sections: [
-                {
-                  title:
-                    type === "veg"
-                      ? "VEG MENU"
-                      : "NON-VEG MENU",
-
-                  rows
-                }
-              ]
-            })
-        }
-
-      ]
+      if (
+        text === "hi" ||
+        text === "hello" ||
+        text === "hey" ||
+        text === "start"
+      ) {
+        await sendWelcomeMessage(from);
+      }
     }
-  );
 
-}
+    // Button responses
+    if (message.type === "interactive") {
+      const buttonId =
+        message.interactive?.button_reply?.id;
 
-// ==================================================
-// SIMPLE TEXT
-// ==================================================
-
-async function sendText(sock, jid, text) {
-
-  await sock.sendMessage(
-    jid,
-    {
-      text
-    }
-  );
-
-}
-
-// ==================================================
-// WHATSAPP BOT
-// ==================================================
-
-async function startBot() {
-
-  const {
-    state,
-    saveCreds
-  } =
-    await useMultiFileAuthState(
-      "auth_info_baileys"
-    );
-
-  const sock = makeWASocket({
-
-    auth: state,
-
-    printQRInTerminal: false
-
-  });
-
-  // ==================================================
-  // SAVE CREDENTIALS
-  // ==================================================
-
-  sock.ev.on(
-    "creds.update",
-    saveCreds
-  );
-
-  // ==================================================
-  // CONNECTION
-  // ==================================================
-
-  sock.ev.on(
-    "connection.update",
-    async (update) => {
-
-      const {
-        connection,
-        lastDisconnect,
-        qr
-      } = update;
-
-      // ----------------------------------------------
-      // QR GENERATED
-      // ----------------------------------------------
-
-      if (qr) {
-
-        latestQR = qr;
-
-        console.log("");
-        console.log(
-          "======================================"
-        );
-
-        console.log(
-          " WHATSAPP QR CODE GENERATED"
-        );
-
-        console.log(
-          " OPEN /qr ON RENDER"
-        );
-
-        console.log(
-          "======================================"
-        );
-
+      if (buttonId === "veg") {
+        await sendCategoryMessage(from, "VEG");
       }
 
-      // ----------------------------------------------
-      // CONNECTED
-      // ----------------------------------------------
-
-      if (connection === "open") {
-
-        latestQR = null;
-
-        console.log("");
-        console.log(
-          "======================================"
-        );
-
-        console.log(
-          " TREAT RESTAURANT BOT CONNECTED"
-        );
-
-        console.log(
-          "======================================"
-        );
-
+      if (buttonId === "non_veg") {
+        await sendCategoryMessage(from, "NON-VEG");
       }
-
-      // ----------------------------------------------
-      // CLOSED
-      // ----------------------------------------------
-
-      if (connection === "close") {
-
-        const statusCode =
-          lastDisconnect
-            ?.error
-            ?.output
-            ?.statusCode ||
-          new Boom(
-            lastDisconnect?.error
-          )?.output?.statusCode;
-
-        console.log(
-          `WhatsApp connection closed. Status: ${statusCode}`
-        );
-
-        const shouldReconnect =
-          statusCode !==
-          DisconnectReason.loggedOut;
-
-        if (shouldReconnect) {
-
-          console.log(
-            "Restarting WhatsApp connection in 5 seconds..."
-          );
-
-          setTimeout(
-            () => {
-              startBot();
-            },
-            5000
-          );
-
-        } else {
-
-          latestQR = null;
-
-          console.log(
-            "WhatsApp logged out."
-          );
-
-        }
-
-      }
-
     }
-  );
 
-  // ==================================================
-  // INCOMING MESSAGES
-  // ==================================================
+    return res.sendStatus(200);
 
-  sock.ev.on(
-    "messages.upsert",
-    async ({ messages }) => {
+  } catch (error) {
+    console.error("Webhook error:", error);
+    return res.sendStatus(500);
+  }
+});
 
-      try {
-
-        const message = messages[0];
-
-        if (!message?.message) {
-          return;
-        }
-
-        if (message.key.fromMe) {
-          return;
-        }
-
-        const jid =
-          message.key.remoteJid;
-
-        if (
-          jid === "status@broadcast"
-        ) {
-          return;
-        }
-
-        // ------------------------------------------
-        // NORMAL TEXT
-        // ------------------------------------------
-
-        const text =
-          message.message
-            .conversation ||
-          message.message
-            .extendedTextMessage
-            ?.text ||
-          "";
-
-        const userMessage =
-          text
-            .trim()
-            .toLowerCase();
-
-        // ------------------------------------------
-        // OLD BUTTON RESPONSE
-        // ------------------------------------------
-
-        const oldButtonId =
-          message.message
-            .buttonsResponseMessage
-            ?.selectedButtonId ||
-          message.message
-            .templateButtonReplyMessage
-            ?.selectedId ||
-          "";
-
-        // ------------------------------------------
-        // OLD LIST RESPONSE
-        // ------------------------------------------
-
-        const oldListId =
-          message.message
-            .listResponseMessage
-            ?.singleSelectReply
-            ?.selectedRowId ||
-          "";
-
-        // ------------------------------------------
-        // MODERN INTERACTIVE RESPONSE
-        // ------------------------------------------
-
-        let modernButtonId = "";
-
-        const interactiveResponse =
-          message.message
-            .interactiveResponseMessage
-            ?.nativeFlowResponseMessage;
-
-        if (
-          interactiveResponse?.paramsJson
-        ) {
-
-          try {
-
-            const params =
-              JSON.parse(
-                interactiveResponse
-                  .paramsJson
-              );
-
-            modernButtonId =
-              params.id ||
-              params.selected_id ||
-              params.row_id ||
-              "";
-
-          } catch (error) {
-
-            console.log(
-              "Interactive response parse error"
-            );
-
+// Send VEG / NON-VEG welcome buttons
+async function sendWelcomeMessage(to) {
+  await sendWhatsAppMessage(to, {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to,
+    type: "interactive",
+    interactive: {
+      type: "button",
+      body: {
+        text:
+          "Hey! Welcome to TREAT RESTAURANT 🍽️\n\nChoose your preference:"
+      },
+      action: {
+        buttons: [
+          {
+            type: "reply",
+            reply: {
+              id: "veg",
+              title: "VEG"
+            }
+          },
+          {
+            type: "reply",
+            reply: {
+              id: "non_veg",
+              title: "NON-VEG"
+            }
           }
-
-        }
-
-        // ------------------------------------------
-        // FINAL ACTION
-        // ------------------------------------------
-
-        const action =
-          modernButtonId ||
-          oldButtonId ||
-          oldListId ||
-          userMessage;
-
-        console.log(
-          `User action: ${action}`
-        );
-
-        // ------------------------------------------
-        // HI
-        // ------------------------------------------
-
-        if (
-          userMessage === "hi" ||
-          userMessage === "hello" ||
-          userMessage === "hey" ||
-          userMessage === "start"
-        ) {
-
-          await sendPreferenceButtons(
-            sock,
-            jid
-          );
-
-          return;
-        }
-
-        // ------------------------------------------
-        // VEG
-        // ------------------------------------------
-
-        if (
-          action === "veg"
-        ) {
-
-          await sendCategoryList(
-            sock,
-            jid,
-            "veg"
-          );
-
-          return;
-        }
-
-        // ------------------------------------------
-        // NON-VEG
-        // ------------------------------------------
-
-        if (
-          action === "nonveg"
-        ) {
-
-          await sendCategoryList(
-            sock,
-            jid,
-            "nonveg"
-          );
-
-          return;
-        }
-
-        // ------------------------------------------
-        // BACK
-        // ------------------------------------------
-
-        if (
-          action ===
-          "back_to_preference"
-        ) {
-
-          await sendPreferenceButtons(
-            sock,
-            jid
-          );
-
-          return;
-        }
-
-        // ------------------------------------------
-        // CATEGORY
-        // ------------------------------------------
-
-        if (
-          action.includes(
-            "_category_"
-          )
-        ) {
-
-          const category =
-            action
-              .split(
-                "_category_"
-              )[1]
-              ?.replace(
-                /_/g,
-                " "
-              )
-              .toUpperCase();
-
-          await sendText(
-            sock,
-            jid,
-
-            `You selected ${category}.\n\n` +
-            "Items for this category will appear here next."
-          );
-
-          return;
-        }
-
-        // ------------------------------------------
-        // FALLBACK
-        // ------------------------------------------
-
-        if (userMessage) {
-
-          await sendPreferenceButtons(
-            sock,
-            jid
-          );
-
-        }
-
-      } catch (error) {
-
-        console.error(
-          "Message handling error:",
-          error
-        );
-
+        ]
       }
-
     }
-  );
-
+  });
 }
 
-// ==================================================
-// START
-// ==================================================
+// Temporary category response
+async function sendCategoryMessage(to, type) {
+  await sendWhatsAppMessage(to, {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to,
+    type: "text",
+    text: {
+      body:
+        `You selected ${type}.\n\n` +
+        `Category menu will be added next.`
+    }
+  });
+}
 
-startBot().catch(
-  (error) => {
+// Common WhatsApp API sender
+async function sendWhatsAppMessage(to, message) {
+  const url =
+    `https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages`;
 
-    console.error(
-      "Failed to start bot:",
-      error
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${ACCESS_TOKEN}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(message)
+  });
+
+  const data = await response.json();
+
+  console.log("WhatsApp API response:");
+  console.log(JSON.stringify(data, null, 2));
+
+  if (!response.ok) {
+    throw new Error(
+      `WhatsApp API error: ${JSON.stringify(data)}`
     );
-
   }
-);
+
+  return data;
+}
+
+// Start server
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(
+    `TREAT RESTAURANT bot running on port ${PORT}`
+  );
+});
