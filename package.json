@@ -1,7 +1,7 @@
 {
   "name": "treat-restaurant-bot",
-  "version": "1.0.0",
-  "description": "WhatsApp ordering bot for Treat Restaurant",
+  "version": "2.0.0",
+  "description": "TREAT RESTAURANT WhatsApp Cloud API Bot",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -10,10 +10,6 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@hapi/boom": "^9.1.3",
-    "@whiskeysockets/baileys": "6.7.24",
-    "pino": "^9.6.0",
-    "qrcode-terminal": "^0.12.0",
-    "qrcode": "^1.5.4"
+    "express": "^4.21.2"
   }
 }
