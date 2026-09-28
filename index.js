@@ -63,7 +63,9 @@ const DELIVERY_TIERS = [
   { maxKm: 10, charge: 100 }
 ];
 
-const MENU_PDF_PATH = path.join(__dirname, "assets", "menu.pdf");
+const MENU_PDF_PATH = fs.existsSync(path.join(__dirname, "menu.pdf"))
+  ? path.join(__dirname, "menu.pdf")
+  : path.join(__dirname, "assets", "menu.pdf");
 
 // ======================================================
 // SESSIONS / ORDERS  (in memory: lost on restart/sleep)
@@ -330,7 +332,17 @@ async function handleText(from, raw) {
 
   if (["pdf", "menu pdf", "menu card"].includes(lower)) {
     await sendMenuPdf(from);
-    await sendWelcomeMessage(from);
+
+    const lang = getSession(from).lang || "en";
+    const afterPdfText = {
+      en: "📄 Menu sent!\n\nWould you like to place your order by writing it?",
+      hi: "📄 मेनू भेज दिया गया है!\n\nक्या आप लिखकर अपना ऑर्डर देना चाहेंगे?",
+      hg: "📄 Menu bhej diya hai!\n\nKya aap likh kar apna order dena chahoge?"
+    }[lang] || "📄 Menu sent!\n\nWould you like to place your order by writing it?";
+
+    await sendButtons(from, afterPdfText, [
+      ["write_order", T(from, "btnWrite")]
+    ]);
     return;
   }
 
@@ -568,7 +580,17 @@ async function handleAction(to, id) {
   // ---------- MENU PDF / WRITE ORDER ----------
   if (id === "menu_pdf") {
     await sendMenuPdf(to);
-    await sendWelcomeMessage(to);
+
+    const lang = getSession(to).lang || "en";
+    const afterPdfText = {
+      en: "📄 Menu sent!\n\nWould you like to place your order by writing it?",
+      hi: "📄 मेनू भेज दिया गया है!\n\nक्या आप लिखकर अपना ऑर्डर देना चाहेंगे?",
+      hg: "📄 Menu bhej diya hai!\n\nKya aap likh kar apna order dena chahoge?"
+    }[lang] || "📄 Menu sent!\n\nWould you like to place your order by writing it?";
+
+    await sendButtons(to, afterPdfText, [
+      ["write_order", T(to, "btnWrite")]
+    ]);
     return;
   }
 
@@ -839,7 +861,7 @@ async function getMenuMediaId(force = false) {
 
 async function sendMenuPdf(to) {
   if (!fs.existsSync(MENU_PDF_PATH)) {
-    console.error("assets/menu.pdf not found");
+    console.error("Menu PDF not found. Checked:", MENU_PDF_PATH);
     await sendText(to, T(to, "menuPdfError"));
     return;
   }
