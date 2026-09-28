@@ -38,6 +38,9 @@ const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 // Free-form messages to the owner only work if the owner messaged the bot
 // in the last 24h. For reliable alerts use an approved template message.
 const OWNER_PHONE = process.env.OWNER_PHONE;
+// Owner order alerts on Telegram (optional, works alongside OWNER_PHONE)
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 // ---------------- Razorpay (add keys at the end) ----------------
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID;
@@ -1705,12 +1708,9 @@ app.post("/razorpay-webhook", async (req, res) => {
           `✅ Payment received for order ${entity.reference_id}. Restaurant will contact you shortly.`
         );
       }
-      if (OWNER_PHONE) {
-        await sendText(
-          OWNER_PHONE,
-          `⚠️ PAID ONLINE but order details were lost (server restarted).\nOrder: ${entity.reference_id}\nAmount: ₹${paid}\nCustomer: +${phone || "unknown"}\nPlease call the customer.`
-        );
-      }
+      await alertOwner(
+        `⚠️ PAID ONLINE but order details were lost (server restarted).\nOrder: ${entity.reference_id}\nAmount: ₹${paid}\nCustomer: +${phone || "unknown"}\nPlease call the customer.`
+      );
     }
   } catch (err) {
     console.error("Razorpay webhook error:", err);
@@ -1723,11 +1723,33 @@ app.post("/razorpay-webhook", async (req, res) => {
 // ======================================================
 
 async function notifyOwner(order) {
-  if (!OWNER_PHONE) {
-    console.log("OWNER_PHONE not set - order:", JSON.stringify(order));
+  const jobs = [];
+  if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) jobs.push(notifyTelegram(order));
+  if (OWNER_PHONE) jobs.push(notifyOwnerWhatsApp(order));
+
+  if (!jobs.length) {
+    console.log("No owner channel set (Telegram / OWNER_PHONE) - order:", JSON.stringify(order));
     return;
   }
 
+  await Promise.allSettled(jobs); // one channel failing never blocks the other
+}
+
+// Plain-text alert to every configured owner channel
+async function alertOwner(text) {
+  const jobs = [];
+  if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
+    jobs.push(telegramCall("sendMessage", { chat_id: TELEGRAM_CHAT_ID, text }));
+  }
+  if (OWNER_PHONE) jobs.push(sendText(OWNER_PHONE, text));
+
+  const results = await Promise.allSettled(jobs);
+  results.forEach((r) => {
+    if (r.status === "rejected") console.error("Owner alert failed:", r.reason?.message);
+  });
+}
+
+async function notifyOwnerWhatsApp(order) {
   let text = `🔔 NEW ORDER ${order.id}\n`;
   text += `Customer: ${order.name || "-"} (+${order.phone})\n`;
   text += `Type: ${order.orderType}\n`;
@@ -1750,6 +1772,129 @@ async function notifyOwner(order) {
     await deliverInvoice(order, OWNER_PHONE, "en");
   } catch (err) {
     console.error("Owner notification failed:", err.message);
+  }
+}
+
+// ======================================================
+// TELEGRAM ORDER NOTIFICATION (message + location pin + PDF invoice)
+// ======================================================
+
+const esc = (v) =>
+  String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+// 970 -> "970", 67.9 -> "67.90", 1087.9 -> "1,087.90"
+const inr = (n) =>
+  Number(n).toLocaleString("en-IN", {
+    minimumFractionDigits: Number.isInteger(Number(n)) ? 0 : 2,
+    maximumFractionDigits: 2
+  });
+
+function fmtPhone(p) {
+  const d = String(p || "").replace(/\D/g, "");
+  if (d.length === 12 && d.startsWith("91")) return `+91 ${d.slice(2, 7)} ${d.slice(7)}`;
+  return d ? `+${d}` : "-";
+}
+
+function buildTelegramText(order) {
+  const b = order.bill;
+  const paid = order.status === "PAID";
+  const L = [];
+
+  L.push("🔔 <b>NEW ORDER — TREAT RESTAURANT</b>", "");
+  L.push(`Order ID: <b>${esc(order.id)}</b>`);
+  L.push(`Customer: ${esc(order.name || "-")}`);
+  L.push(`Phone: ${esc(fmtPhone(order.phone))}`);
+  L.push(`Type: ${esc(order.orderType)}${order.table ? ` (Table ${esc(order.table)})` : ""}`, "");
+
+  L.push("<b>ITEMS</b>");
+  order.items.forEach((l) => {
+    L.push(`• ${esc(l.name + optionsText(l))} × ${l.quantity} — ₹${inr(l.price * l.quantity)}`);
+  });
+  L.push("");
+
+  L.push(`Food Subtotal: ₹${inr(b.subtotal)}`);
+  if (order.orderType !== "DINE-IN") L.push(`Packing (${b.packingPercent}%): ₹${inr(b.packing)}`);
+  if (order.orderType === "DELIVERY") L.push(`Delivery: ₹${inr(b.delivery)}`);
+  L.push("Discount: ₹0", "");
+
+  const total = Number(b.total).toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+  L.push(`<b>TOTAL: ₹${total}</b>`, "");
+
+  L.push(
+    `Payment: ${
+      paid ? "ONLINE (PAID)" : order.orderType === "DELIVERY" ? "COD" : "CASH AT COUNTER"
+    }`
+  );
+  if (paid && order.paymentId) L.push(`Ref: ${esc(order.paymentId)}`);
+  L.push(`Status: ${paid ? "PAID" : "CONFIRMED"}`);
+
+  if (order.orderType === "DELIVERY") {
+    L.push("", "<b>Delivery Location:</b>");
+    L.push(`${esc(order.address || "-")}${order.distanceKm != null ? ` (${order.distanceKm} km)` : ""}`);
+    if (order.lat && order.lng) {
+      L.push(`<a href="https://www.google.com/maps?q=${order.lat},${order.lng}">Google Maps Location</a>`);
+    }
+  }
+
+  L.push("", "PDF Invoice: Attached");
+  return L.join("\n");
+}
+
+async function telegramCall(method, body) {
+  const isForm = body instanceof FormData;
+
+  const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/${method}`, {
+    method: "POST",
+    headers: isForm ? undefined : { "Content-Type": "application/json" },
+    body: isForm ? body : JSON.stringify(body),
+    signal: AbortSignal.timeout(15000)
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || data.ok === false) {
+    throw new Error(`Telegram ${method} failed: ${data.description || response.status}`);
+  }
+  return data;
+}
+
+async function notifyTelegram(order) {
+  try {
+    await telegramCall("sendMessage", {
+      chat_id: TELEGRAM_CHAT_ID,
+      text: buildTelegramText(order),
+      parse_mode: "HTML",
+      disable_web_page_preview: true
+    });
+  } catch (err) {
+    console.error("Telegram message failed:", err.message);
+  }
+
+  // Map pin the rider can tap
+  if (order.orderType === "DELIVERY" && order.lat && order.lng) {
+    try {
+      await telegramCall("sendLocation", {
+        chat_id: TELEGRAM_CHAT_ID,
+        latitude: order.lat,
+        longitude: order.lng
+      });
+    } catch (err) {
+      console.error("Telegram location failed:", err.message);
+    }
+  }
+
+  // PDF invoice
+  try {
+    const pdf = await buildInvoicePdf(order);
+    const form = new FormData();
+    form.append("chat_id", String(TELEGRAM_CHAT_ID));
+    form.append("caption", `🧾 Invoice ${order.id}`);
+    form.append("document", new Blob([pdf], { type: "application/pdf" }), `Invoice_${order.id}.pdf`);
+    await telegramCall("sendDocument", form);
+  } catch (err) {
+    console.error("Telegram invoice failed:", err.message);
   }
 }
 
