@@ -257,11 +257,8 @@ app.post("/webhook", async (req, res) => {
     const profileName = value.contacts?.[0]?.profile?.name;
     if (profileName) session.name = profileName;
 
-    // Closed outside 10:30 AM - 10:30 PM
-    if (!isOpenNow()) {
-      await sendText(from, t(session.lang || "hg", "closed"));
-      return;
-    }
+    // Opening-hours check temporarily disabled for testing.
+    // Re-enable this block later when the bot is ready for live use.
 
     if (message.type === "text") {
       await handleText(from, message.text?.body || "");
