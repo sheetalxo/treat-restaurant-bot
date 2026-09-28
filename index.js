@@ -10,11 +10,18 @@ const {
   isHalfFull,
   isBonelessEligible,
   isPizza,
+  chargeCategory,
   marker
 } = require("./menu");
 const { t } = require("./i18n");
 const { parseTypedOrder } = require("./matcher");
 const { buildInvoicePdf } = require("./invoice");
+const { notifyTelegram, orderSummaryText } = require("./telegram");
+const {
+  calculateOrderTotal,
+  deliveryChargeFor,
+  DELIVERY_TIERS
+} = require("./billing");
 
 const app = express();
 
@@ -38,9 +45,6 @@ const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 // Free-form messages to the owner only work if the owner messaged the bot
 // in the last 24h. For reliable alerts use an approved template message.
 const OWNER_PHONE = process.env.OWNER_PHONE;
-// Owner order alerts on Telegram (optional, works alongside OWNER_PHONE)
-const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 // ---------------- Razorpay (add keys at the end) ----------------
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID;
@@ -49,7 +53,6 @@ const RAZORPAY_WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET;
 
 // ---------------- Business rules ----------------
 const MIN_FOOD_ORDER = 300;      // delivery only; excludes packing/delivery charge
-const PACKING_PERCENT = 7;       // % of food subtotal (takeaway + delivery)
 const BONELESS_CHARGE = 50;      // per plate, non-veg main course (as printed on menu)
 const EXTRA_CHEESE_CHARGE = 30;  // per pizza
 const MAX_QTY = 500;
@@ -62,14 +65,12 @@ const RESTAURANT_LNG = Number(process.env.RESTAURANT_LNG || 74.9215249);
 // Without it the bot uses straight-line distance.
 const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 
-// Delivery charge by distance. Last maxKm = delivery limit.
-// 0-2.5 km = 30 | 2.5-5 km = 50 | 5-7 km = 80 | 7-10 km = 100
-const DELIVERY_TIERS = [
-  { maxKm: 2.5, charge: 30 },
-  { maxKm: 5, charge: 50 },
-  { maxKm: 7, charge: 80 },
-  { maxKm: 10, charge: 100 }
-];
+// Packing %, shake/mocktail extra and delivery slabs live in billing.js
+// (central billing - see calculateOrderTotal).
+
+// Telegram admin alerts (set both on Render)
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
 // Opening hours (Indian time): 10:30 AM - 10:30 PM. Closed otherwise.
 // Set BYPASS_HOURS=true on Render to test outside timings.
@@ -117,10 +118,10 @@ function getSession(phone) {
       cheese: null,
       quantity: 1,
       cart: [],
-      awaiting: null, // "qty" | "address" | "table" | "location"
+      awaiting: null, // "qty" | "address" | "visit" | "location"
       orderType: null,
       address: null,
-      table: null,
+      visitTime: null,
       distanceKm: null,
       lat: null,
       lng: null,
@@ -172,7 +173,7 @@ function resetOrderFlow(session) {
   session.category = null;
   session.orderType = null;
   session.address = null;
-  session.table = null;
+  session.visitTime = null;
   session.distanceKm = null;
   session.lat = null;
   session.lng = null;
@@ -257,8 +258,11 @@ app.post("/webhook", async (req, res) => {
     const profileName = value.contacts?.[0]?.profile?.name;
     if (profileName) session.name = profileName;
 
-    // Opening-hours check temporarily disabled for testing.
-    // Re-enable this block later when the bot is ready for live use.
+    // Closed outside 10:30 AM - 10:30 PM
+    if (!isOpenNow()) {
+      await sendText(from, t(session.lang || "hg", "closed"));
+      return;
+    }
 
     if (message.type === "text") {
       await handleText(from, message.text?.body || "");
@@ -343,7 +347,7 @@ async function handleText(from, raw) {
     return;
   }
 
-  // 3. order-type inputs (location -> address, or table number)
+  // 3. order-type inputs (location -> address, or expected visit time)
   if (session.awaiting === "location") {
     await sendText(from, T(from, "needLocation"));
     await sendLocationRequest(from);
@@ -362,10 +366,10 @@ async function handleText(from, raw) {
     return;
   }
 
-  if (session.awaiting === "table") {
-    session.table = cut(text, 30);
+  if (session.awaiting === "visit") {
+    session.visitTime = cut(text, 30);
     session.awaiting = null;
-    await sendText(from, T(from, "tableSaved", session.table));
+    await sendText(from, T(from, "visitSaved", session.visitTime));
     await sendMenuStart(from);
     return;
   }
@@ -590,13 +594,6 @@ function haversineKm(lat1, lon1, lat2, lon2) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function deliveryChargeFor(km) {
-  for (const tier of DELIVERY_TIERS) {
-    if (km <= tier.maxKm) return tier.charge;
-  }
-  return null; // beyond delivery limit
-}
-
 // Road distance via Google Routes API (if key is set), else straight-line
 async function getDistanceKm(lat, lng) {
   if (GOOGLE_MAPS_API_KEY) {
@@ -676,12 +673,11 @@ async function handleLocation(from, loc) {
   }
 
   const km = await getDistanceKm(loc.latitude, loc.longitude);
-  const maxKm = DELIVERY_TIERS[DELIVERY_TIERS.length - 1].maxKm;
   const charge = deliveryChargeFor(km);
 
   if (charge === null) {
     resetOrderFlow(session);
-    await sendText(from, T(from, "tooFar", km.toFixed(1), maxKm));
+    await sendText(from, T(from, "tooFar"));
     await sendOrderTypeButtons(from);
     return;
   }
@@ -693,11 +689,11 @@ async function handleLocation(from, loc) {
   // Ask for the written address once (keep it if the pin was re-shared)
   if (!session.address) {
     session.awaiting = "address";
-    await sendText(from, T(from, "deliveryInfo", km, charge));
+    await sendText(from, T(from, "deliveryInfo", charge));
     await sendText(from, T(from, "askAddress"));
   } else {
     session.awaiting = null;
-    await sendText(from, T(from, "deliveryInfo", km, charge));
+    await sendText(from, T(from, "deliveryInfo", charge));
     await sendMenuStart(from);
   }
 }
@@ -930,16 +926,16 @@ async function handleAction(to, id) {
     session.distanceKm = null;
     session.lat = null;
     session.lng = null;
-    session.table = null;
-    session.awaiting = "table";
-    await sendText(to, T(to, "askTable"));
+    session.visitTime = null;
+    session.awaiting = "visit";
+    await sendText(to, T(to, "askVisit"));
     return;
   }
 
   if (id === "ot_takeaway") {
     session.orderType = "TAKEAWAY";
     session.address = null;
-    session.table = null;
+    session.visitTime = null;
     session.distanceKm = null;
     session.lat = null;
     session.lng = null;
@@ -950,7 +946,7 @@ async function handleAction(to, id) {
 
   if (id === "ot_delivery") {
     session.orderType = "DELIVERY";
-    session.table = null;
+    session.visitTime = null;
     session.address = null;
     session.distanceKm = null;
     session.lat = null;
@@ -1258,7 +1254,8 @@ async function sendQuantityScreen(to) {
     return;
   }
 
-  const price = unitPrice(item, session.variant, session.boneless, session.cheese);
+  const menuPrice = unitPrice(item, session.variant, session.boneless, session.cheese);
+  const price = chargedUnitPrice(session, item, menuPrice);
   const total = price * session.quantity;
 
   const opts = optionsText({
@@ -1298,7 +1295,8 @@ function addCurrentItemToCart(session) {
       session.boneless && isBonelessEligible(item),
       session.cheese && isPizza(item)
     ),
-    quantity: session.quantity
+    quantity: session.quantity,
+    chargeCat: chargeCategory(item) // NORMAL_FOOD | SHAKE | MOCKTAIL | COLD_DRINK | WATER
   };
 
   const summary = `${line.quantity} × ${line.name}${optionsText(line)}`;
@@ -1321,16 +1319,33 @@ function addCurrentItemToCart(session) {
   return summary;
 }
 
-function cartSubtotal(session) {
-  return session.cart.reduce((sum, l) => sum + l.price * l.quantity, 0);
+// Cart preview (before checkout): item prices exactly as they will be billed.
+// Delivery has the same item prices as takeaway, and distance is not needed here.
+function previewBill(session) {
+  const type = session.orderType === "DINE-IN" ? "DINE-IN" : "TAKEAWAY";
+  return calculateOrderTotal({ items: session.cart, orderType: type });
 }
 
-function buildCartLines(session) {
+function cartSubtotal(session) {
+  return previewBill(session).foodSubtotal;
+}
+
+// Unit price of one item as charged for the current order type
+function chargedUnitPrice(session, item, menuPrice) {
+  const type = session.orderType === "DINE-IN" ? "DINE-IN" : "TAKEAWAY";
+  const bill = calculateOrderTotal({
+    items: [{ name: item.name, price: menuPrice, quantity: 1, chargeCat: chargeCategory(item) }],
+    orderType: type
+  });
+  return bill.items[0].unitPrice;
+}
+
+function buildCartLines(items) {
   let text = "";
-  session.cart.forEach((line, index) => {
+  items.forEach((line, index) => {
     text +=
       `${index + 1}. ${line.name}${optionsText(line)}\n` +
-      `   ₹${line.price} × ${line.quantity} = ₹${line.price * line.quantity}\n\n`;
+      `   ₹${line.unitPrice} × ${line.quantity} = ₹${line.lineTotal}\n\n`;
   });
   return text;
 }
@@ -1347,7 +1362,7 @@ async function sendCart(to) {
   }
 
   const subtotal = cartSubtotal(session);
-  let body = `${T(to, "cartTitle")}\n\n${buildCartLines(session)}${T(to, "subtotalLbl")}: ₹${subtotal}`;
+  let body = `${T(to, "cartTitle")}\n\n${buildCartLines(previewBill(session).items)}${T(to, "subtotalLbl")}: ₹${subtotal}`;
 
   // Button body limit is 1024 chars -> long carts go as plain text first
   if (body.length > 900) {
@@ -1370,11 +1385,12 @@ async function sendRemoveList(to, page = 0) {
     return;
   }
 
-  const entries = session.cart.map((line, index) => ({
+  const previewItems = previewBill(session).items;
+  const entries = previewItems.map((line, index) => ({
     id: `remove:${index}`,
     title: cut(`${index + 1}. ${line.name}`, 24),
     description: cut(
-      `${optionsText(line).trim()} × ${line.quantity} — ₹${line.price * line.quantity}`.trim(),
+      `${optionsText(line).trim()} × ${line.quantity} — ₹${line.lineTotal}`.trim(),
       72
     )
   }));
@@ -1433,14 +1449,20 @@ async function startCheckout(to) {
     await sendText(to, T(to, "askAddress"));
     return;
   }
-  if (session.orderType === "DINE-IN" && !session.table) {
-    session.awaiting = "table";
-    await sendText(to, T(to, "askTable"));
+  if (session.orderType === "DINE-IN" && !session.visitTime) {
+    session.awaiting = "visit";
+    await sendText(to, T(to, "askVisit"));
     return;
   }
 
   await sendBill(to);
 }
+
+const ORDER_TYPE_LABEL = {
+  "DINE-IN": "Dine-In",
+  TAKEAWAY: "Takeaway",
+  DELIVERY: "Delivery"
+};
 
 // Delivery first, then takeaway, then dine-in
 async function sendOrderTypeButtons(to, textKey = "orderTypeBody") {
@@ -1451,41 +1473,37 @@ async function sendOrderTypeButtons(to, textKey = "orderTypeBody") {
   ]);
 }
 
+// ONE place for totals: billing.js -> calculateOrderTotal().
+// Everything (WhatsApp bill, PDF, Telegram, owner alert) uses this object.
 function calcBill(session) {
-  const subtotal = cartSubtotal(session);
-
-  const packing =
-    session.orderType === "DINE-IN" ? 0 : round2((subtotal * PACKING_PERCENT) / 100);
-
-  const delivery =
-    session.orderType === "DELIVERY" && session.distanceKm !== null
-      ? deliveryChargeFor(session.distanceKm) || 0
-      : 0;
-
-  return {
-    subtotal,
-    packing,
-    packingPercent: PACKING_PERCENT,
-    delivery,
-    total: round2(subtotal + packing + delivery)
-  };
+  return calculateOrderTotal({
+    items: session.cart,
+    orderType: session.orderType,
+    distanceKm: session.distanceKm, // used internally for the delivery slab only
+    discount: 0 // no coupon system in this bot yet - plug it in here
+  });
 }
 
 function billText(to, session, bill) {
-  let text = `${T(to, "cartTitle")}\n\n${buildCartLines(session)}`;
+  let text = `${T(to, "cartTitle")}\n\n${buildCartLines(bill.items)}`;
 
   text += "━━━━━━━━━━━━\n";
-  text += `${T(to, "billSubtotal")}: ₹${bill.subtotal}\n`;
-  if (session.orderType !== "DINE-IN") {
-    text += `${T(to, "billPacking", PACKING_PERCENT)}: ₹${rs(bill.packing)}\n`;
+  text += `${T(to, "billSubtotal")}: ₹${rs(bill.foodSubtotal)}\n`;
+  if (bill.packingCharges > 0) {
+    text += `${T(to, "billPacking")}: ₹${rs(bill.packingCharges)}\n`;
   }
   if (session.orderType === "DELIVERY") {
-    text += `${T(to, "billDelivery", session.distanceKm)}: ₹${bill.delivery}\n`;
+    text += `${T(to, "billDelivery")}: ₹${rs(bill.deliveryCharges)}\n`;
+  }
+  if (bill.discount > 0) {
+    text += `${T(to, "billDiscount")}: -₹${rs(bill.discount)}\n`;
   }
   text += `*${T(to, "billTotal")}: ₹${rs(bill.total)}*\n`;
   text += "━━━━━━━━━━━━\n\n";
-  text += `${T(to, "billType")}: ${session.orderType}\n`;
-  if (session.table) text += `${T(to, "billTable")}: ${session.table}\n`;
+  text += `${T(to, "billType")}: ${ORDER_TYPE_LABEL[session.orderType] || session.orderType}\n`;
+  if (session.orderType === "DINE-IN" && session.visitTime) {
+    text += `${T(to, "billVisit")}: ${session.visitTime}\n`;
+  }
   if (session.address) text += `${T(to, "billAddress")}: ${session.address}\n`;
 
   return text;
@@ -1539,12 +1557,11 @@ async function placeOrder(to, method) {
     name: session.name,
     lang: session.lang,
     orderType: session.orderType,
-    table: session.table,
+    visitTime: session.visitTime,
     address: session.address,
-    distanceKm: session.distanceKm,
     lat: session.lat,
     lng: session.lng,
-    items: JSON.parse(JSON.stringify(session.cart)),
+    items: bill.items, // items exactly as billed
     bill,
     method,
     status: method === "ONLINE" ? "AWAITING_PAYMENT" : "CONFIRMED_CASH",
@@ -1705,9 +1722,12 @@ app.post("/razorpay-webhook", async (req, res) => {
           `✅ Payment received for order ${entity.reference_id}. Restaurant will contact you shortly.`
         );
       }
-      await alertOwner(
-        `⚠️ PAID ONLINE but order details were lost (server restarted).\nOrder: ${entity.reference_id}\nAmount: ₹${paid}\nCustomer: +${phone || "unknown"}\nPlease call the customer.`
-      );
+      if (OWNER_PHONE) {
+        await sendText(
+          OWNER_PHONE,
+          `⚠️ PAID ONLINE but order details were lost (server restarted).\nOrder: ${entity.reference_id}\nAmount: ₹${paid}\nCustomer: +${phone || "unknown"}\nPlease call the customer.`
+        );
+      }
     }
   } catch (err) {
     console.error("Razorpay webhook error:", err);
@@ -1720,178 +1740,29 @@ app.post("/razorpay-webhook", async (req, res) => {
 // ======================================================
 
 async function notifyOwner(order) {
-  const jobs = [];
-  if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) jobs.push(notifyTelegram(order));
-  if (OWNER_PHONE) jobs.push(notifyOwnerWhatsApp(order));
-
-  if (!jobs.length) {
-    console.log("No owner channel set (Telegram / OWNER_PHONE) - order:", JSON.stringify(order));
-    return;
+  // Build the PDF once for Telegram (same bill data as the customer copy)
+  let pdf = null;
+  try {
+    pdf = await buildInvoicePdf(order);
+  } catch (err) {
+    console.error("Invoice build failed (Telegram):", err.message);
   }
 
-  await Promise.allSettled(jobs); // one channel failing never blocks the other
-}
-
-// Plain-text alert to every configured owner channel
-async function alertOwner(text) {
-  const jobs = [];
-  if (TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID) {
-    jobs.push(telegramCall("sendMessage", { chat_id: TELEGRAM_CHAT_ID, text }));
+  // 1. Telegram admin alert + PDF
+  try {
+    await notifyTelegram(order, pdf);
+  } catch (err) {
+    console.error("Telegram notification failed:", err.message);
   }
-  if (OWNER_PHONE) jobs.push(sendText(OWNER_PHONE, text));
 
-  const results = await Promise.allSettled(jobs);
-  results.forEach((r) => {
-    if (r.status === "rejected") console.error("Owner alert failed:", r.reason?.message);
-  });
-}
-
-async function notifyOwnerWhatsApp(order) {
-  let text = `🔔 NEW ORDER ${order.id}\n`;
-  text += `Customer: ${order.name || "-"} (+${order.phone})\n`;
-  text += `Type: ${order.orderType}\n`;
-  if (order.table) text += `Table: ${order.table}\n`;
-  if (order.address) text += `Address: ${order.address} (${order.distanceKm} km)\n`;
-  if (order.lat && order.lng) text += `Map: https://www.google.com/maps?q=${order.lat},${order.lng}\n`;
-  text += "\n";
-
-  order.items.forEach((l, i) => {
-    text += `${i + 1}. ${l.name}${optionsText(l)} × ${l.quantity} = ₹${l.price * l.quantity}\n`;
-  });
-
-  if (order.bill.packing > 0) text += `\nPacking: ₹${order.bill.packing}`;
-  if (order.bill.delivery > 0) text += `\nDelivery: ₹${order.bill.delivery}`;
-  text += `\nTotal: ₹${order.bill.total}\n`;
-  text += `Payment: ${order.status === "PAID" ? "PAID ONLINE" : "CASH"}`;
+  // 2. Optional WhatsApp copy to the owner (existing behaviour)
+  if (!OWNER_PHONE) return;
 
   try {
-    await sendText(OWNER_PHONE, text);
+    await sendText(OWNER_PHONE, orderSummaryText(order));
     await deliverInvoice(order, OWNER_PHONE, "en");
   } catch (err) {
     console.error("Owner notification failed:", err.message);
-  }
-}
-
-// ======================================================
-// TELEGRAM ORDER NOTIFICATION (message + location pin + PDF invoice)
-// ======================================================
-
-const esc = (v) =>
-  String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-// 970 -> "970", 67.9 -> "67.90", 1087.9 -> "1,087.90"
-const inr = (n) =>
-  Number(n).toLocaleString("en-IN", {
-    minimumFractionDigits: Number.isInteger(Number(n)) ? 0 : 2,
-    maximumFractionDigits: 2
-  });
-
-function fmtPhone(p) {
-  const d = String(p || "").replace(/\D/g, "");
-  if (d.length === 12 && d.startsWith("91")) return `+91 ${d.slice(2, 7)} ${d.slice(7)}`;
-  return d ? `+${d}` : "-";
-}
-
-function buildTelegramText(order) {
-  const b = order.bill;
-  const paid = order.status === "PAID";
-  const L = [];
-
-  L.push("🔔 <b>NEW ORDER — TREAT RESTAURANT</b>", "");
-  L.push(`Order ID: <b>${esc(order.id)}</b>`);
-  L.push(`Customer: ${esc(order.name || "-")}`);
-  L.push(`Phone: ${esc(fmtPhone(order.phone))}`);
-  L.push(`Type: ${esc(order.orderType)}${order.table ? ` (Table ${esc(order.table)})` : ""}`, "");
-
-  L.push("<b>ITEMS</b>");
-  order.items.forEach((l) => {
-    L.push(`• ${esc(l.name + optionsText(l))} × ${l.quantity} — ₹${inr(l.price * l.quantity)}`);
-  });
-  L.push("");
-
-  L.push(`Food Subtotal: ₹${inr(b.subtotal)}`);
-  if (order.orderType !== "DINE-IN") L.push(`Packing (${b.packingPercent}%): ₹${inr(b.packing)}`);
-  if (order.orderType === "DELIVERY") L.push(`Delivery: ₹${inr(b.delivery)}`);
-  L.push("Discount: ₹0", "");
-
-  const total = Number(b.total).toLocaleString("en-IN", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-  L.push(`<b>TOTAL: ₹${total}</b>`, "");
-
-  L.push(
-    `Payment: ${
-      paid ? "ONLINE (PAID)" : order.orderType === "DELIVERY" ? "COD" : "CASH AT COUNTER"
-    }`
-  );
-  if (paid && order.paymentId) L.push(`Ref: ${esc(order.paymentId)}`);
-  L.push(`Status: ${paid ? "PAID" : "CONFIRMED"}`);
-
-  if (order.orderType === "DELIVERY") {
-    L.push("", "<b>Delivery Location:</b>");
-    L.push(`${esc(order.address || "-")}${order.distanceKm != null ? ` (${order.distanceKm} km)` : ""}`);
-    if (order.lat && order.lng) {
-      L.push(`<a href="https://www.google.com/maps?q=${order.lat},${order.lng}">Google Maps Location</a>`);
-    }
-  }
-
-  L.push("", "PDF Invoice: Attached");
-  return L.join("\n");
-}
-
-async function telegramCall(method, body) {
-  const isForm = body instanceof FormData;
-
-  const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/${method}`, {
-    method: "POST",
-    headers: isForm ? undefined : { "Content-Type": "application/json" },
-    body: isForm ? body : JSON.stringify(body),
-    signal: AbortSignal.timeout(15000)
-  });
-
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok || data.ok === false) {
-    throw new Error(`Telegram ${method} failed: ${data.description || response.status}`);
-  }
-  return data;
-}
-
-async function notifyTelegram(order) {
-  try {
-    await telegramCall("sendMessage", {
-      chat_id: TELEGRAM_CHAT_ID,
-      text: buildTelegramText(order),
-      parse_mode: "HTML",
-      disable_web_page_preview: true
-    });
-  } catch (err) {
-    console.error("Telegram message failed:", err.message);
-  }
-
-  // Map pin the rider can tap
-  if (order.orderType === "DELIVERY" && order.lat && order.lng) {
-    try {
-      await telegramCall("sendLocation", {
-        chat_id: TELEGRAM_CHAT_ID,
-        latitude: order.lat,
-        longitude: order.lng
-      });
-    } catch (err) {
-      console.error("Telegram location failed:", err.message);
-    }
-  }
-
-  // PDF invoice
-  try {
-    const pdf = await buildInvoicePdf(order);
-    const form = new FormData();
-    form.append("chat_id", String(TELEGRAM_CHAT_ID));
-    form.append("caption", `🧾 Invoice ${order.id}`);
-    form.append("document", new Blob([pdf], { type: "application/pdf" }), `Invoice_${order.id}.pdf`);
-    await telegramCall("sendDocument", form);
-  } catch (err) {
-    console.error("Telegram invoice failed:", err.message);
   }
 }
 

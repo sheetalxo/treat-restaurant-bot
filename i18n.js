@@ -238,10 +238,10 @@ const S = {
   btnDineIn: { en: "🪑 DINE-IN", hi: "🪑 डाइन-इन" },
   btnTakeaway: { en: "🥡 TAKEAWAY", hi: "🥡 टेकअवे" },
   btnDelivery: { en: "🛵 DELIVERY", hi: "🛵 डिलीवरी" },
-  askTable: {
-    en: "🪑 Please type your *table number*.",
-    hi: "🪑 कृपया अपना *टेबल नंबर* लिखें।",
-    hg: "🪑 Apna *table number* likh ke bhejo."
+  askVisit: {
+    en: "🪑 When do you plan to visit the restaurant?\n\nExample: 7:30 PM",
+    hi: "🪑 आप रेस्टोरेंट कब आने की योजना बना रहे हैं?\n\nउदाहरण: 7:30 PM",
+    hg: "🪑 Aap restaurant kab aane ka plan kar rahe ho?\n\nExample: 7:30 PM"
   },
   askAddress: {
     en: "🏠 Please type your *full delivery address* (house no., area, landmark).",
@@ -264,19 +264,19 @@ const S = {
     hg: (tiers) => `🛵 Delivery ke liye neeche ke button se apni *delivery location* bhejo.\n\nDelivery charge:\n${tiers}`
   },
   deliveryInfo: {
-    en: (km, c) => `📍 Location received!\nDistance: ${km} km\nDelivery charge: ₹${c}`,
-    hi: (km, c) => `📍 लोकेशन मिल गई!\nदूरी: ${km} km\nडिलीवरी चार्ज: ₹${c}`,
-    hg: (km, c) => `📍 Location mil gayi!\nDistance: ${km} km\nDelivery charge: ₹${c}`
+    en: (c) => `📍 Location received!\nDelivery charges: ₹${c}`,
+    hi: (c) => `📍 लोकेशन मिल गई!\nडिलीवरी चार्ज: ₹${c}`,
+    hg: (c) => `📍 Location mil gayi!\nDelivery charges: ₹${c}`
   },
   addressSaved: {
     en: "✅ Address saved.",
     hi: "✅ पता सेव हो गया।",
     hg: "✅ Address save ho gaya."
   },
-  tableSaved: {
-    en: (t) => `✅ Table: ${t}`,
-    hi: (t) => `✅ टेबल: ${t}`,
-    hg: (t) => `✅ Table: ${t}`
+  visitSaved: {
+    en: (t) => `✅ Expected visit time: ${t}`,
+    hi: (t) => `✅ आने का समय: ${t}`,
+    hg: (t) => `✅ Aane ka time: ${t}`
   },
   needLocation: {
     en: "Please send a location pin (📎 → Location). Delivery charge can't be calculated without it.",
@@ -289,18 +289,19 @@ const S = {
     hg: "Delivery abhi available nahi hai. Takeaway ya dine-in choose karo."
   },
   tooFar: {
-    en: (km, max) => `😔 You are ${km} km away. We deliver only up to ${max} km. You can choose takeaway or dine-in.`,
-    hi: (km, max) => `😔 आप ${km} km दूर हैं। हम सिर्फ़ ${max} km तक डिलीवरी करते हैं। आप टेकअवे या डाइन-इन चुन सकते हैं।`,
-    hg: (km, max) => `😔 Aap ${km} km door ho. Hum sirf ${max} km tak deliver karte hain. Takeaway ya dine-in choose kar sakte ho.`
+    en: "😔 Sorry, your location is outside our delivery area. You can choose takeaway or dine-in.",
+    hi: "😔 क्षमा करें, आपकी लोकेशन हमारे डिलीवरी क्षेत्र से बाहर है। आप टेकअवे या डाइन-इन चुन सकते हैं।",
+    hg: "😔 Sorry, aapki location hamare delivery area se bahar hai. Takeaway ya dine-in choose kar sakte ho."
   },
 
   // ---------- bill ----------
   billSubtotal: { en: "Subtotal", hi: "सबटोटल" },
-  billPacking: { en: (p) => `Packing (${p}%)`, hi: (p) => `पैकिंग (${p}%)` },
-  billDelivery: { en: (k) => `Delivery (${k} km)`, hi: (k) => `डिलीवरी (${k} km)` },
+  billPacking: { en: "Packing Charges", hi: "पैकिंग चार्ज" },
+  billDelivery: { en: "Delivery Charges", hi: "डिलीवरी चार्ज" },
+  billDiscount: { en: "Discount", hi: "छूट" },
   billTotal: { en: "TOTAL", hi: "कुल" },
   billType: { en: "Order type", hi: "ऑर्डर टाइप" },
-  billTable: { en: "Table", hi: "टेबल" },
+  billVisit: { en: "Expected Visit", hi: "आने का समय" },
   billAddress: { en: "Address", hi: "पता" },
   payBody: {
     en: "Choose payment method:",

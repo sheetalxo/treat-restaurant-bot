@@ -23,6 +23,8 @@ const RESTAURANT = {
   fssai: process.env.FSSAI_NO || ""
 };
 
+const TYPE_LABEL = { "DINE-IN": "Dine-In", TAKEAWAY: "Takeaway", DELIVERY: "Delivery" };
+
 const mmToPt = (mm) => (mm * 72) / 25.4;
 
 function ascii(s) {
@@ -81,7 +83,7 @@ function optionsText(line) {
 
 function buildLines(order, cols) {
   const lines = [];
-  const push = (text, bold = false) => lines.push({ text, bold });
+  const push = (text, bold = false, link = null) => lines.push({ text, bold, link });
 
   const center = (t) => {
     t = ascii(t).slice(0, cols);
@@ -111,38 +113,44 @@ function buildLines(order, cols) {
   // ----- order info -----
   push(lr("Order ID:", order.id), true);
   push(lr("Date:", fmtDate(order.createdAt)));
-  push(lr("Type:", order.orderType));
-  if (order.table) push(lr("Table:", order.table));
+  push(lr("Type:", TYPE_LABEL[order.orderType] || order.orderType));
+  if (order.orderType === "DINE-IN" && order.visitTime) {
+    wrap("Expected Visit: " + order.visitTime, cols).forEach((l) => push(l));
+  }
   wrap("Customer: " + (order.name || "-"), cols).forEach((l) => push(l));
   push("Phone: +" + ascii(order.phone));
-  if (order.address) wrap("Address: " + order.address, cols).forEach((l) => push(l));
+  if (order.orderType === "DELIVERY") {
+    if (order.address) wrap("Address: " + order.address, cols).forEach((l) => push(l));
+    if (order.lat && order.lng) {
+      // clickable in the PDF; no distance is ever printed
+      push("Google Maps Location", false, `https://www.google.com/maps?q=${order.lat},${order.lng}`);
+    }
+  }
   dash();
 
   // ----- items -----
   push(lr("ITEM", "AMOUNT"), true);
   dash();
 
+  const b = order.bill; // single source of truth (billing.js)
+
   let totalQty = 0;
-  for (const it of order.items) {
-    const amount = it.price * it.quantity;
+  for (const it of b.items) {
     totalQty += it.quantity;
 
     wrap(it.name + optionsText(it), cols).forEach((l) => push(l));
-    push(lr("  " + it.quantity + " x " + money(it.price), money(amount)));
+    push(lr("  " + it.quantity + " x " + money(it.unitPrice), money(it.lineTotal)));
   }
 
   dash();
-  push(lr("Items: " + order.items.length, "Qty: " + totalQty));
+  push(lr("Items: " + b.items.length, "Qty: " + totalQty));
   dash();
 
   // ----- totals -----
-  const b = order.bill;
-  push(lr("Subtotal", money(b.subtotal)));
-  if (b.packing > 0) push(lr(`Packing (${b.packingPercent}%)`, money(b.packing)));
-  if (b.delivery > 0) {
-    const label = order.distanceKm ? `Delivery (${order.distanceKm} km)` : "Delivery";
-    push(lr(label, money(b.delivery)));
-  }
+  push(lr("Food Subtotal", money(b.foodSubtotal)));
+  if (b.packingCharges > 0) push(lr("Packing Charges", money(b.packingCharges)));
+  if (order.orderType === "DELIVERY") push(lr("Delivery Charges", money(b.deliveryCharges)));
+  push(lr("Discount", money(b.discount)));
   dbl();
   push(lr("TOTAL (Rs.)", money(b.total)), true);
   dbl();
@@ -155,7 +163,7 @@ function buildLines(order, cols) {
     push(
       lr(
         "Payment:",
-        order.orderType === "DELIVERY" ? "CASH ON DELIVERY" : "CASH AT COUNTER"
+        order.orderType === "DELIVERY" ? "CASH ON DELIVERY" : "PAY AT RESTAURANT"
       ),
       true
     );
@@ -163,6 +171,7 @@ function buildLines(order, cols) {
   } else {
     push(lr("Payment:", "PENDING"), true);
   }
+  push(lr("Status:", "CONFIRMED"), true);
   dash();
 
   // ----- footer -----
@@ -202,7 +211,7 @@ function buildInvoicePdf(order) {
         doc
           .font(line.bold ? "Courier-Bold" : "Courier")
           .fontSize(FONT_SIZE)
-          .text(line.text, marginPt, y, { lineBreak: false });
+          .text(line.text, marginPt, y, { lineBreak: false, link: line.link || undefined });
         y += LINE_H;
       }
 

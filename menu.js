@@ -256,6 +256,22 @@ const isBonelessEligible = (item) =>
 
 const isPizza = (item) => item.category === "PIZZA";
 
+// Charging category used by billing.js:
+// NORMAL_FOOD | SHAKE | MOCKTAIL | COLD_DRINK | WATER
+// COLD_DRINK / WATER (incl. cans and disposable glass) are exempt from all extra charges.
+function chargeCategory(item) {
+  const cat = String(item.category || "").toUpperCase();
+  if (cat === "SHAKES") return "SHAKE";
+  if (cat === "MOCKTAILS") return "MOCKTAIL";
+
+  if (cat === "EXTRAS") {
+    const n = String(item.name || "").toLowerCase();
+    if (n.includes("water")) return "WATER";
+    if (/colddrink|cold drink|coke|^can$|disposable glass/.test(n)) return "COLD_DRINK";
+  }
+  return "NORMAL_FOOD";
+}
+
 function marker(item, type) {
   if (type !== "BOTH") return "";
   if (item.veg === true) return "🟢 ";
@@ -271,5 +287,6 @@ module.exports = {
   isHalfFull,
   isBonelessEligible,
   isPizza,
+  chargeCategory,
   marker
 };
