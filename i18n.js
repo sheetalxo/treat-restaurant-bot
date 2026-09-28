@@ -10,10 +10,27 @@ const S = {
     en: "Please select your language\nअपनी भाषा चुनें\nApni language chuno"
   },
 
+  // step 1: order type first
   welcome: {
-    en: "Welcome to TREAT RESTAURANT 🍽️\n\nWhat would you like to order?",
-    hi: "TREAT RESTAURANT में आपका स्वागत है 🍽️\n\nआप क्या ऑर्डर करना चाहेंगे?",
-    hg: "TREAT RESTAURANT mein aapka swagat hai 🍽️\n\nAap kya order karna chahoge?"
+    en: "Welcome to TREAT RESTAURANT 🍽️\n\nHow would you like to receive your order?",
+    hi: "TREAT RESTAURANT में आपका स्वागत है 🍽️\n\nआप अपना ऑर्डर कैसे लेना चाहेंगे?",
+    hg: "TREAT RESTAURANT mein aapka swagat hai 🍽️\n\nOrder kaise lena chahoge?"
+  },
+  // step 2: after order type is chosen
+  menuStart: {
+    en: "What would you like to order? 🍽️",
+    hi: "आप क्या ऑर्डर करना चाहेंगे? 🍽️",
+    hg: "Aap kya order karna chahoge? 🍽️"
+  },
+  chooseTypeFirst: {
+    en: "Please choose first how you want to receive your order 👇",
+    hi: "पहले चुनें कि आप ऑर्डर कैसे लेना चाहेंगे 👇",
+    hg: "Pehle choose karo ki order kaise lena hai 👇"
+  },
+  closed: {
+    en: "😴 Sorry, TREAT RESTAURANT is closed right now.\n\n🕥 Timings: 10:30 AM – 10:30 PM (every day)\n\nPlease message us again during opening hours. 🙏",
+    hi: "😴 क्षमा करें, TREAT RESTAURANT अभी बंद है।\n\n🕥 समय: सुबह 10:30 से रात 10:30 तक (रोज़)\n\nकृपया खुलने के समय में दोबारा मैसेज करें। 🙏",
+    hg: "😴 Sorry, TREAT RESTAURANT abhi band hai.\n\n🕥 Timing: subah 10:30 se raat 10:30 tak (roz)\n\nPlease khulne ke time pe dobara message karo. 🙏"
   },
   welcome2: {
     en: "Or choose an option below 👇",
@@ -237,9 +254,29 @@ const S = {
     hg: "Address thoda detail mein likho (house no., area, landmark)."
   },
   askLocation: {
-    en: "📍 Now send your *location pin* so I can calculate the delivery charge.\n\nTap 📎 → Location → Send your current location.",
-    hi: "📍 अब अपनी *लोकेशन पिन* भेजें ताकि डिलीवरी चार्ज निकाला जा सके।\n\n📎 दबाएँ → Location → Send your current location।",
-    hg: "📍 Ab apni *location pin* bhejo taaki delivery charge calculate ho sake.\n\n📎 dabao → Location → Send your current location."
+    en: "📍 Please send your *location pin* so I can calculate the delivery charge.\n\nTap 📎 → Location → Send your current location.",
+    hi: "📍 कृपया अपनी *लोकेशन पिन* भेजें ताकि डिलीवरी चार्ज निकाला जा सके।\n\n📎 दबाएँ → Location → Send your current location।",
+    hg: "📍 Please apni *location pin* bhejo taaki delivery charge calculate ho sake.\n\n📎 dabao → Location → Send your current location."
+  },
+  askLocationBtn: {
+    en: (tiers) => `🛵 For delivery, please share your *delivery location* using the button below.\n\nDelivery charges:\n${tiers}`,
+    hi: (tiers) => `🛵 डिलीवरी के लिए नीचे के बटन से अपनी *डिलीवरी लोकेशन* भेजें।\n\nडिलीवरी चार्ज:\n${tiers}`,
+    hg: (tiers) => `🛵 Delivery ke liye neeche ke button se apni *delivery location* bhejo.\n\nDelivery charge:\n${tiers}`
+  },
+  deliveryInfo: {
+    en: (km, c) => `📍 Location received!\nDistance: ${km} km\nDelivery charge: ₹${c}`,
+    hi: (km, c) => `📍 लोकेशन मिल गई!\nदूरी: ${km} km\nडिलीवरी चार्ज: ₹${c}`,
+    hg: (km, c) => `📍 Location mil gayi!\nDistance: ${km} km\nDelivery charge: ₹${c}`
+  },
+  addressSaved: {
+    en: "✅ Address saved.",
+    hi: "✅ पता सेव हो गया।",
+    hg: "✅ Address save ho gaya."
+  },
+  tableSaved: {
+    en: (t) => `✅ Table: ${t}`,
+    hi: (t) => `✅ टेबल: ${t}`,
+    hg: (t) => `✅ Table: ${t}`
   },
   needLocation: {
     en: "Please send a location pin (📎 → Location). Delivery charge can't be calculated without it.",

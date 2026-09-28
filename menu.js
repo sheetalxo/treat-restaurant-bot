@@ -191,7 +191,7 @@ const MENU = {
       ["Plain Roti", 15],
       ["Butter Roti", 20],
       ["Garlic Naan", 60],
-      ["Lachha Paratha", 70],
+      ["Lacchha Paratha", 70],
       ["Butter Naan", 40]
     ],
     "TANDOORI": [

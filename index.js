@@ -45,23 +45,50 @@ const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
 const RAZORPAY_WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET;
 
 // ---------------- Business rules ----------------
-const MIN_FOOD_ORDER = 300;      // excludes packing/delivery
+const MIN_FOOD_ORDER = 300;      // delivery only; excludes packing/delivery charge
 const PACKING_PERCENT = 7;       // % of food subtotal (takeaway + delivery)
 const BONELESS_CHARGE = 50;      // per plate, non-veg main course (as printed on menu)
 const EXTRA_CHEESE_CHARGE = 30;  // per pizza
 const MAX_QTY = 500;
 
-const RESTAURANT_LAT = Number(process.env.RESTAURANT_LAT || 0);
-const RESTAURANT_LNG = Number(process.env.RESTAURANT_LNG || 0);
+// Treat Restaurant pin from Google Maps (can be overridden with env vars)
+const RESTAURANT_LAT = Number(process.env.RESTAURANT_LAT || 32.5192169);
+const RESTAURANT_LNG = Number(process.env.RESTAURANT_LNG || 74.9215249);
 
-// !!! CHANGE the km limits to your real tiers (charges are from your notes,
-// km breakpoints are PLACEHOLDERS). Last maxKm = delivery limit.
+// Optional: Google Maps API key (Routes API enabled) -> ROAD distance.
+// Without it the bot uses straight-line distance.
+const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+
+// Delivery charge by distance. Last maxKm = delivery limit.
+// 0-2.5 km = 30 | 2.5-5 km = 50 | 5-7 km = 80 | 7-10 km = 100
 const DELIVERY_TIERS = [
   { maxKm: 2.5, charge: 30 },
   { maxKm: 5, charge: 50 },
-  { maxKm: 7.5, charge: 80 },
+  { maxKm: 7, charge: 80 },
   { maxKm: 10, charge: 100 }
 ];
+
+// Opening hours (Indian time): 10:30 AM - 10:30 PM. Closed otherwise.
+// Set BYPASS_HOURS=true on Render to test outside timings.
+const OPEN_MINUTES = 10 * 60 + 30;
+const CLOSE_MINUTES = 22 * 60 + 30;
+
+function isOpenNow(date = new Date()) {
+  if (process.env.BYPASS_HOURS === "true") return true;
+
+  const parts = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  }).formatToParts(date);
+
+  const h = Number(parts.find((p) => p.type === "hour").value) % 24;
+  const m = Number(parts.find((p) => p.type === "minute").value);
+  const mins = h * 60 + m;
+
+  return mins >= OPEN_MINUTES && mins < CLOSE_MINUTES;
+}
 
 const MENU_PDF_PATH = fs.existsSync(path.join(__dirname, "menu.pdf"))
   ? path.join(__dirname, "menu.pdf")
@@ -92,6 +119,8 @@ function getSession(phone) {
       address: null,
       table: null,
       distanceKm: null,
+      lat: null,
+      lng: null,
       name: null,
       // typed-order state
       queue: [],
@@ -111,6 +140,8 @@ const T = (to, key, ...args) => t(getSession(to).lang || "en", key, ...args);
 
 const cut = (s, n) => Array.from(String(s)).slice(0, n).join("");
 const round2 = (n) => Math.round(n * 100) / 100;
+// 58.1 -> "58.10", 830 -> "830"
+const rs = (n) => (Number.isInteger(n) ? String(n) : Number(n).toFixed(2));
 
 function resetSelection(session) {
   session.item = null;
@@ -129,6 +160,19 @@ function clearTyped(session) {
   session.pickCandidates = [];
   session.pickCtx = null;
   session.presetQty = null;
+}
+
+// Back to the very start (order type is chosen first). Cart is kept.
+function resetOrderFlow(session) {
+  session.awaiting = null;
+  session.type = null;
+  session.category = null;
+  session.orderType = null;
+  session.address = null;
+  session.table = null;
+  session.distanceKm = null;
+  session.lat = null;
+  session.lng = null;
 }
 
 // What step is still pending for the currently selected item?
@@ -210,6 +254,12 @@ app.post("/webhook", async (req, res) => {
     const profileName = value.contacts?.[0]?.profile?.name;
     if (profileName) session.name = profileName;
 
+    // Closed outside 10:30 AM - 10:30 PM
+    if (!isOpenNow()) {
+      await sendText(from, t(session.lang || "hg", "closed"));
+      return;
+    }
+
     if (message.type === "text") {
       await handleText(from, message.text?.body || "");
       return;
@@ -240,10 +290,15 @@ app.post("/webhook", async (req, res) => {
 // TEXT HANDLER
 // ======================================================
 
+// These restart everything (order type is asked again first)
 const GREETINGS = [
   "hi", "hii", "hiii", "hello", "hlo", "helo", "hey", "hie", "start",
-  "menu", "order", "namaste", "namaskar", "नमस्ते", "हेलो", "हाय"
+  "namaste", "namaskar", "नमस्ते", "हेलो", "हाय"
 ];
+
+// These only go back to the menu; order type is kept
+const MENU_WORDS = ["menu", "order"];
+const CHANGE_TYPE_WORDS = ["change", "change type", "order type"];
 
 async function handleText(from, raw) {
   const session = getSession(from);
@@ -261,8 +316,16 @@ async function handleText(from, raw) {
     return;
   }
 
-  // 2. greetings always restart
+  // 2. greetings always restart from the beginning (order type first)
   if (GREETINGS.includes(lower)) {
+    resetSelection(session);
+    clearTyped(session);
+    resetOrderFlow(session);
+    await sendWelcomeMessage(from);
+    return;
+  }
+
+  if (MENU_WORDS.includes(lower)) {
     resetSelection(session);
     clearTyped(session);
     session.awaiting = null;
@@ -272,32 +335,46 @@ async function handleText(from, raw) {
     return;
   }
 
-  // 3. checkout inputs
+  if (CHANGE_TYPE_WORDS.includes(lower)) {
+    resetSelection(session);
+    clearTyped(session);
+    resetOrderFlow(session);
+    await sendOrderTypeButtons(from);
+    return;
+  }
+
+  // 3. order-type inputs (location -> address, or table number)
+  if (session.awaiting === "location") {
+    await sendText(from, T(from, "needLocation"));
+    await sendLocationRequest(from);
+    return;
+  }
+
   if (session.awaiting === "address") {
     if (text.length < 10) {
       await sendText(from, T(from, "addressShort"));
       return;
     }
     session.address = text;
-    session.awaiting = "location";
-    await sendText(from, T(from, "askLocation"));
+    session.awaiting = null;
+    await sendText(from, T(from, "addressSaved"));
+    await sendMenuStart(from);
     return;
   }
 
   if (session.awaiting === "table") {
     session.table = cut(text, 30);
     session.awaiting = null;
-    await sendBill(from);
+    await sendText(from, T(from, "tableSaved", session.table));
+    await sendMenuStart(from);
     return;
   }
 
-  if (session.awaiting === "location") {
-    await sendText(from, T(from, "needLocation"));
-    return;
-  }
-
-  // 4. typed quantity
-  if (session.awaiting === "qty" || (session.item && !pendingStep(session))) {
+  // 4. typed quantity (only a plain number counts when no qty prompt is open)
+  if (
+    session.awaiting === "qty" ||
+    (session.item && !pendingStep(session) && /^\d{1,3}$/.test(text))
+  ) {
     const match = text.match(/\d+/);
 
     if (match) {
@@ -346,7 +423,13 @@ async function handleText(from, raw) {
     return;
   }
 
-  // 6. typed order
+  // 6. typed order (order type must be chosen first)
+  if (!session.orderType) {
+    await sendText(from, T(from, "chooseTypeFirst"));
+    await sendOrderTypeButtons(from);
+    return;
+  }
+
   await handleTypedOrder(from, text);
 }
 
@@ -514,6 +597,67 @@ function deliveryChargeFor(km) {
   return null; // beyond delivery limit
 }
 
+// Road distance via Google Routes API (if key is set), else straight-line
+async function getDistanceKm(lat, lng) {
+  if (GOOGLE_MAPS_API_KEY) {
+    try {
+      const response = await fetch("https://routes.googleapis.com/directions/v2:computeRoutes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": GOOGLE_MAPS_API_KEY,
+          "X-Goog-FieldMask": "routes.distanceMeters"
+        },
+        body: JSON.stringify({
+          origin: { location: { latLng: { latitude: RESTAURANT_LAT, longitude: RESTAURANT_LNG } } },
+          destination: { location: { latLng: { latitude: lat, longitude: lng } } },
+          travelMode: "DRIVE"
+        }),
+        signal: AbortSignal.timeout(8000)
+      });
+
+      const data = await response.json();
+      const meters = data.routes?.[0]?.distanceMeters;
+
+      if (response.ok && Number.isFinite(meters)) return round2(meters / 1000);
+      console.error("Routes API error:", JSON.stringify(data));
+    } catch (err) {
+      console.error("Routes API failed, using straight-line distance:", err.message);
+    }
+  }
+
+  return round2(haversineKm(RESTAURANT_LAT, RESTAURANT_LNG, lat, lng));
+}
+
+function tiersText() {
+  let from = 0;
+  return DELIVERY_TIERS.map((tier) => {
+    const line = `${from}-${tier.maxKm} km: ₹${tier.charge}`;
+    from = tier.maxKm;
+    return line;
+  }).join("\n");
+}
+
+// WhatsApp "Send location" button. Falls back to plain instructions.
+async function sendLocationRequest(to) {
+  try {
+    await sendWhatsAppMessage(to, {
+      messaging_product: "whatsapp",
+      recipient_type: "individual",
+      to,
+      type: "interactive",
+      interactive: {
+        type: "location_request_message",
+        body: { text: cut(T(to, "askLocationBtn", tiersText()), 1000) },
+        action: { name: "send_location" }
+      }
+    });
+  } catch (err) {
+    console.error("Location request failed, sending plain text:", err.message);
+    await sendText(to, T(to, "askLocation"));
+  }
+}
+
 async function handleLocation(from, loc) {
   const session = getSession(from);
 
@@ -522,34 +666,40 @@ async function handleLocation(from, loc) {
     return;
   }
 
-  if (session.awaiting !== "location") {
+  // location is accepted while asking for it (or if the customer re-shares it)
+  if (
+    session.orderType !== "DELIVERY" ||
+    (session.awaiting !== "location" && session.awaiting !== "address")
+  ) {
     await sendWelcomeMessage(from);
     return;
   }
 
-  if (!RESTAURANT_LAT || !RESTAURANT_LNG) {
-    console.error("RESTAURANT_LAT / RESTAURANT_LNG env vars are not set");
-    session.awaiting = null;
-    await sendText(from, T(from, "deliveryNotConfigured"));
-    await sendOrderTypeButtons(from);
-    return;
-  }
-
-  // Straight-line distance, NOT road distance
-  const km = haversineKm(RESTAURANT_LAT, RESTAURANT_LNG, loc.latitude, loc.longitude);
+  const km = await getDistanceKm(loc.latitude, loc.longitude);
   const maxKm = DELIVERY_TIERS[DELIVERY_TIERS.length - 1].maxKm;
+  const charge = deliveryChargeFor(km);
 
-  session.awaiting = null;
-
-  if (deliveryChargeFor(km) === null) {
-    session.distanceKm = null;
+  if (charge === null) {
+    resetOrderFlow(session);
     await sendText(from, T(from, "tooFar", km.toFixed(1), maxKm));
     await sendOrderTypeButtons(from);
     return;
   }
 
-  session.distanceKm = round2(km);
-  await sendBill(from);
+  session.distanceKm = km;
+  session.lat = loc.latitude;
+  session.lng = loc.longitude;
+
+  // Ask for the written address once (keep it if the pin was re-shared)
+  if (!session.address) {
+    session.awaiting = "address";
+    await sendText(from, T(from, "deliveryInfo", km, charge));
+    await sendText(from, T(from, "askAddress"));
+  } else {
+    session.awaiting = null;
+    await sendText(from, T(from, "deliveryInfo", km, charge));
+    await sendMenuStart(from);
+  }
 }
 
 // ======================================================
@@ -574,6 +724,13 @@ async function handleAction(to, id) {
 
   if (id === "change_lang") {
     await sendLanguagePrompt(to);
+    return;
+  }
+
+  // Order type (delivery / takeaway / dine-in) must be chosen first
+  const NO_TYPE_NEEDED = ["menu_pdf", "ot_dinein", "ot_takeaway", "ot_delivery"];
+  if (!session.orderType && !NO_TYPE_NEEDED.includes(id)) {
+    await sendWelcomeMessage(to);
     return;
   }
 
@@ -771,6 +928,9 @@ async function handleAction(to, id) {
     session.orderType = "DINE-IN";
     session.address = null;
     session.distanceKm = null;
+    session.lat = null;
+    session.lng = null;
+    session.table = null;
     session.awaiting = "table";
     await sendText(to, T(to, "askTable"));
     return;
@@ -781,16 +941,22 @@ async function handleAction(to, id) {
     session.address = null;
     session.table = null;
     session.distanceKm = null;
+    session.lat = null;
+    session.lng = null;
     session.awaiting = null;
-    await sendBill(to);
+    await sendMenuStart(to);
     return;
   }
 
   if (id === "ot_delivery") {
     session.orderType = "DELIVERY";
     session.table = null;
-    session.awaiting = "address";
-    await sendText(to, T(to, "askAddress"));
+    session.address = null;
+    session.distanceKm = null;
+    session.lat = null;
+    session.lng = null;
+    session.awaiting = "location";
+    await sendLocationRequest(to);
     return;
   }
 
@@ -829,8 +995,18 @@ async function sendLanguagePrompt(to) {
   });
 }
 
+// Step 1: choose how to receive the order. Once chosen -> menu start.
 async function sendWelcomeMessage(to) {
-  await sendButtons(to, T(to, "welcome"), [
+  if (!getSession(to).orderType) {
+    await sendOrderTypeButtons(to, "welcome");
+    return;
+  }
+  await sendMenuStart(to);
+}
+
+// Step 2: VEG / NON-VEG / BOTH
+async function sendMenuStart(to) {
+  await sendButtons(to, T(to, "menuStart"), [
     ["veg", "VEG"],
     ["non_veg", "NON-VEG"],
     ["both", "VEG + NON-VEG"]
@@ -1230,9 +1406,15 @@ async function startCheckout(to) {
     return;
   }
 
+  if (!session.orderType) {
+    await sendWelcomeMessage(to);
+    return;
+  }
+
   const subtotal = cartSubtotal(session);
 
-  if (subtotal < MIN_FOOD_ORDER) {
+  // Minimum food order applies to DELIVERY only
+  if (session.orderType === "DELIVERY" && subtotal < MIN_FOOD_ORDER) {
     await sendButtons(to, T(to, "minOrder", MIN_FOOD_ORDER, subtotal), [
       ["add_more", T(to, "btnAddMore")],
       ["view_cart", T(to, "btnViewCart")]
@@ -1240,14 +1422,32 @@ async function startCheckout(to) {
     return;
   }
 
-  await sendOrderTypeButtons(to);
+  // Make sure the order-type details are complete before billing
+  if (session.orderType === "DELIVERY" && session.distanceKm === null) {
+    session.awaiting = "location";
+    await sendLocationRequest(to);
+    return;
+  }
+  if (session.orderType === "DELIVERY" && !session.address) {
+    session.awaiting = "address";
+    await sendText(to, T(to, "askAddress"));
+    return;
+  }
+  if (session.orderType === "DINE-IN" && !session.table) {
+    session.awaiting = "table";
+    await sendText(to, T(to, "askTable"));
+    return;
+  }
+
+  await sendBill(to);
 }
 
-async function sendOrderTypeButtons(to) {
-  await sendButtons(to, T(to, "orderTypeBody"), [
-    ["ot_dinein", T(to, "btnDineIn")],
+// Delivery first, then takeaway, then dine-in
+async function sendOrderTypeButtons(to, textKey = "orderTypeBody") {
+  await sendButtons(to, T(to, textKey), [
+    ["ot_delivery", T(to, "btnDelivery")],
     ["ot_takeaway", T(to, "btnTakeaway")],
-    ["ot_delivery", T(to, "btnDelivery")]
+    ["ot_dinein", T(to, "btnDineIn")]
   ]);
 }
 
@@ -1277,12 +1477,12 @@ function billText(to, session, bill) {
   text += "━━━━━━━━━━━━\n";
   text += `${T(to, "billSubtotal")}: ₹${bill.subtotal}\n`;
   if (session.orderType !== "DINE-IN") {
-    text += `${T(to, "billPacking", PACKING_PERCENT)}: ₹${bill.packing}\n`;
+    text += `${T(to, "billPacking", PACKING_PERCENT)}: ₹${rs(bill.packing)}\n`;
   }
   if (session.orderType === "DELIVERY") {
     text += `${T(to, "billDelivery", session.distanceKm)}: ₹${bill.delivery}\n`;
   }
-  text += `*${T(to, "billTotal")}: ₹${bill.total}*\n`;
+  text += `*${T(to, "billTotal")}: ₹${rs(bill.total)}*\n`;
   text += "━━━━━━━━━━━━\n\n";
   text += `${T(to, "billType")}: ${session.orderType}\n`;
   if (session.table) text += `${T(to, "billTable")}: ${session.table}\n`;
@@ -1342,6 +1542,8 @@ async function placeOrder(to, method) {
     table: session.table,
     address: session.address,
     distanceKm: session.distanceKm,
+    lat: session.lat,
+    lng: session.lng,
     items: JSON.parse(JSON.stringify(session.cart)),
     bill,
     method,
@@ -1354,11 +1556,11 @@ async function placeOrder(to, method) {
   // ---------------- CASH ----------------
   if (method === "CASH") {
     session.cart = [];
-    session.orderType = null;
+    resetOrderFlow(session);
 
     await sendText(
       to,
-      T(to, "cashConfirmed", order.id, bill.total, order.orderType === "DELIVERY")
+      T(to, "cashConfirmed", order.id, rs(bill.total), order.orderType === "DELIVERY")
     );
 
     await deliverInvoice(order, to, order.lang);
@@ -1386,9 +1588,9 @@ async function placeOrder(to, method) {
 
   order.paymentLink = link;
   session.cart = [];
-  session.orderType = null;
+  resetOrderFlow(session);
 
-  await sendText(to, T(to, "payLink", order.id, bill.total, link));
+  await sendText(to, T(to, "payLink", order.id, rs(bill.total), link));
 }
 
 // ======================================================
@@ -1489,17 +1691,24 @@ app.post("/razorpay-webhook", async (req, res) => {
       order.paidAt = new Date().toISOString();
       order.paymentId = req.body.payload?.payment?.entity?.id || null;
 
-      await sendText(order.phone, t(order.lang || "hg", "payReceived", order.id, order.bill.total));
+      await sendText(order.phone, t(order.lang || "hg", "payReceived", order.id, rs(order.bill.total)));
       await deliverInvoice(order, order.phone, order.lang);
       await notifyOwner(order);
     } else {
       // Server restarted and lost in-memory orders: still tell the customer
       const phone = entity.notes?.phone;
+      const paid = (entity.amount_paid ?? entity.amount ?? 0) / 100;
       console.error("Paid link for unknown order:", entity.reference_id);
       if (phone) {
         await sendText(
           phone,
           `✅ Payment received for order ${entity.reference_id}. Restaurant will contact you shortly.`
+        );
+      }
+      if (OWNER_PHONE) {
+        await sendText(
+          OWNER_PHONE,
+          `⚠️ PAID ONLINE but order details were lost (server restarted).\nOrder: ${entity.reference_id}\nAmount: ₹${paid}\nCustomer: +${phone || "unknown"}\nPlease call the customer.`
         );
       }
     }
@@ -1524,12 +1733,15 @@ async function notifyOwner(order) {
   text += `Type: ${order.orderType}\n`;
   if (order.table) text += `Table: ${order.table}\n`;
   if (order.address) text += `Address: ${order.address} (${order.distanceKm} km)\n`;
+  if (order.lat && order.lng) text += `Map: https://www.google.com/maps?q=${order.lat},${order.lng}\n`;
   text += "\n";
 
   order.items.forEach((l, i) => {
     text += `${i + 1}. ${l.name}${optionsText(l)} × ${l.quantity} = ₹${l.price * l.quantity}\n`;
   });
 
+  if (order.bill.packing > 0) text += `\nPacking: ₹${order.bill.packing}`;
+  if (order.bill.delivery > 0) text += `\nDelivery: ₹${order.bill.delivery}`;
   text += `\nTotal: ₹${order.bill.total}\n`;
   text += `Payment: ${order.status === "PAID" ? "PAID ONLINE" : "CASH"}`;
 
