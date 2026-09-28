@@ -1,5 +1,20 @@
 const express = require("express");
 const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
+
+const {
+  typeLabel,
+  getCategories,
+  getItems,
+  isHalfFull,
+  isBonelessEligible,
+  isPizza,
+  marker
+} = require("./menu");
+const { t } = require("./i18n");
+const { parseTypedOrder } = require("./matcher");
+const { buildInvoicePdf } = require("./invoice");
 
 const app = express();
 
@@ -20,7 +35,7 @@ const ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
 // Owner number with country code, no "+" (e.g. 919876543210)
-// NOTE: free-form text to the owner only works if the owner messaged the bot
+// Free-form messages to the owner only work if the owner messaged the bot
 // in the last 24h. For reliable alerts use an approved template message.
 const OWNER_PHONE = process.env.OWNER_PHONE;
 
@@ -30,18 +45,17 @@ const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
 const RAZORPAY_WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET;
 
 // ---------------- Business rules ----------------
-const MIN_FOOD_ORDER = 300;          // excludes packing/delivery
-const PACKING_PERCENT = 7;           // % of food subtotal (takeaway + delivery)
-const BONELESS_CHARGE = 50;          // per plate, main course non-veg
-const EXTRA_CHEESE_CHARGE = 30;      // per pizza
+const MIN_FOOD_ORDER = 300;      // excludes packing/delivery
+const PACKING_PERCENT = 7;       // % of food subtotal (takeaway + delivery)
+const BONELESS_CHARGE = 50;      // per plate, non-veg main course (as printed on menu)
+const EXTRA_CHEESE_CHARGE = 30;  // per pizza
 const MAX_QTY = 500;
 
-// Restaurant location for delivery distance
 const RESTAURANT_LAT = Number(process.env.RESTAURANT_LAT || 0);
 const RESTAURANT_LNG = Number(process.env.RESTAURANT_LNG || 0);
 
-// !!! CHANGE THESE km limits to your real tiers. Prices are from your notes,
-// km breakpoints are PLACEHOLDERS. Last tier max = delivery limit (10 km).
+// !!! CHANGE the km limits to your real tiers (charges are from your notes,
+// km breakpoints are PLACEHOLDERS). Last maxKm = delivery limit.
 const DELIVERY_TIERS = [
   { maxKm: 2.5, charge: 30 },
   { maxKm: 5, charge: 50 },
@@ -49,265 +63,7 @@ const DELIVERY_TIERS = [
   { maxKm: 10, charge: 100 }
 ];
 
-// ======================================================
-// MENU
-// ======================================================
-
-const EXTRAS = [
-  ["Salad", 50],
-  ["Water", 10],
-  ["Water Bottle", 20],
-  ["Disposable Glass", 5],
-  ["Colddrink", 20],
-  ["Coke Can", 30],
-  ["Can", 50]
-];
-
-const MENU = {
-  VEG: {
-    "MOMOS": [
-      ["Veg Steam Momos", 70],
-      ["Veg Fried Momos", 80],
-      ["Kurkure Veg Momos", 120],
-      ["Chilli Veg Momos", 120],
-      ["Malai Veg Momos", 140],
-      ["Steam Paneer Momos", 100],
-      ["Paneer Fried Momos", 110],
-      ["Kurkure Paneer Momos", 130],
-      ["Chilli Paneer Momos", 140],
-      ["Malai Paneer Momos", 160]
-    ],
-    "NOODLES": [
-      ["Veg Noodles", 100],
-      ["Veg Hakka Noodles", 120],
-      ["Paneer Noodle", 130],
-      ["Chilli Garlic Noodles", 140]
-    ],
-    "CHINESE SNACKS": [
-      ["French Fries", 80],
-      ["Peri Peri Fries", 100],
-      ["Honey Chilli Potato", 150],
-      ["Veg Manchurian Dry", 150],
-      ["Veg Manchurian Gravy", 170],
-      ["Chilly Chaap", 180],
-      ["Chilly Mushroom", 200],
-      ["Chilly Paneer", 210],
-      ["Crispy Corn", 190],
-      ["Butterfly Paneer", 220],
-      ["Garlic Mushroom", 220],
-      ["Paneer 65", 250],
-      ["Mushroom Duplex", 250]
-    ],
-    "TANDOORI SNACKS": [
-      ["Tandoori Chaap", 150],
-      ["Tandoori Lemon Chaap", 160],
-      ["Malai Chaap", 180],
-      ["Paneer Tikka", 200],
-      ["Paneer Malai Tikka", 220]
-    ],
-    "MAIN COURSE": [
-      ["Dal Fry", 200],
-      ["Dal Makhani", 220],
-      ["Paneer Butter Masala", 250],
-      ["Masala Paneer", 230],
-      ["Kadai Paneer", 230],
-      ["Paneer Lababdar", 230],
-      ["Mushroom Do Pyaza", 240],
-      ["Masala Mushroom", 220],
-      ["Paneer Bhurji", 220],
-      ["Paneer Do Pyaza", 240],
-      ["Kadai Chaap", 240],
-      ["Tawa Chaap", 240],
-      ["Masala Chaap", 230],
-      ["Rara Paneer", 300]
-    ],
-    "RICE": [
-      ["Plain Rice", 80],
-      ["Jeera Rice", 100],
-      ["Veg Fried Rice", 120],
-      ["Paneer Fried Rice", 150],
-      ["Chilli Garlic Fried Rice", 140],
-      ["Veg Biryani", 240]
-    ],
-    "BURGERS": [
-      ["Aloo Tikki Burger", 70],
-      ["Veg Cheese Burger", 90],
-      ["Paneer Cheese Burger", 120],
-      ["Double Decker Burger", 150]
-    ],
-    "PIZZA": [
-      ["Margherita Pizza", 160],
-      ["Veg Deluxe Pizza", 200],
-      ["Cheese Chilli Pizza", 220],
-      ["Farm House Pizza", 250],
-      ["Italian Pizza", 270],
-      ["Treat Signature Pizza", 300]
-    ],
-    "PASTA": [
-      ["Red Sauce Pasta", 150],
-      ["White Sauce Pasta", 170],
-      ["Veggie Masala Pasta", 160],
-      ["Mexican Pasta", 180]
-    ],
-    "ROLLS": [
-      ["Spring Roll", 90],
-      ["Veggie Roll", 110],
-      ["Cheese Corn Roll", 130],
-      ["Chaap Roll", 140],
-      ["Paneer Roll", 150]
-    ],
-    "SOUPS": [
-      ["Veg Clear Soup", 90],
-      ["Sweet Corn Soup", 120],
-      ["Manchow Soup", 130],
-      ["Hot & Sour Soup", 140],
-      ["Lemon Coriander Soup", 170]
-    ],
-    "MOCKTAILS": [
-      ["Lime Soda", 80],
-      ["Virgin Mojito", 120],
-      ["Blue Heaven", 120],
-      ["Green Apple", 120],
-      ["Black Currant", 120],
-      ["Blue Berry", 120]
-    ],
-    "SHAKES": [
-      ["Strawberry Shake", 120],
-      ["Blue Berry Shake", 120],
-      ["KitKat Shake", 120],
-      ["Oreo Chocolate Shake", 140],
-      ["Black Current Shake", 120]
-    ],
-    "COFFEE & DESSERTS": [
-      ["Hot Coffee", 50],
-      ["Cold Coffee", 120],
-      ["Oreo Cold Coffee", 140],
-      ["Vanilla Ice Cream", 40],
-      ["Butterscotch Ice Cream", 60],
-      ["Gulab Jamun (2 Pcs)", 60],
-      ["Vanilla & Butterscotch Mix", 70]
-    ],
-    "EXTRAS": EXTRAS
-  },
-
-  "NON-VEG": {
-    "MOMOS": [
-      ["Chicken Steam Momos", 120],
-      ["Chicken Fried Momos", 140],
-      ["Chicken Chilli Momos", 160],
-      ["Chicken Malai Momos", 180]
-    ],
-    "CHICKEN SNACKS": [
-      ["Crispy Chicken", { half: 260, full: 480 }],
-      ["Chilli Chicken", { half: 250, full: 480 }],
-      ["Garlic Chicken", { half: 250, full: 480 }],
-      ["Lemon Chicken", 380],
-      ["Chicken 65 (Boneless)", 380],
-      ["Dragon Chicken (Boneless)", 380],
-      ["Chicken Lollipop (6 Pcs)", 380]
-    ],
-    "NOODLES": [
-      ["Egg Noodles", 130],
-      ["Chicken Noodles", 150],
-      ["Schezwan Noodles", 170],
-      ["Chicken Hakka Noodles", 180],
-      ["Chicken Garlic Noodles", 180]
-    ],
-    "MAIN COURSE": [
-      ["Masala Chicken", { half: 260, full: 480 }],
-      ["Kadai Chicken", { half: 260, full: 480 }],
-      ["Rara Chicken", { half: 300, full: 500 }],
-      ["Butter Chicken", { half: 280, full: 490 }],
-      ["Chicken Do Pyaza", { half: 270, full: 480 }],
-      ["Chicken Lababdar", { half: 270, full: 480 }]
-    ],
-    "RICE": [
-      ["Plain Rice", 80],
-      ["Jeera Rice", 100],
-      ["Egg Fried Rice", 130],
-      ["Chicken Fried Rice", 150],
-      ["Garlic Chicken Fried Rice", 170],
-      ["Egg + Chicken Fried Rice", 200],
-      ["Matka Chicken Biryani", 420]
-    ],
-    "SOUPS": [
-      ["Egg Soup", 90],
-      ["Chicken Manchow Soup", 130],
-      ["Chicken Hot & Sour Soup", 120],
-      ["Chicken Clear Soup", 140]
-    ],
-    "BREADS": [
-      ["Plain Roti", 15],
-      ["Butter Roti", 20],
-      ["Garlic Naan", 60],
-      ["Lachha Paratha", 70],
-      ["Butter Naan", 40]
-    ],
-    "TANDOORI": [
-      ["Tandoori Chicken", { half: 240, full: 450 }],
-      ["Tandoori Lemon Chicken", { half: 250, full: 470 }],
-      ["Afghani Chicken", { half: 270, full: 480 }],
-      ["Chicken Tikka (8 pcs)", 280],
-      ["Chicken Seekh Kebab", 220]
-    ],
-    "ROLLS": [
-      ["Egg Roll", 120],
-      ["Chicken Roll", 140],
-      ["Chicken Chilli Roll", 160]
-    ],
-    "EXTRAS": EXTRAS
-  }
-};
-
-// ======================================================
-// MENU HELPERS  (type = "VEG" | "NON-VEG" | "BOTH")
-// ======================================================
-
-function typeLabel(type) {
-  return type === "BOTH" ? "VEG + NON-VEG" : type;
-}
-
-function getCategories(type) {
-  const set = new Set();
-  if (type !== "NON-VEG") Object.keys(MENU.VEG).forEach((c) => set.add(c));
-  if (type !== "VEG") Object.keys(MENU["NON-VEG"]).forEach((c) => set.add(c));
-  return [...set];
-}
-
-// veg: true = veg only, false = non-veg only, null = same item in both menus
-function getItems(type, category) {
-  const out = [];
-  const byName = new Map();
-
-  const add = (menuKey, isVeg) => {
-    for (const [name, price] of MENU[menuKey][category] || []) {
-      if (byName.has(name)) {
-        byName.get(name).veg = null;
-        continue;
-      }
-      const it = { name, price, veg: isVeg, category };
-      byName.set(name, it);
-      out.push(it);
-    }
-  };
-
-  if (type !== "NON-VEG") add("VEG", true);
-  if (type !== "VEG") add("NON-VEG", false);
-
-  return out;
-}
-
-const isHalfFull = (item) => typeof item.price === "object";
-const isBonelessEligible = (item) =>
-  item.veg === false && item.category === "MAIN COURSE" && isHalfFull(item);
-const isPizza = (item) => item.category === "PIZZA";
-
-function marker(item, type) {
-  if (type !== "BOTH") return "";
-  if (item.veg === true) return "🟢 ";
-  if (item.veg === false) return "🔴 ";
-  return "";
-}
+const MENU_PDF_PATH = path.join(__dirname, "assets", "menu.pdf");
 
 // ======================================================
 // SESSIONS / ORDERS  (in memory: lost on restart/sleep)
@@ -320,7 +76,8 @@ const processedMessages = new Set();
 function getSession(phone) {
   if (!sessions[phone]) {
     sessions[phone] = {
-      type: null,
+      lang: null, // "en" | "hi" | "hg"
+      type: null, // "VEG" | "NON-VEG" | "BOTH"
       category: null,
       item: null,
       variant: null,
@@ -329,15 +86,29 @@ function getSession(phone) {
       quantity: 1,
       cart: [],
       awaiting: null, // "qty" | "address" | "table" | "location"
-      orderType: null, // "DINE-IN" | "TAKEAWAY" | "DELIVERY"
+      orderType: null,
       address: null,
       table: null,
       distanceKm: null,
-      name: null
+      name: null,
+      // typed-order state
+      queue: [],
+      typedAdded: [],
+      typedUnknown: [],
+      pickCandidates: [],
+      pickCtx: null,
+      presetQty: null,
+      autoAdd: false
     };
   }
   return sessions[phone];
 }
+
+// translate for a given customer
+const T = (to, key, ...args) => t(getSession(to).lang || "en", key, ...args);
+
+const cut = (s, n) => Array.from(String(s)).slice(0, n).join("");
+const round2 = (n) => Math.round(n * 100) / 100;
 
 function resetSelection(session) {
   session.item = null;
@@ -345,7 +116,17 @@ function resetSelection(session) {
   session.boneless = null;
   session.cheese = null;
   session.quantity = 1;
+  session.autoAdd = false;
   if (session.awaiting === "qty") session.awaiting = null;
+}
+
+function clearTyped(session) {
+  session.queue = [];
+  session.typedAdded = [];
+  session.typedUnknown = [];
+  session.pickCandidates = [];
+  session.pickCtx = null;
+  session.presetQty = null;
 }
 
 // What step is still pending for the currently selected item?
@@ -377,7 +158,11 @@ function optionsText(line) {
   return opts.length ? ` (${opts.join(", ")})` : "";
 }
 
-const round2 = (n) => Math.round(n * 100) / 100;
+function priceText(item) {
+  return isHalfFull(item)
+    ? `Half ₹${item.price.half} | Full ₹${item.price.full}`
+    : `₹${item.price}`;
+}
 
 // ======================================================
 // HEALTH CHECK + WEBHOOK VERIFICATION
@@ -414,7 +199,6 @@ app.post("/webhook", async (req, res) => {
     const message = value?.messages?.[0];
     if (!message) return;
 
-    // Ignore duplicate deliveries
     if (processedMessages.has(message.id)) return;
     processedMessages.add(message.id);
     if (processedMessages.size > 2000) processedMessages.clear();
@@ -424,30 +208,27 @@ app.post("/webhook", async (req, res) => {
     const profileName = value.contacts?.[0]?.profile?.name;
     if (profileName) session.name = profileName;
 
-    // ---------------- TEXT ----------------
     if (message.type === "text") {
       await handleText(from, message.text?.body || "");
       return;
     }
 
-    // ---------------- LOCATION ----------------
     if (message.type === "location") {
       await handleLocation(from, message.location);
       return;
     }
 
-    // ---------------- INTERACTIVE ----------------
     if (message.type === "interactive") {
       const id =
         message.interactive?.button_reply?.id ||
         message.interactive?.list_reply?.id;
-
       if (id) await handleAction(from, id);
       return;
     }
 
-    // Anything else (image, sticker...) -> welcome
-    await sendWelcomeMessage(from);
+    // image / sticker / audio etc.
+    if (!session.lang) await sendLanguagePrompt(from);
+    else await sendWelcomeMessage(from);
   } catch (error) {
     console.error("Webhook error:", error);
   }
@@ -457,85 +238,246 @@ app.post("/webhook", async (req, res) => {
 // TEXT HANDLER
 // ======================================================
 
+const GREETINGS = [
+  "hi", "hii", "hiii", "hello", "hlo", "helo", "hey", "hie", "start",
+  "menu", "order", "namaste", "namaskar", "नमस्ते", "हेलो", "हाय"
+];
+
 async function handleText(from, raw) {
   const session = getSession(from);
   const text = raw.trim();
   const lower = text.toLowerCase();
 
-  // Typed quantity
-  const busyWithCheckout = ["address", "table", "location"].includes(session.awaiting);
-
-  if (
-    !busyWithCheckout &&
-    (session.awaiting === "qty" || (session.item && !pendingStep(session))) &&
-    /\d+/.test(text)
-  ) {
-    const qty = parseInt(text.match(/\d+/)[0], 10);
-
-    if (!qty || qty < 1) {
-      await sendText(from, "Quantity 1 ya usse zyada honi chahiye. Number type karo (e.g. 5).");
-      return;
-    }
-    if (qty > MAX_QTY) {
-      await sendText(from, `Max ${MAX_QTY} allowed hai. Bulk order ke liye restaurant ko directly call karo.`);
-      return;
-    }
-
-    session.quantity = qty;
-    session.awaiting = null;
-    await sendQuantityScreen(from);
+  // 1. language first
+  if (!session.lang) {
+    await sendLanguagePrompt(from);
     return;
   }
 
-  if (session.awaiting === "qty") {
-    await sendText(from, "Sirf number type karo, e.g. 3 ya 10.");
+  if (["language", "lang", "bhasha", "भाषा"].includes(lower)) {
+    await sendLanguagePrompt(from);
     return;
   }
 
-  // Delivery address
-  if (session.awaiting === "address") {
-    if (text.length < 10) {
-      await sendText(from, "Address thoda detail mein likho (house no., area, landmark).");
-      return;
-    }
-    session.address = text;
-    session.awaiting = "location";
-    await sendText(
-      from,
-      "📍 Ab apni *location pin* bhejo taaki delivery charge calculate ho sake.\n\n" +
-        "Attach (📎) → Location → Send your current location."
-    );
-    return;
-  }
-
-  // Dine-in table
-  if (session.awaiting === "table") {
-    session.table = text.substring(0, 30);
-    session.awaiting = null;
-    await sendBill(from);
-    return;
-  }
-
-  if (session.awaiting === "location") {
-    await sendText(from, "Please location pin bhejo (📎 → Location). Uske bina delivery charge nahi ban sakta.");
-    return;
-  }
-
-  if (["hi", "hello", "hey", "start", "hii", "menu"].includes(lower)) {
+  // 2. greetings always restart
+  if (GREETINGS.includes(lower)) {
     resetSelection(session);
+    clearTyped(session);
+    session.awaiting = null;
     session.type = null;
     session.category = null;
     await sendWelcomeMessage(from);
     return;
   }
 
-  if (lower === "cart") {
+  // 3. checkout inputs
+  if (session.awaiting === "address") {
+    if (text.length < 10) {
+      await sendText(from, T(from, "addressShort"));
+      return;
+    }
+    session.address = text;
+    session.awaiting = "location";
+    await sendText(from, T(from, "askLocation"));
+    return;
+  }
+
+  if (session.awaiting === "table") {
+    session.table = cut(text, 30);
+    session.awaiting = null;
+    await sendBill(from);
+    return;
+  }
+
+  if (session.awaiting === "location") {
+    await sendText(from, T(from, "needLocation"));
+    return;
+  }
+
+  // 4. typed quantity
+  if (session.awaiting === "qty" || (session.item && !pendingStep(session))) {
+    const match = text.match(/\d+/);
+
+    if (match) {
+      const qty = parseInt(match[0], 10);
+
+      if (!qty || qty < 1) {
+        await sendText(from, T(from, "qtyInvalid"));
+        return;
+      }
+      if (qty > MAX_QTY) {
+        await sendText(from, T(from, "qtyMax", MAX_QTY));
+        return;
+      }
+
+      session.quantity = qty;
+      session.awaiting = null;
+      await sendQuantityScreen(from);
+      return;
+    }
+
+    if (session.awaiting === "qty") {
+      await sendText(from, T(from, "qtyOnlyNumber"));
+      return;
+    }
+  }
+
+  // 5. shortcuts
+  if (["cart", "kart", "my cart", "कार्ट"].includes(lower)) {
     await sendCart(from);
     return;
   }
 
-  // Fallback: don't stay silent
-  await sendWelcomeMessage(from);
+  if (["pdf", "menu pdf", "menu card"].includes(lower)) {
+    await sendMenuPdf(from);
+    await sendWelcomeMessage(from);
+    return;
+  }
+
+  // 6. typed order
+  await handleTypedOrder(from, text);
+}
+
+// ======================================================
+// TYPED ORDER  ("2 veg momos, 1 dal makhani, pizza")
+// ======================================================
+
+async function handleTypedOrder(to, text) {
+  const session = getSession(to);
+  const entries = parseTypedOrder(text);
+  const recognised = entries.filter((e) => e.kind !== "unknown");
+
+  if (!recognised.length) {
+    await sendText(to, T(to, "notUnderstood"));
+    await sendWelcomeMessage(to);
+    return;
+  }
+
+  // Typed orders search the WHOLE menu (veg + non-veg)
+  session.type = "BOTH";
+  resetSelection(session);
+  clearTyped(session);
+  session.queue = entries.map((e) => ({ ...e, qty: Math.min(e.qty || 1, MAX_QTY) }));
+
+  await processQueue(to);
+}
+
+function startTypedItem(session, item, e) {
+  resetSelection(session);
+  session.item = item;
+  session.quantity = e.qty || 1;
+  session.variant = isHalfFull(item) && e.variant ? e.variant : null;
+  session.boneless = isBonelessEligible(item) && e.boneless !== null && e.boneless !== undefined ? e.boneless : null;
+  session.cheese = isPizza(item) && e.cheese !== null && e.cheese !== undefined ? e.cheese : null;
+  session.autoAdd = true;
+}
+
+async function processQueue(to) {
+  const session = getSession(to);
+
+  while (session.queue.length) {
+    const e = session.queue.shift();
+
+    if (e.kind === "unknown") {
+      session.typedUnknown.push(e.text);
+      continue;
+    }
+
+    if (e.kind === "item") {
+      startTypedItem(session, e.item, e);
+      await nextItemStep(to);
+      return; // waits for button OR continues via nextItemStep
+    }
+
+    if (e.kind === "pick") {
+      session.pickCandidates = e.candidates.slice(0, 10);
+      session.pickCtx = e;
+      await sendPickList(to, e);
+      return;
+    }
+
+    if (e.kind === "category") {
+      resetSelection(session);
+      session.category = e.category;
+      session.presetQty = e.qty > 1 ? e.qty : null;
+      await sendText(to, T(to, "catFromText", e.category));
+      await sendItemList(to, 0);
+      return;
+    }
+
+    if (e.kind === "catpick") {
+      resetSelection(session);
+      session.presetQty = e.qty > 1 ? e.qty : null;
+      await sendCatPick(to, e);
+      return;
+    }
+  }
+
+  await finishTypedOrder(to);
+}
+
+async function finishTypedOrder(to) {
+  const session = getSession(to);
+  const added = session.typedAdded;
+  const unknown = session.typedUnknown;
+  session.typedAdded = [];
+  session.typedUnknown = [];
+
+  if (added.length) await sendText(to, T(to, "typedAdded", added));
+  if (unknown.length) await sendText(to, T(to, "typedUnknown", unknown));
+
+  if (session.cart.length) await sendCart(to);
+  else await sendWelcomeMessage(to);
+}
+
+async function sendSimpleList(to, { body, button, sectionTitle, rows }) {
+  await sendWhatsAppMessage(to, {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to,
+    type: "interactive",
+    interactive: {
+      type: "list",
+      body: { text: cut(body, 1000) },
+      action: {
+        button: cut(button, 20),
+        sections: [{ title: cut(sectionTitle, 24), rows }]
+      }
+    }
+  });
+}
+
+async function sendPickList(to, e) {
+  const rows = session_pickRows(e.candidates.slice(0, 10));
+  await sendSimpleList(to, {
+    body: T(to, "pickBody", e.query),
+    button: T(to, "btnChoose"),
+    sectionTitle: e.query,
+    rows
+  });
+}
+
+function session_pickRows(items) {
+  return items.map((it, i) => ({
+    id: `tpick:${i}`,
+    title: cut(marker(it, "BOTH") + it.name, 24),
+    description: cut(`${it.name} — ${priceText(it)}`, 72)
+  }));
+}
+
+async function sendCatPick(to, e) {
+  const rows = e.categories.slice(0, 10).map((c) => ({
+    id: `cat:${c}`,
+    title: cut(c, 24),
+    description: cut(T(to, "catDesc", c), 72)
+  }));
+
+  await sendSimpleList(to, {
+    body: T(to, "catPickBody", e.query),
+    button: T(to, "btnChooseCat"),
+    sectionTitle: e.query,
+    rows
+  });
 }
 
 // ======================================================
@@ -563,6 +505,11 @@ function deliveryChargeFor(km) {
 async function handleLocation(from, loc) {
   const session = getSession(from);
 
+  if (!session.lang) {
+    await sendLanguagePrompt(from);
+    return;
+  }
+
   if (session.awaiting !== "location") {
     await sendWelcomeMessage(from);
     return;
@@ -570,30 +517,26 @@ async function handleLocation(from, loc) {
 
   if (!RESTAURANT_LAT || !RESTAURANT_LNG) {
     console.error("RESTAURANT_LAT / RESTAURANT_LNG env vars are not set");
-    await sendText(from, "Delivery abhi configure nahi hai. Takeaway / dine-in choose karo.");
     session.awaiting = null;
+    await sendText(from, T(from, "deliveryNotConfigured"));
     await sendOrderTypeButtons(from);
     return;
   }
 
   // Straight-line distance, NOT road distance
   const km = haversineKm(RESTAURANT_LAT, RESTAURANT_LNG, loc.latitude, loc.longitude);
-  session.distanceKm = round2(km);
+  const maxKm = DELIVERY_TIERS[DELIVERY_TIERS.length - 1].maxKm;
+
+  session.awaiting = null;
 
   if (deliveryChargeFor(km) === null) {
-    session.awaiting = null;
     session.distanceKm = null;
-    await sendText(
-      from,
-      `😔 Aap ${session.distanceKm ?? km.toFixed(1)} km door ho. Hum sirf ${
-        DELIVERY_TIERS[DELIVERY_TIERS.length - 1].maxKm
-      } km tak deliver karte hain. Takeaway / dine-in choose kar sakte ho.`
-    );
+    await sendText(from, T(from, "tooFar", km.toFixed(1), maxKm));
     await sendOrderTypeButtons(from);
     return;
   }
 
-  session.awaiting = null;
+  session.distanceKm = round2(km);
   await sendBill(from);
 }
 
@@ -604,11 +547,43 @@ async function handleLocation(from, loc) {
 async function handleAction(to, id) {
   const session = getSession(to);
 
+  // ---------- LANGUAGE ----------
+  if (id.startsWith("lang_")) {
+    session.lang = id.slice(5); // hi | en | hg
+    if (!["hi", "en", "hg"].includes(session.lang)) session.lang = "hg";
+    await sendWelcomeMessage(to);
+    return;
+  }
+
+  if (!session.lang) {
+    await sendLanguagePrompt(to);
+    return;
+  }
+
+  if (id === "change_lang") {
+    await sendLanguagePrompt(to);
+    return;
+  }
+
+  // ---------- MENU PDF / WRITE ORDER ----------
+  if (id === "menu_pdf") {
+    await sendMenuPdf(to);
+    await sendWelcomeMessage(to);
+    return;
+  }
+
+  if (id === "write_order") {
+    session.awaiting = null;
+    await sendText(to, T(to, "writePrompt"));
+    return;
+  }
+
   // ---------- TYPE ----------
   if (id === "veg" || id === "non_veg" || id === "both") {
     session.type = id === "veg" ? "VEG" : id === "non_veg" ? "NON-VEG" : "BOTH";
     session.category = null;
     resetSelection(session);
+    clearTyped(session);
     await sendCategoryList(to, 0);
     return;
   }
@@ -618,6 +593,7 @@ async function handleAction(to, id) {
     session.type = null;
     session.category = null;
     resetSelection(session);
+    clearTyped(session);
     await sendWelcomeMessage(to);
     return;
   }
@@ -639,6 +615,7 @@ async function handleAction(to, id) {
   // ---------- CATEGORY / ITEM LISTS ----------
   if (id.startsWith("cat:")) {
     session.category = id.slice(4);
+    if (!session.type) session.type = "BOTH";
     await sendItemList(to, 0);
     return;
   }
@@ -658,8 +635,21 @@ async function handleAction(to, id) {
     const item = items[Number(id.split(":")[1])];
     if (!item) return;
 
+    const preset = session.presetQty;
     resetSelection(session);
     session.item = item;
+    session.quantity = preset || 1;
+    session.presetQty = null;
+    await nextItemStep(to);
+    return;
+  }
+
+  // item picked from a typed-order "which one?" list
+  if (id.startsWith("tpick:")) {
+    const item = session.pickCandidates[Number(id.split(":")[1])];
+    if (!item) return sendWelcomeMessage(to);
+
+    startTypedItem(session, item, session.pickCtx || {});
     await nextItemStep(to);
     return;
   }
@@ -704,18 +694,19 @@ async function handleAction(to, id) {
   if (id === "qty_type") {
     if (!session.item) return sendCart(to);
     session.awaiting = "qty";
-    await sendText(
-      to,
-      "✍️ Kitne chahiye? Number type karke bhejo (e.g. 4, 10, 25).\n\n" +
-        `Max ${MAX_QTY}.`
-    );
+    await sendText(to, T(to, "typeQtyPrompt", MAX_QTY));
     return;
   }
 
   if (id === "add_cart") {
     if (!session.item || pendingStep(session)) return sendCart(to);
     addCurrentItemToCart(session);
-    await sendCart(to);
+
+    if (session.queue.length || session.typedAdded.length || session.typedUnknown.length) {
+      await processQueue(to);
+    } else {
+      await sendCart(to);
+    }
     return;
   }
 
@@ -759,7 +750,7 @@ async function handleAction(to, id) {
     session.address = null;
     session.distanceKm = null;
     session.awaiting = "table";
-    await sendText(to, "🪑 Apna *table number* type karke bhejo.");
+    await sendText(to, T(to, "askTable"));
     return;
   }
 
@@ -777,7 +768,7 @@ async function handleAction(to, id) {
     session.orderType = "DELIVERY";
     session.table = null;
     session.awaiting = "address";
-    await sendText(to, "🏠 Apna *poora delivery address* type karke bhejo (house no., area, landmark).");
+    await sendText(to, T(to, "askAddress"));
     return;
   }
 
@@ -793,10 +784,10 @@ async function handleAction(to, id) {
 }
 
 // ======================================================
-// WELCOME
+// LANGUAGE + WELCOME
 // ======================================================
 
-async function sendWelcomeMessage(to) {
+async function sendLanguagePrompt(to) {
   await sendWhatsAppMessage(to, {
     messaging_product: "whatsapp",
     recipient_type: "individual",
@@ -804,20 +795,68 @@ async function sendWelcomeMessage(to) {
     type: "interactive",
     interactive: {
       type: "button",
-      body: {
-        text:
-          "Hey! Welcome to TREAT RESTAURANT 🍽️\n\n" +
-          "What would you like to order?"
-      },
+      body: { text: t("en", "langPrompt") },
       action: {
         buttons: [
-          { type: "reply", reply: { id: "veg", title: "VEG" } },
-          { type: "reply", reply: { id: "non_veg", title: "NON-VEG" } },
-          { type: "reply", reply: { id: "both", title: "VEG + NON-VEG" } }
+          { type: "reply", reply: { id: "lang_hi", title: "हिंदी" } },
+          { type: "reply", reply: { id: "lang_en", title: "English" } },
+          { type: "reply", reply: { id: "lang_hg", title: "Hinglish" } }
         ]
       }
     }
   });
+}
+
+async function sendWelcomeMessage(to) {
+  await sendButtons(to, T(to, "welcome"), [
+    ["veg", "VEG"],
+    ["non_veg", "NON-VEG"],
+    ["both", "VEG + NON-VEG"]
+  ]);
+
+  await sendButtons(to, T(to, "welcome2"), [
+    ["menu_pdf", T(to, "btnMenuPdf")],
+    ["write_order", T(to, "btnWrite")],
+    ["change_lang", T(to, "btnLang")]
+  ]);
+}
+
+// ======================================================
+// MENU PDF
+// ======================================================
+
+let menuMedia = { id: null, at: 0 };
+
+async function getMenuMediaId(force = false) {
+  const fresh = menuMedia.id && Date.now() - menuMedia.at < 20 * 24 * 60 * 60 * 1000;
+  if (!force && fresh) return menuMedia.id;
+
+  const buffer = fs.readFileSync(MENU_PDF_PATH);
+  const id = await uploadMedia(buffer, "TREAT_RESTAURANT_MENU.pdf", "application/pdf");
+  menuMedia = { id, at: Date.now() };
+  return id;
+}
+
+async function sendMenuPdf(to) {
+  if (!fs.existsSync(MENU_PDF_PATH)) {
+    console.error("assets/menu.pdf not found");
+    await sendText(to, T(to, "menuPdfError"));
+    return;
+  }
+
+  const caption = T(to, "menuPdfCaption");
+
+  try {
+    await sendDocument(to, await getMenuMediaId(), "TREAT_RESTAURANT_MENU.pdf", caption);
+  } catch (err) {
+    console.error("Menu PDF send failed, retrying with fresh upload:", err.message);
+    try {
+      await sendDocument(to, await getMenuMediaId(true), "TREAT_RESTAURANT_MENU.pdf", caption);
+    } catch (err2) {
+      console.error("Menu PDF retry failed:", err2.message);
+      await sendText(to, T(to, "menuPdfError"));
+    }
+  }
 }
 
 // ======================================================
@@ -837,16 +876,16 @@ async function sendPagedList(to, { body, button, sectionTitle, entries, page, pa
   if (page > 0) {
     rows.push({
       id: `${pagePrefix}:${page - 1}`,
-      title: "⬅ PREVIOUS",
-      description: `Go back (page ${page} of ${totalPages})`
+      title: cut(T(to, "navPrev"), 24),
+      description: cut(T(to, "navPrevDesc", page, totalPages), 72)
     });
   }
 
   if (start + PAGE_SIZE < entries.length) {
     rows.push({
       id: `${pagePrefix}:${page + 1}`,
-      title: "➡ MORE",
-      description: `See more (page ${page + 2} of ${totalPages})`
+      title: cut(T(to, "navMore"), 24),
+      description: cut(T(to, "navMoreDesc", page + 2, totalPages), 72)
     });
   }
 
@@ -859,10 +898,12 @@ async function sendPagedList(to, { body, button, sectionTitle, entries, page, pa
     type: "interactive",
     interactive: {
       type: "list",
-      body: { text: totalPages > 1 ? `${body}\n\nPage ${page + 1}/${totalPages}` : body },
+      body: {
+        text: totalPages > 1 ? `${body}\n\n${T(to, "pageOf", page + 1, totalPages)}` : body
+      },
       action: {
-        button,
-        sections: [{ title: sectionTitle.substring(0, 24), rows }]
+        button: cut(button, 20),
+        sections: [{ title: cut(sectionTitle, 24), rows }]
       }
     }
   });
@@ -878,22 +919,21 @@ async function sendCategoryList(to, page = 0) {
 
   const entries = getCategories(session.type).map((category) => ({
     id: `cat:${category}`,
-    title: category.substring(0, 24),
-    description: `View ${category}`.substring(0, 72)
+    title: cut(category, 24),
+    description: cut(T(to, "catDesc", category), 72)
   }));
 
   await sendPagedList(to, {
-    body: `🍽️ ${label} MENU\n\nChoose a category:` +
-      (session.type === "BOTH" ? "\n🟢 veg  🔴 non-veg" : ""),
-    button: "VIEW CATEGORIES",
-    sectionTitle: `${label} CATEGORIES`,
+    body: T(to, "catBody", label, session.type === "BOTH"),
+    button: T(to, "btnViewCats"),
+    sectionTitle: T(to, "sectionCats", label),
     entries,
     page,
     pagePrefix: "catpage",
     extraNavRow: {
       id: "nav:back_main",
-      title: "🔙 VEG/NON-VEG",
-      description: "Change VEG / NON-VEG / BOTH"
+      title: cut(T(to, "navBackMain"), 24),
+      description: cut(T(to, "navBackMainDesc"), 72)
     }
   });
 }
@@ -907,29 +947,33 @@ async function sendItemList(to, page = 0) {
   const items = getItems(session.type, session.category);
 
   const entries = items.map((item, index) => {
-    const description = isHalfFull(item)
-      ? `Half ₹${item.price.half} | Full ₹${item.price.full}`
-      : `₹${item.price}`;
+    const fullTitle = marker(item, session.type) + item.name;
+    const price = priceText(item);
+    let description = item.desc ? `${price} • ${item.desc}` : price;
+
+    // Long names get cut in the title, so show the full name in the description
+    if (Array.from(fullTitle).length > 24) {
+      description = `${item.name} — ${price}`;
+    }
 
     return {
       id: `item:${index}`,
-      title: (marker(item, session.type) + item.name).substring(0, 24),
-      description: description.substring(0, 72)
+      title: cut(fullTitle, 24),
+      description: cut(description, 72)
     };
   });
 
   await sendPagedList(to, {
-    body: `🍽️ ${session.category}\n\nSelect an item:` +
-      (session.type === "BOTH" ? "\n🟢 veg  🔴 non-veg" : ""),
-    button: "VIEW FOOD",
+    body: T(to, "itemBody", session.category, session.type === "BOTH"),
+    button: T(to, "btnViewFood"),
     sectionTitle: session.category,
     entries,
     page,
     pagePrefix: "itempage",
     extraNavRow: {
       id: "nav:back_categories",
-      title: "🔙 CATEGORIES",
-      description: "Back to categories"
+      title: cut(T(to, "navBackCats"), 24),
+      description: cut(T(to, "navBackCatsDesc"), 72)
     }
   });
 }
@@ -945,7 +989,16 @@ async function nextItemStep(to) {
   if (step === "variant") return sendVariantButtons(to);
   if (step === "boneless") return sendBonelessButtons(to);
   if (step === "cheese") return sendCheeseButtons(to);
-  return sendQuantityScreen(to);
+
+  // Typed orders are added straight to the cart once every option is known
+  if (session.autoAdd) {
+    const line = addCurrentItemToCart(session);
+    session.typedAdded.push(`• ${line}`);
+    await processQueue(to);
+    return;
+  }
+
+  await sendQuantityScreen(to);
 }
 
 async function sendButtons(to, text, buttons) {
@@ -956,11 +1009,11 @@ async function sendButtons(to, text, buttons) {
     type: "interactive",
     interactive: {
       type: "button",
-      body: { text },
+      body: { text: cut(text, 1000) },
       action: {
         buttons: buttons.map(([id, title]) => ({
           type: "reply",
-          reply: { id, title: title.substring(0, 20) }
+          reply: { id, title: cut(title, 20) }
         }))
       }
     }
@@ -970,36 +1023,28 @@ async function sendButtons(to, text, buttons) {
 async function sendVariantButtons(to) {
   const item = getSession(to).item;
 
-  await sendButtons(to, `🍽️ ${item.name}\n\nChoose plate size:`, [
-    ["variant_half", `HALF ₹${item.price.half}`],
-    ["variant_full", `FULL ₹${item.price.full}`]
+  await sendButtons(to, T(to, "variantBody", item.name), [
+    ["variant_half", T(to, "btnHalf", item.price.half)],
+    ["variant_full", T(to, "btnFull", item.price.full)]
   ]);
 }
 
 async function sendBonelessButtons(to) {
   const item = getSession(to).item;
 
-  await sendButtons(
-    to,
-    `🍗 ${item.name}\n\nBone-in ya Boneless?\nBoneless = +₹${BONELESS_CHARGE} per plate`,
-    [
-      ["bone_no", "WITH BONE"],
-      ["bone_yes", `BONELESS +₹${BONELESS_CHARGE}`]
-    ]
-  );
+  await sendButtons(to, T(to, "boneBody", item.name, BONELESS_CHARGE), [
+    ["bone_no", T(to, "btnWithBone")],
+    ["bone_yes", T(to, "btnBoneless", BONELESS_CHARGE)]
+  ]);
 }
 
 async function sendCheeseButtons(to) {
   const item = getSession(to).item;
 
-  await sendButtons(
-    to,
-    `🍕 ${item.name}\n\nExtra cheese chahiye?\nExtra cheese = +₹${EXTRA_CHEESE_CHARGE} per pizza`,
-    [
-      ["cheese_no", "NO EXTRA CHEESE"],
-      ["cheese_yes", `EXTRA CHEESE +₹${EXTRA_CHEESE_CHARGE}`]
-    ]
-  );
+  await sendButtons(to, T(to, "cheeseBody", item.name, EXTRA_CHEESE_CHARGE), [
+    ["cheese_no", T(to, "btnNoCheese")],
+    ["cheese_yes", T(to, "btnCheese", EXTRA_CHEESE_CHARGE)]
+  ]);
 }
 
 // ======================================================
@@ -1024,23 +1069,15 @@ async function sendQuantityScreen(to) {
     cheese: session.cheese
   });
 
-  await sendButtons(
-    to,
-    `🍽️ ${item.name}${opts}\n\n` +
-      `Price: ₹${price}\n` +
-      `Quantity: ${session.quantity}\n` +
-      `Item Total: ₹${total}\n\n` +
-      `Zyada chahiye? ✍️ TYPE QTY dabao aur number likho.`,
-    [
-      ["qty_minus", "➖"],
-      ["qty_plus", "➕"],
-      ["qty_type", "✍️ TYPE QTY"]
-    ]
-  );
+  await sendButtons(to, T(to, "qtyBody", item.name, opts, price, session.quantity, total), [
+    ["qty_minus", "➖"],
+    ["qty_plus", "➕"],
+    ["qty_type", T(to, "btnTypeQty")]
+  ]);
 
-  await sendButtons(to, "Quantity final hai?", [
-    ["add_cart", "✅ ADD TO CART"],
-    ["back_items", "🔙 BACK"]
+  await sendButtons(to, T(to, "qtyFinal"), [
+    ["add_cart", T(to, "btnAddCart")],
+    ["back_items", T(to, "btnBack")]
   ]);
 }
 
@@ -1048,19 +1085,26 @@ async function sendQuantityScreen(to) {
 // CART
 // ======================================================
 
+// returns a short text like "2 × Masala Chicken (FULL, Boneless)"
 function addCurrentItemToCart(session) {
   const item = session.item;
 
   const line = {
     name: item.name,
     variant: isHalfFull(item) ? session.variant : null,
-    boneless: !!session.boneless,
-    cheese: !!session.cheese,
-    price: unitPrice(item, session.variant, session.boneless, session.cheese),
+    boneless: !!session.boneless && isBonelessEligible(item),
+    cheese: !!session.cheese && isPizza(item),
+    price: unitPrice(
+      item,
+      session.variant,
+      session.boneless && isBonelessEligible(item),
+      session.cheese && isPizza(item)
+    ),
     quantity: session.quantity
   };
 
-  // Merge identical lines
+  const summary = `${line.quantity} × ${line.name}${optionsText(line)}`;
+
   const existing = session.cart.find(
     (l) =>
       l.name === line.name &&
@@ -1076,22 +1120,20 @@ function addCurrentItemToCart(session) {
   }
 
   resetSelection(session);
+  return summary;
 }
 
 function cartSubtotal(session) {
   return session.cart.reduce((sum, l) => sum + l.price * l.quantity, 0);
 }
 
-function buildCartText(session) {
-  let text = "🛒 YOUR CART\n\n";
-
+function buildCartLines(session) {
+  let text = "";
   session.cart.forEach((line, index) => {
     text +=
       `${index + 1}. ${line.name}${optionsText(line)}\n` +
       `   ₹${line.price} × ${line.quantity} = ₹${line.price * line.quantity}\n\n`;
   });
-
-  text += `Subtotal: ₹${cartSubtotal(session)}`;
   return text;
 }
 
@@ -1099,25 +1141,26 @@ async function sendCart(to) {
   const session = getSession(to);
 
   if (session.cart.length === 0) {
-    await sendButtons(to, "🛒 Your cart is empty.\n\nWould you like to view the menu?", [
-      ["add_more", "VIEW MENU"],
-      ["back_main", "BACK"]
+    await sendButtons(to, T(to, "cartEmpty"), [
+      ["add_more", T(to, "btnViewMenu")],
+      ["back_main", T(to, "btnBackShort")]
     ]);
     return;
   }
 
-  let body = buildCartText(session);
+  const subtotal = cartSubtotal(session);
+  let body = `${T(to, "cartTitle")}\n\n${buildCartLines(session)}${T(to, "subtotalLbl")}: ₹${subtotal}`;
 
-  // Button message body limit is 1024 chars -> send long carts as plain text first
+  // Button body limit is 1024 chars -> long carts go as plain text first
   if (body.length > 900) {
     await sendText(to, body);
-    body = `Subtotal: ₹${cartSubtotal(session)}\n\nWhat next?`;
+    body = T(to, "whatNext", subtotal);
   }
 
   await sendButtons(to, body, [
-    ["add_more", "ADD MORE"],
-    ["remove_mode", "REMOVE"],
-    ["checkout", "CHECKOUT"]
+    ["add_more", T(to, "btnAddMore")],
+    ["remove_mode", T(to, "btnRemove")],
+    ["checkout", T(to, "btnCheckout")]
   ]);
 }
 
@@ -1131,22 +1174,24 @@ async function sendRemoveList(to, page = 0) {
 
   const entries = session.cart.map((line, index) => ({
     id: `remove:${index}`,
-    title: `${index + 1}. ${line.name}`.substring(0, 24),
-    description:
-      `${optionsText(line).trim()} × ${line.quantity} — ₹${line.price * line.quantity}`.trim().substring(0, 72)
+    title: cut(`${index + 1}. ${line.name}`, 24),
+    description: cut(
+      `${optionsText(line).trim()} × ${line.quantity} — ₹${line.price * line.quantity}`.trim(),
+      72
+    )
   }));
 
   await sendPagedList(to, {
-    body: "🗑️ REMOVE ITEM\n\nSelect the item you want to remove:",
-    button: "REMOVE ITEM",
-    sectionTitle: "YOUR CART",
+    body: T(to, "removeBody"),
+    button: T(to, "btnRemoveItem"),
+    sectionTitle: T(to, "removeSection"),
     entries,
     page,
     pagePrefix: "rempage",
     extraNavRow: {
       id: "empty_cart",
-      title: "🗑 CLEAR CART",
-      description: "Remove everything"
+      title: cut(T(to, "navClear"), 24),
+      description: cut(T(to, "navClearDesc"), 72)
     }
   });
 }
@@ -1166,15 +1211,10 @@ async function startCheckout(to) {
   const subtotal = cartSubtotal(session);
 
   if (subtotal < MIN_FOOD_ORDER) {
-    await sendButtons(
-      to,
-      `⚠️ Minimum food order ₹${MIN_FOOD_ORDER} hai.\n` +
-        `Aapka subtotal ₹${subtotal} hai. ₹${MIN_FOOD_ORDER - subtotal} ka aur order add karo.`,
-      [
-        ["add_more", "ADD MORE"],
-        ["view_cart", "VIEW CART"]
-      ]
-    );
+    await sendButtons(to, T(to, "minOrder", MIN_FOOD_ORDER, subtotal), [
+      ["add_more", T(to, "btnAddMore")],
+      ["view_cart", T(to, "btnViewCart")]
+    ]);
     return;
   }
 
@@ -1182,10 +1222,10 @@ async function startCheckout(to) {
 }
 
 async function sendOrderTypeButtons(to) {
-  await sendButtons(to, "How would you like to receive your order?", [
-    ["ot_dinein", "🪑 DINE-IN"],
-    ["ot_takeaway", "🥡 TAKEAWAY"],
-    ["ot_delivery", "🛵 DELIVERY"]
+  await sendButtons(to, T(to, "orderTypeBody"), [
+    ["ot_dinein", T(to, "btnDineIn")],
+    ["ot_takeaway", T(to, "btnTakeaway")],
+    ["ot_delivery", T(to, "btnDelivery")]
   ]);
 }
 
@@ -1200,27 +1240,31 @@ function calcBill(session) {
       ? deliveryChargeFor(session.distanceKm) || 0
       : 0;
 
-  const total = round2(subtotal + packing + delivery);
-
-  return { subtotal, packing, delivery, total };
+  return {
+    subtotal,
+    packing,
+    packingPercent: PACKING_PERCENT,
+    delivery,
+    total: round2(subtotal + packing + delivery)
+  };
 }
 
-function billText(session, bill) {
-  let text = buildCartText(session).replace(/\n\nSubtotal: ₹\d+$/, "") + "\n\n";
+function billText(to, session, bill) {
+  let text = `${T(to, "cartTitle")}\n\n${buildCartLines(session)}`;
 
   text += "━━━━━━━━━━━━\n";
-  text += `Subtotal: ₹${bill.subtotal}\n`;
+  text += `${T(to, "billSubtotal")}: ₹${bill.subtotal}\n`;
   if (session.orderType !== "DINE-IN") {
-    text += `Packing (${PACKING_PERCENT}%): ₹${bill.packing}\n`;
+    text += `${T(to, "billPacking", PACKING_PERCENT)}: ₹${bill.packing}\n`;
   }
   if (session.orderType === "DELIVERY") {
-    text += `Delivery (${session.distanceKm} km): ₹${bill.delivery}\n`;
+    text += `${T(to, "billDelivery", session.distanceKm)}: ₹${bill.delivery}\n`;
   }
-  text += `*TOTAL: ₹${bill.total}*\n`;
+  text += `*${T(to, "billTotal")}: ₹${bill.total}*\n`;
   text += "━━━━━━━━━━━━\n\n";
-  text += `Order type: ${session.orderType}\n`;
-  if (session.table) text += `Table: ${session.table}\n`;
-  if (session.address) text += `Address: ${session.address}\n`;
+  text += `${T(to, "billType")}: ${session.orderType}\n`;
+  if (session.table) text += `${T(to, "billTable")}: ${session.table}\n`;
+  if (session.address) text += `${T(to, "billAddress")}: ${session.address}\n`;
 
   return text;
 }
@@ -1234,12 +1278,12 @@ async function sendBill(to) {
   }
 
   const bill = calcBill(session);
-  await sendText(to, billText(session, bill));
+  await sendText(to, billText(to, session, bill));
 
-  await sendButtons(to, "Payment method choose karo:", [
-    ["pay_online", "💳 PAY ONLINE"],
-    ["pay_cash", session.orderType === "DELIVERY" ? "💵 CASH ON DELIVERY" : "💵 PAY AT COUNTER"],
-    ["view_cart", "✏️ EDIT CART"]
+  await sendButtons(to, T(to, "payBody"), [
+    ["pay_online", T(to, "btnPayOnline")],
+    ["pay_cash", T(to, session.orderType === "DELIVERY" ? "btnCod" : "btnCounter")],
+    ["view_cart", T(to, "btnEdit")]
   ]);
 }
 
@@ -1248,6 +1292,7 @@ async function sendBill(to) {
 // ======================================================
 
 function makeOrderId() {
+  // always starts with TR
   return "TR" + Date.now().toString(36).toUpperCase();
 }
 
@@ -1270,6 +1315,7 @@ async function placeOrder(to, method) {
     id: makeOrderId(),
     phone: to,
     name: session.name,
+    lang: session.lang,
     orderType: session.orderType,
     table: session.table,
     address: session.address,
@@ -1283,21 +1329,22 @@ async function placeOrder(to, method) {
 
   orders[order.id] = order;
 
+  // ---------------- CASH ----------------
   if (method === "CASH") {
     session.cart = [];
     session.orderType = null;
 
     await sendText(
       to,
-      `✅ Order confirmed!\n\nOrder ID: *${order.id}*\nTotal: ₹${bill.total}\n` +
-        `Payment: ${order.orderType === "DELIVERY" ? "Cash on delivery" : "Pay at counter"}\n\n` +
-        "Thank you for ordering from TREAT RESTAURANT 🙏"
+      T(to, "cashConfirmed", order.id, bill.total, order.orderType === "DELIVERY")
     );
+
+    await deliverInvoice(order, to, order.lang);
     await notifyOwner(order);
     return;
   }
 
-  // ONLINE
+  // ---------------- ONLINE ----------------
   let link = null;
   try {
     link = await createRazorpayPaymentLink(order);
@@ -1306,17 +1353,12 @@ async function placeOrder(to, method) {
   }
 
   if (!link) {
-    order.status = "PAYMENT_LINK_FAILED";
-    await sendButtons(
-      to,
-      "😔 Online payment abhi available nahi hai. Cash se order karna chahoge?",
-      [
-        ["pay_cash", "💵 PAY CASH"],
-        ["view_cart", "VIEW CART"]
-      ]
-    );
-    // Order was registered as online; drop it so it can be re-placed as cash
+    // Order was never payable online -> drop it so it can be re-placed
     delete orders[order.id];
+    await sendButtons(to, T(to, "payUnavailable"), [
+      ["pay_cash", T(to, "btnPayCash")],
+      ["view_cart", T(to, "btnViewCart")]
+    ]);
     return;
   }
 
@@ -1324,12 +1366,22 @@ async function placeOrder(to, method) {
   session.cart = [];
   session.orderType = null;
 
-  await sendText(
-    to,
-    `💳 Order ID: *${order.id}*\nAmount: *₹${bill.total}*\n\n` +
-      `Pay karne ke liye link kholo:\n${link}\n\n` +
-      "Payment hone par yahin confirmation mil jayega. Link 30 minute mein expire hoga."
-  );
+  await sendText(to, T(to, "payLink", order.id, bill.total, link));
+}
+
+// ======================================================
+// INVOICE PDF (thermal format) -> WhatsApp document
+// ======================================================
+
+async function deliverInvoice(order, to, lang) {
+  try {
+    const pdf = await buildInvoicePdf(order);
+    const filename = `Invoice_${order.id}.pdf`;
+    const mediaId = await uploadMedia(pdf, filename, "application/pdf");
+    await sendDocument(to, mediaId, filename, t(lang || "en", "invoiceCaption", order.id));
+  } catch (err) {
+    console.error("Invoice error:", err.message);
+  }
 }
 
 // ======================================================
@@ -1376,8 +1428,8 @@ async function createRazorpayPaymentLink(order) {
   return data.short_url;
 }
 
-// Razorpay -> Dashboard -> Webhooks: URL = https://<your-render-url>/razorpay-webhook
-// Event: payment_link.paid   Secret = RAZORPAY_WEBHOOK_SECRET
+// Razorpay Dashboard -> Webhooks: https://<render-url>/razorpay-webhook
+// Event: payment_link.paid    Secret = RAZORPAY_WEBHOOK_SECRET
 app.post("/razorpay-webhook", async (req, res) => {
   try {
     const signature = req.get("x-razorpay-signature");
@@ -1399,8 +1451,7 @@ app.post("/razorpay-webhook", async (req, res) => {
       return res.sendStatus(400);
     }
 
-    // Verified. Acknowledge first.
-    res.sendStatus(200);
+    res.sendStatus(200); // verified, acknowledge first
 
     if (req.body.event !== "payment_link.paid") return;
 
@@ -1411,14 +1462,13 @@ app.post("/razorpay-webhook", async (req, res) => {
 
     if (order) {
       if (order.status === "PAID") return; // duplicate event
+
       order.status = "PAID";
       order.paidAt = new Date().toISOString();
+      order.paymentId = req.body.payload?.payment?.entity?.id || null;
 
-      await sendText(
-        order.phone,
-        `✅ Payment received!\n\nOrder ID: *${order.id}*\nAmount: ₹${order.bill.total}\n\n` +
-          "Aapka order confirm ho gaya hai. Thank you 🙏"
-      );
+      await sendText(order.phone, t(order.lang || "hg", "payReceived", order.id, order.bill.total));
+      await deliverInvoice(order, order.phone, order.lang);
       await notifyOwner(order);
     } else {
       // Server restarted and lost in-memory orders: still tell the customer
@@ -1427,7 +1477,7 @@ app.post("/razorpay-webhook", async (req, res) => {
       if (phone) {
         await sendText(
           phone,
-          `✅ Payment received for order ${entity.reference_id}. Restaurant aapse contact karega.`
+          `✅ Payment received for order ${entity.reference_id}. Restaurant will contact you shortly.`
         );
       }
     }
@@ -1438,7 +1488,7 @@ app.post("/razorpay-webhook", async (req, res) => {
 });
 
 // ======================================================
-// OWNER NOTIFICATION
+// OWNER NOTIFICATION (text + invoice)
 // ======================================================
 
 async function notifyOwner(order) {
@@ -1463,6 +1513,7 @@ async function notifyOwner(order) {
 
   try {
     await sendText(OWNER_PHONE, text);
+    await deliverInvoice(order, OWNER_PHONE, "en");
   } catch (err) {
     console.error("Owner notification failed:", err.message);
   }
@@ -1502,6 +1553,38 @@ async function sendWhatsAppMessage(to, message) {
   }
 
   return data;
+}
+
+// Upload a file (Buffer) to WhatsApp and get a media id back
+async function uploadMedia(buffer, filename, mime) {
+  const form = new FormData();
+  form.append("messaging_product", "whatsapp");
+  form.append("type", mime);
+  form.append("file", new Blob([buffer], { type: mime }), filename);
+
+  const response = await fetch(`https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/media`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${ACCESS_TOKEN}` }, // no Content-Type: fetch sets the boundary
+    body: form
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.id) {
+    throw new Error(`Media upload error: ${JSON.stringify(data)}`);
+  }
+
+  return data.id;
+}
+
+async function sendDocument(to, mediaId, filename, caption) {
+  return sendWhatsAppMessage(to, {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to,
+    type: "document",
+    document: { id: mediaId, filename, caption }
+  });
 }
 
 // ======================================================
