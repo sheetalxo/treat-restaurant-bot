@@ -1,40 +1,70 @@
 const express = require("express");
+const crypto = require("crypto");
 
 const app = express();
-app.use(express.json());
+
+// Keep raw body: needed to verify Razorpay webhook signature
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    }
+  })
+);
 
 const PORT = process.env.PORT || 3000;
 
+// ---------------- WhatsApp ----------------
 const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN;
 const ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
-// =====================================================
-// TREAT RESTAURANT LOCATION
-// =====================================================
+// Owner number with country code, no "+" (e.g. 919876543210)
+// NOTE: free-form text to the owner only works if the owner messaged the bot
+// in the last 24h. For reliable alerts use an approved template message.
+const OWNER_PHONE = process.env.OWNER_PHONE;
 
-const RESTAURANT_LAT = 32.5192169;
-const RESTAURANT_LNG = 74.9215249;
+// ---------------- Razorpay (add keys at the end) ----------------
+const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID;
+const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
+const RAZORPAY_WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET;
 
-// =====================================================
-// DELIVERY RULES
-// =====================================================
+// ---------------- Business rules ----------------
+const MIN_FOOD_ORDER = 300;          // excludes packing/delivery
+const PACKING_PERCENT = 7;           // % of food subtotal (takeaway + delivery)
+const BONELESS_CHARGE = 50;          // per plate, main course non-veg
+const EXTRA_CHEESE_CHARGE = 30;      // per pizza
+const MAX_QTY = 500;
 
-const DELIVERY_RULES = [
-  { max: 2.5, charge: 30 },
-  { max: 5, charge: 50 },
-  { max: 7, charge: 80 },
-  { max: 10, charge: 100 }
+// Restaurant location for delivery distance
+const RESTAURANT_LAT = Number(process.env.RESTAURANT_LAT || 0);
+const RESTAURANT_LNG = Number(process.env.RESTAURANT_LNG || 0);
+
+// !!! CHANGE THESE km limits to your real tiers. Prices are from your notes,
+// km breakpoints are PLACEHOLDERS. Last tier max = delivery limit (10 km).
+const DELIVERY_TIERS = [
+  { maxKm: 2.5, charge: 30 },
+  { maxKm: 5, charge: 50 },
+  { maxKm: 7.5, charge: 80 },
+  { maxKm: 10, charge: 100 }
 ];
 
-// =====================================================
+// ======================================================
 // MENU
-// =====================================================
+// ======================================================
+
+const EXTRAS = [
+  ["Salad", 50],
+  ["Water", 10],
+  ["Water Bottle", 20],
+  ["Disposable Glass", 5],
+  ["Colddrink", 20],
+  ["Coke Can", 30],
+  ["Can", 50]
+];
 
 const MENU = {
-
   VEG: {
-
     "MOMOS": [
       ["Veg Steam Momos", 70],
       ["Veg Fried Momos", 80],
@@ -47,14 +77,12 @@ const MENU = {
       ["Chilli Paneer Momos", 140],
       ["Malai Paneer Momos", 160]
     ],
-
     "NOODLES": [
       ["Veg Noodles", 100],
       ["Veg Hakka Noodles", 120],
       ["Paneer Noodle", 130],
       ["Chilli Garlic Noodles", 140]
     ],
-
     "CHINESE SNACKS": [
       ["French Fries", 80],
       ["Peri Peri Fries", 100],
@@ -70,7 +98,6 @@ const MENU = {
       ["Paneer 65", 250],
       ["Mushroom Duplex", 250]
     ],
-
     "TANDOORI SNACKS": [
       ["Tandoori Chaap", 150],
       ["Tandoori Lemon Chaap", 160],
@@ -78,7 +105,6 @@ const MENU = {
       ["Paneer Tikka", 200],
       ["Paneer Malai Tikka", 220]
     ],
-
     "MAIN COURSE": [
       ["Dal Fry", 200],
       ["Dal Makhani", 220],
@@ -95,7 +121,6 @@ const MENU = {
       ["Masala Chaap", 230],
       ["Rara Paneer", 300]
     ],
-
     "RICE": [
       ["Plain Rice", 80],
       ["Jeera Rice", 100],
@@ -104,14 +129,12 @@ const MENU = {
       ["Chilli Garlic Fried Rice", 140],
       ["Veg Biryani", 240]
     ],
-
     "BURGERS": [
       ["Aloo Tikki Burger", 70],
       ["Veg Cheese Burger", 90],
       ["Paneer Cheese Burger", 120],
       ["Double Decker Burger", 150]
     ],
-
     "PIZZA": [
       ["Margherita Pizza", 160],
       ["Veg Deluxe Pizza", 200],
@@ -120,14 +143,12 @@ const MENU = {
       ["Italian Pizza", 270],
       ["Treat Signature Pizza", 300]
     ],
-
     "PASTA": [
       ["Red Sauce Pasta", 150],
       ["White Sauce Pasta", 170],
       ["Veggie Masala Pasta", 160],
       ["Mexican Pasta", 180]
     ],
-
     "ROLLS": [
       ["Spring Roll", 90],
       ["Veggie Roll", 110],
@@ -135,7 +156,6 @@ const MENU = {
       ["Chaap Roll", 140],
       ["Paneer Roll", 150]
     ],
-
     "SOUPS": [
       ["Veg Clear Soup", 90],
       ["Sweet Corn Soup", 120],
@@ -143,7 +163,6 @@ const MENU = {
       ["Hot & Sour Soup", 140],
       ["Lemon Coriander Soup", 170]
     ],
-
     "MOCKTAILS": [
       ["Lime Soda", 80],
       ["Virgin Mojito", 120],
@@ -152,7 +171,6 @@ const MENU = {
       ["Black Currant", 120],
       ["Blue Berry", 120]
     ],
-
     "SHAKES": [
       ["Strawberry Shake", 120],
       ["Blue Berry Shake", 120],
@@ -160,7 +178,6 @@ const MENU = {
       ["Oreo Chocolate Shake", 140],
       ["Black Current Shake", 120]
     ],
-
     "COFFEE & DESSERTS": [
       ["Hot Coffee", 50],
       ["Cold Coffee", 120],
@@ -169,18 +186,17 @@ const MENU = {
       ["Butterscotch Ice Cream", 60],
       ["Gulab Jamun (2 Pcs)", 60],
       ["Vanilla & Butterscotch Mix", 70]
-    ]
+    ],
+    "EXTRAS": EXTRAS
   },
 
-  NON_VEG: {
-
+  "NON-VEG": {
     "MOMOS": [
       ["Chicken Steam Momos", 120],
       ["Chicken Fried Momos", 140],
       ["Chicken Chilli Momos", 160],
       ["Chicken Malai Momos", 180]
     ],
-
     "CHICKEN SNACKS": [
       ["Crispy Chicken", { half: 260, full: 480 }],
       ["Chilli Chicken", { half: 250, full: 480 }],
@@ -190,7 +206,6 @@ const MENU = {
       ["Dragon Chicken (Boneless)", 380],
       ["Chicken Lollipop (6 Pcs)", 380]
     ],
-
     "NOODLES": [
       ["Egg Noodles", 130],
       ["Chicken Noodles", 150],
@@ -198,16 +213,14 @@ const MENU = {
       ["Chicken Hakka Noodles", 180],
       ["Chicken Garlic Noodles", 180]
     ],
-
     "MAIN COURSE": [
-      ["Masala Chicken", { half: 260, full: 480, boneless: 50 }],
-      ["Kadai Chicken", { half: 260, full: 480, boneless: 50 }],
-      ["Rara Chicken", { half: 300, full: 500, boneless: 50 }],
-      ["Butter Chicken", { half: 280, full: 490, boneless: 50 }],
-      ["Chicken Do Pyaza", { half: 270, full: 480, boneless: 50 }],
-      ["Chicken Lababdar", { half: 270, full: 480, boneless: 50 }]
+      ["Masala Chicken", { half: 260, full: 480 }],
+      ["Kadai Chicken", { half: 260, full: 480 }],
+      ["Rara Chicken", { half: 300, full: 500 }],
+      ["Butter Chicken", { half: 280, full: 490 }],
+      ["Chicken Do Pyaza", { half: 270, full: 480 }],
+      ["Chicken Lababdar", { half: 270, full: 480 }]
     ],
-
     "RICE": [
       ["Plain Rice", 80],
       ["Jeera Rice", 100],
@@ -217,14 +230,12 @@ const MENU = {
       ["Egg + Chicken Fried Rice", 200],
       ["Matka Chicken Biryani", 420]
     ],
-
     "SOUPS": [
       ["Egg Soup", 90],
       ["Chicken Manchow Soup", 130],
       ["Chicken Hot & Sour Soup", 120],
       ["Chicken Clear Soup", 140]
     ],
-
     "BREADS": [
       ["Plain Roti", 15],
       ["Butter Roti", 20],
@@ -232,7 +243,6 @@ const MENU = {
       ["Lachha Paratha", 70],
       ["Butter Naan", 40]
     ],
-
     "TANDOORI": [
       ["Tandoori Chicken", { half: 240, full: 450 }],
       ["Tandoori Lemon Chicken", { half: 250, full: 470 }],
@@ -240,2561 +250,1264 @@ const MENU = {
       ["Chicken Tikka (8 pcs)", 280],
       ["Chicken Seekh Kebab", 220]
     ],
-
     "ROLLS": [
       ["Egg Roll", 120],
       ["Chicken Roll", 140],
       ["Chicken Chilli Roll", 160]
-    ]
-  },
-
-  COMMON: {
-
-    "SALAD": [
-      ["Salad", 50]
     ],
-
-    "WATER": [
-      ["Water", 10],
-      ["Water Bottle", 20]
-    ],
-
-    "DISPOSAL": [
-      ["Disposal Glass", 5]
-    ],
-
-    "BEVERAGE": [
-      ["Colddrink", 20],
-      ["Coke Can", 30],
-      ["Can", 50]
-    ]
+    "EXTRAS": EXTRAS
   }
 };
 
-// =====================================================
-// SESSION STORAGE
-// =====================================================
+// ======================================================
+// MENU HELPERS  (type = "VEG" | "NON-VEG" | "BOTH")
+// ======================================================
+
+function typeLabel(type) {
+  return type === "BOTH" ? "VEG + NON-VEG" : type;
+}
+
+function getCategories(type) {
+  const set = new Set();
+  if (type !== "NON-VEG") Object.keys(MENU.VEG).forEach((c) => set.add(c));
+  if (type !== "VEG") Object.keys(MENU["NON-VEG"]).forEach((c) => set.add(c));
+  return [...set];
+}
+
+// veg: true = veg only, false = non-veg only, null = same item in both menus
+function getItems(type, category) {
+  const out = [];
+  const byName = new Map();
+
+  const add = (menuKey, isVeg) => {
+    for (const [name, price] of MENU[menuKey][category] || []) {
+      if (byName.has(name)) {
+        byName.get(name).veg = null;
+        continue;
+      }
+      const it = { name, price, veg: isVeg, category };
+      byName.set(name, it);
+      out.push(it);
+    }
+  };
+
+  if (type !== "NON-VEG") add("VEG", true);
+  if (type !== "VEG") add("NON-VEG", false);
+
+  return out;
+}
+
+const isHalfFull = (item) => typeof item.price === "object";
+const isBonelessEligible = (item) =>
+  item.veg === false && item.category === "MAIN COURSE" && isHalfFull(item);
+const isPizza = (item) => item.category === "PIZZA";
+
+function marker(item, type) {
+  if (type !== "BOTH") return "";
+  if (item.veg === true) return "🟢 ";
+  if (item.veg === false) return "🔴 ";
+  return "";
+}
+
+// ======================================================
+// SESSIONS / ORDERS  (in memory: lost on restart/sleep)
+// ======================================================
 
 const sessions = {};
+const orders = {};
+const processedMessages = new Set();
 
 function getSession(phone) {
-
   if (!sessions[phone]) {
-
     sessions[phone] = {
-
-      mode: null,
-
+      type: null,
       category: null,
-
       item: null,
-
       variant: null,
-
-      boneless: false,
-
-      extraCheese: false,
-
+      boneless: null,
+      cheese: null,
       quantity: 1,
-
       cart: [],
-
-      checkoutStep: null,
-
-      customerName: "",
-      address: "",
-      latitude: null,
-      longitude: null
-
+      awaiting: null, // "qty" | "address" | "table" | "location"
+      orderType: null, // "DINE-IN" | "TAKEAWAY" | "DELIVERY"
+      address: null,
+      table: null,
+      distanceKm: null,
+      name: null
     };
   }
-
   return sessions[phone];
 }
 
-// =====================================================
-// HEALTH
-// =====================================================
+function resetSelection(session) {
+  session.item = null;
+  session.variant = null;
+  session.boneless = null;
+  session.cheese = null;
+  session.quantity = 1;
+  if (session.awaiting === "qty") session.awaiting = null;
+}
+
+// What step is still pending for the currently selected item?
+function pendingStep(session) {
+  const item = session.item;
+  if (!item) return null;
+  if (isHalfFull(item) && !session.variant) return "variant";
+  if (isBonelessEligible(item) && session.boneless === null) return "boneless";
+  if (isPizza(item) && session.cheese === null) return "cheese";
+  return null;
+}
+
+function unitPrice(item, variant, boneless, cheese) {
+  let price = isHalfFull(item)
+    ? variant === "HALF"
+      ? item.price.half
+      : item.price.full
+    : item.price;
+  if (boneless) price += BONELESS_CHARGE;
+  if (cheese) price += EXTRA_CHEESE_CHARGE;
+  return price;
+}
+
+function optionsText(line) {
+  const opts = [];
+  if (line.variant) opts.push(line.variant);
+  if (line.boneless) opts.push("Boneless");
+  if (line.cheese) opts.push("Extra Cheese");
+  return opts.length ? ` (${opts.join(", ")})` : "";
+}
+
+const round2 = (n) => Math.round(n * 100) / 100;
+
+// ======================================================
+// HEALTH CHECK + WEBHOOK VERIFICATION
+// ======================================================
 
 app.get("/", (req, res) => {
-
-  res.status(200).send(
-    "TREAT RESTAURANT WhatsApp Bot is running"
-  );
-
+  res.status(200).send("TREAT RESTAURANT WhatsApp Bot is running");
 });
 
-// =====================================================
-// WEBHOOK VERIFY
-// =====================================================
-
 app.get("/webhook", (req, res) => {
-
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
-  if (
-    mode === "subscribe" &&
-    token === VERIFY_TOKEN
-  ) {
-
+  if (mode === "subscribe" && token === VERIFY_TOKEN) {
     console.log("Webhook verified successfully");
-
     return res.status(200).send(challenge);
   }
 
+  console.log("Webhook verification failed");
   return res.sendStatus(403);
 });
 
-// =====================================================
-// WEBHOOK RECEIVE
-// =====================================================
+// ======================================================
+// RECEIVE WHATSAPP MESSAGES
+// ======================================================
 
 app.post("/webhook", async (req, res) => {
+  // Reply to Meta immediately so it doesn't retry while we process
+  res.sendStatus(200);
 
   try {
+    const value = req.body.entry?.[0]?.changes?.[0]?.value;
+    const message = value?.messages?.[0];
+    if (!message) return;
 
-    const message =
-      req.body.entry?.[0]
-        ?.changes?.[0]
-        ?.value
-        ?.messages?.[0];
-
-    if (!message) {
-      return res.sendStatus(200);
-    }
+    // Ignore duplicate deliveries
+    if (processedMessages.has(message.id)) return;
+    processedMessages.add(message.id);
+    if (processedMessages.size > 2000) processedMessages.clear();
 
     const from = message.from;
     const session = getSession(from);
+    const profileName = value.contacts?.[0]?.profile?.name;
+    if (profileName) session.name = profileName;
 
-    // -----------------------------------------------
-    // TEXT
-    // -----------------------------------------------
-
+    // ---------------- TEXT ----------------
     if (message.type === "text") {
-
-      const text =
-        message.text?.body?.trim();
-
-      const lower =
-        text.toLowerCase();
-
-      // Customer entering direct quantity
-      if (session.checkoutStep === "quantity") {
-        const quantity = Number(text);
-
-        if (!Number.isInteger(quantity) || quantity < 1) {
-          await sendText(
-            from,
-            "Please enter a valid quantity, for example: 4, 10 or 20."
-          );
-          return res.sendStatus(200);
-        }
-
-        session.quantity = quantity;
-        session.checkoutStep = null;
-
-        await sendQuantityScreen(from);
-        return res.sendStatus(200);
-      }
-
-      // Customer entering name/address
-      if (session.checkoutStep === "name") {
-
-        session.customerName = text;
-        session.checkoutStep = "address";
-
-        await sendText(
-          from,
-          "Please enter your complete delivery address."
-        );
-
-        return res.sendStatus(200);
-      }
-
-      if (session.checkoutStep === "address") {
-
-        session.address = text;
-        session.checkoutStep = "location";
-
-        await sendLocationRequest(from);
-
-        return res.sendStatus(200);
-      }
-
-      if (
-        lower === "hi" ||
-        lower === "hello" ||
-        lower === "hey" ||
-        lower === "start"
-      ) {
-
-        resetOrderingSession(session);
-
-        await sendWelcomeMessage(from);
-
-        return res.sendStatus(200);
-      }
-
-      return res.sendStatus(200);
-    }
-
-    // -----------------------------------------------
-    // LOCATION
-    // -----------------------------------------------
-
-    if (message.type === "location") {
-
-      session.latitude =
-        message.location.latitude;
-
-      session.longitude =
-        message.location.longitude;
-
-      session.checkoutStep = "payment";
-
-      await sendCheckoutSummary(from);
-
-      return res.sendStatus(200);
-    }
-
-    // -----------------------------------------------
-    // INTERACTIVE
-    // -----------------------------------------------
-
-    if (message.type === "interactive") {
-
-      if (
-        message.interactive.type ===
-        "button_reply"
-      ) {
-
-        await handleButton(
-          from,
-          message.interactive.button_reply.id
-        );
-
-        return res.sendStatus(200);
-      }
-
-      if (
-        message.interactive.type ===
-        "list_reply"
-      ) {
-
-        await handleList(
-          from,
-          message.interactive.list_reply.id
-        );
-
-        return res.sendStatus(200);
-      }
-    }
-
-    return res.sendStatus(200);
-
-  } catch (error) {
-
-    console.error(
-      "Webhook error:",
-      error
-    );
-
-    return res.sendStatus(500);
-  }
-
-});
-
-// =====================================================
-// RESET
-// =====================================================
-
-function resetOrderingSession(session) {
-
-  session.mode = null;
-  session.category = null;
-  session.item = null;
-  session.variant = null;
-  session.boneless = false;
-  session.extraCheese = false;
-  session.quantity = 1;
-  session.cart = [];
-  session.checkoutStep = null;
-  session.customerName = "";
-  session.address = "";
-  session.latitude = null;
-  session.longitude = null;
-}
-
-// =====================================================
-// WELCOME
-// =====================================================
-
-async function sendWelcomeMessage(to) {
-
-  await sendWhatsAppMessage(to, {
-
-    messaging_product: "whatsapp",
-
-    recipient_type: "individual",
-
-    to,
-
-    type: "interactive",
-
-    interactive: {
-
-      type: "button",
-
-      body: {
-
-        text:
-          "Hey! Welcome to TREAT RESTAURANT 🍽️\n\n" +
-          "What would you like to order?"
-
-      },
-
-      action: {
-
-        buttons: [
-
-          {
-            type: "reply",
-
-            reply: {
-              id: "mode_veg",
-              title: "VEG"
-            }
-          },
-
-          {
-            type: "reply",
-
-            reply: {
-              id: "mode_nonveg",
-              title: "NON-VEG"
-            }
-          },
-
-          {
-            type: "reply",
-
-            reply: {
-              id: "mode_both",
-              title: "VEG + NON-VEG"
-            }
-          }
-
-        ]
-      }
-    }
-  });
-}
-
-// =====================================================
-// BUTTON HANDLER
-// =====================================================
-
-async function handleButton(to, id) {
-
-  const session = getSession(to);
-
-  // -----------------------------------------------
-  // MODES
-  // -----------------------------------------------
-
-  if (id === "mode_veg") {
-
-    session.mode = "VEG";
-
-    await sendCategoryList(
-      to,
-      "VEG"
-    );
-
-    return;
-  }
-
-  if (id === "mode_nonveg") {
-
-    session.mode = "NON-VEG";
-
-    await sendCategoryList(
-      to,
-      "NON-VEG"
-    );
-
-    return;
-  }
-
-  if (id === "mode_both") {
-
-    session.mode = "BOTH";
-
-    await sendBothCategoryList(to);
-
-    return;
-  }
-
-  // -----------------------------------------------
-  // BACK
-  // -----------------------------------------------
-
-  if (id === "back_main") {
-
-    await sendWelcomeMessage(to);
-
-    return;
-  }
-
-  if (id === "back_categories") {
-
-    if (session.mode === "BOTH") {
-
-      await sendBothCategoryList(to);
-
-    } else {
-
-      await sendCategoryList(
-        to,
-        session.mode
-      );
-
-    }
-
-    return;
-  }
-
-  // -----------------------------------------------
-  // QUANTITY
-  // -----------------------------------------------
-
-  if (id === "qty_minus") {
-
-    if (session.quantity > 1) {
-      session.quantity--;
-    }
-
-    await sendQuantityScreen(to);
-
-    return;
-  }
-
-  if (id === "qty_plus") {
-
-    session.quantity++;
-
-    await sendQuantityScreen(to);
-
-    return;
-  }
-
-  // -----------------------------------------------
-  // ENTER QUANTITY
-  // -----------------------------------------------
-
-  if (id === "enter_quantity") {
-    session.checkoutStep = "quantity";
-    await sendText(to, "Please enter the quantity.");
-    return;
-  }
-
-  // -----------------------------------------------
-  // ADD CART
-  // -----------------------------------------------
-
-  if (id === "add_cart") {
-
-    addCurrentItemToCart(session);
-
-    await sendCart(to);
-
-    return;
-  }
-
-  // -----------------------------------------------
-  // MORE
-  // -----------------------------------------------
-
-  if (id === "add_more") {
-
-    if (session.mode === "BOTH") {
-
-      await sendBothCategoryList(to);
-
-    } else {
-
-      await sendCategoryList(
-        to,
-        session.mode
-      );
-
-    }
-
-    return;
-  }
-
-  // -----------------------------------------------
-  // CART
-  // -----------------------------------------------
-
-  if (id === "remove_mode") {
-
-    await sendRemoveList(to);
-
-    return;
-  }
-
-  if (id === "checkout") {
-
-    await startCheckout(to);
-
-    return;
-  }
-
-  // -----------------------------------------------
-  // VARIANTS
-  // -----------------------------------------------
-
-  if (id === "variant_half") {
-
-    session.variant = "HALF";
-
-    await sendAddOnOptions(to);
-
-    return;
-  }
-
-  if (id === "variant_full") {
-
-    session.variant = "FULL";
-
-    await sendAddOnOptions(to);
-
-    return;
-  }
-
-  // -----------------------------------------------
-  // BONELESS
-  // -----------------------------------------------
-
-  if (id === "boneless_yes") {
-
-    session.boneless = true;
-
-    await sendQuantityScreen(to);
-
-    return;
-  }
-
-  if (id === "boneless_no") {
-
-    session.boneless = false;
-
-    await sendQuantityScreen(to);
-
-    return;
-  }
-
-  // -----------------------------------------------
-  // EXTRA CHEESE
-  // -----------------------------------------------
-
-  if (id === "cheese_yes") {
-
-    session.extraCheese = true;
-
-    await sendQuantityScreen(to);
-
-    return;
-  }
-
-  if (id === "cheese_no") {
-
-    session.extraCheese = false;
-
-    await sendQuantityScreen(to);
-
-    return;
-  }
-
-  // -----------------------------------------------
-  // PAYMENT
-  // -----------------------------------------------
-
-  if (id === "payment_cod") {
-
-    await confirmCOD(to);
-
-    return;
-  }
-
-  if (id === "payment_online") {
-
-    await sendText(
-      to,
-      "Online payment will be connected with Razorpay in the next step.\n\n" +
-      "For now, please choose COD."
-    );
-
-    return;
-  }
-}
-
-// =====================================================
-// LIST HANDLER
-// =====================================================
-
-async function handleList(to, id) {
-
-  const session = getSession(to);
-
-  // -----------------------------------------------
-  // CATEGORY PAGE NAVIGATION
-  // -----------------------------------------------
-
-  if (id.startsWith("catpage:")) {
-    const page = Number(id.replace("catpage:", ""));
-
-    if (session.mode === "BOTH") {
-      await sendBothCategoryList(to, page);
-    } else {
-      await sendCategoryList(to, session.mode, page);
-    }
-    return;
-  }
-
-  if (id === "catback:main") {
-    await sendWelcomeMessage(to);
-    return;
-  }
-
-  // -----------------------------------------------
-  // CATEGORY
-  // -----------------------------------------------
-
-  if (id.startsWith("cat:")) {
-
-    const data =
-      id.replace("cat:", "");
-
-    const parts =
-      data.split("|");
-
-    const type =
-      parts[0];
-
-    const category =
-      parts.slice(1).join("|");
-
-    session.category = category;
-    session.currentType = type;
-
-    await sendItemList(
-      to,
-      type,
-      category
-    );
-
-    return;
-  }
-
-  // -----------------------------------------------
-  // ITEM
-  // -----------------------------------------------
-
-  if (id.startsWith("item:")) {
-
-    const index =
-      Number(
-        id.replace("item:", "")
-      );
-
-    const type =
-      session.currentType;
-
-    const items =
-      MENU[type][session.category];
-
-    if (!items[index]) return;
-
-    session.item =
-      items[index];
-
-    session.variant = null;
-    session.boneless = false;
-    session.extraCheese = false;
-    session.quantity = 1;
-
-    const price =
-      session.item[1];
-
-    // Half / Full
-    if (
-      typeof price === "object" &&
-      price.half &&
-      price.full
-    ) {
-
-      await sendVariantButtons(to);
-
+      await handleText(from, message.text?.body || "");
       return;
     }
 
-    // Single price
-    await sendAddOnOptions(to);
+    // ---------------- LOCATION ----------------
+    if (message.type === "location") {
+      await handleLocation(from, message.location);
+      return;
+    }
 
+    // ---------------- INTERACTIVE ----------------
+    if (message.type === "interactive") {
+      const id =
+        message.interactive?.button_reply?.id ||
+        message.interactive?.list_reply?.id;
+
+      if (id) await handleAction(from, id);
+      return;
+    }
+
+    // Anything else (image, sticker...) -> welcome
+    await sendWelcomeMessage(from);
+  } catch (error) {
+    console.error("Webhook error:", error);
+  }
+});
+
+// ======================================================
+// TEXT HANDLER
+// ======================================================
+
+async function handleText(from, raw) {
+  const session = getSession(from);
+  const text = raw.trim();
+  const lower = text.toLowerCase();
+
+  // Typed quantity
+  const busyWithCheckout = ["address", "table", "location"].includes(session.awaiting);
+
+  if (
+    !busyWithCheckout &&
+    (session.awaiting === "qty" || (session.item && !pendingStep(session))) &&
+    /\d+/.test(text)
+  ) {
+    const qty = parseInt(text.match(/\d+/)[0], 10);
+
+    if (!qty || qty < 1) {
+      await sendText(from, "Quantity 1 ya usse zyada honi chahiye. Number type karo (e.g. 5).");
+      return;
+    }
+    if (qty > MAX_QTY) {
+      await sendText(from, `Max ${MAX_QTY} allowed hai. Bulk order ke liye restaurant ko directly call karo.`);
+      return;
+    }
+
+    session.quantity = qty;
+    session.awaiting = null;
+    await sendQuantityScreen(from);
     return;
   }
 
-  // -----------------------------------------------
-  // ITEM PAGE
-  // -----------------------------------------------
+  if (session.awaiting === "qty") {
+    await sendText(from, "Sirf number type karo, e.g. 3 ya 10.");
+    return;
+  }
+
+  // Delivery address
+  if (session.awaiting === "address") {
+    if (text.length < 10) {
+      await sendText(from, "Address thoda detail mein likho (house no., area, landmark).");
+      return;
+    }
+    session.address = text;
+    session.awaiting = "location";
+    await sendText(
+      from,
+      "📍 Ab apni *location pin* bhejo taaki delivery charge calculate ho sake.\n\n" +
+        "Attach (📎) → Location → Send your current location."
+    );
+    return;
+  }
+
+  // Dine-in table
+  if (session.awaiting === "table") {
+    session.table = text.substring(0, 30);
+    session.awaiting = null;
+    await sendBill(from);
+    return;
+  }
+
+  if (session.awaiting === "location") {
+    await sendText(from, "Please location pin bhejo (📎 → Location). Uske bina delivery charge nahi ban sakta.");
+    return;
+  }
+
+  if (["hi", "hello", "hey", "start", "hii", "menu"].includes(lower)) {
+    resetSelection(session);
+    session.type = null;
+    session.category = null;
+    await sendWelcomeMessage(from);
+    return;
+  }
+
+  if (lower === "cart") {
+    await sendCart(from);
+    return;
+  }
+
+  // Fallback: don't stay silent
+  await sendWelcomeMessage(from);
+}
+
+// ======================================================
+// LOCATION HANDLER (delivery distance)
+// ======================================================
+
+function haversineKm(lat1, lon1, lat2, lon2) {
+  const R = 6371;
+  const toRad = (d) => (d * Math.PI) / 180;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function deliveryChargeFor(km) {
+  for (const tier of DELIVERY_TIERS) {
+    if (km <= tier.maxKm) return tier.charge;
+  }
+  return null; // beyond delivery limit
+}
+
+async function handleLocation(from, loc) {
+  const session = getSession(from);
+
+  if (session.awaiting !== "location") {
+    await sendWelcomeMessage(from);
+    return;
+  }
+
+  if (!RESTAURANT_LAT || !RESTAURANT_LNG) {
+    console.error("RESTAURANT_LAT / RESTAURANT_LNG env vars are not set");
+    await sendText(from, "Delivery abhi configure nahi hai. Takeaway / dine-in choose karo.");
+    session.awaiting = null;
+    await sendOrderTypeButtons(from);
+    return;
+  }
+
+  // Straight-line distance, NOT road distance
+  const km = haversineKm(RESTAURANT_LAT, RESTAURANT_LNG, loc.latitude, loc.longitude);
+  session.distanceKm = round2(km);
+
+  if (deliveryChargeFor(km) === null) {
+    session.awaiting = null;
+    session.distanceKm = null;
+    await sendText(
+      from,
+      `😔 Aap ${session.distanceKm ?? km.toFixed(1)} km door ho. Hum sirf ${
+        DELIVERY_TIERS[DELIVERY_TIERS.length - 1].maxKm
+      } km tak deliver karte hain. Takeaway / dine-in choose kar sakte ho.`
+    );
+    await sendOrderTypeButtons(from);
+    return;
+  }
+
+  session.awaiting = null;
+  await sendBill(from);
+}
+
+// ======================================================
+// ACTION HANDLER (buttons + lists share one router)
+// ======================================================
+
+async function handleAction(to, id) {
+  const session = getSession(to);
+
+  // ---------- TYPE ----------
+  if (id === "veg" || id === "non_veg" || id === "both") {
+    session.type = id === "veg" ? "VEG" : id === "non_veg" ? "NON-VEG" : "BOTH";
+    session.category = null;
+    resetSelection(session);
+    await sendCategoryList(to, 0);
+    return;
+  }
+
+  // ---------- NAVIGATION ----------
+  if (id === "nav:back_main" || id === "back_main") {
+    session.type = null;
+    session.category = null;
+    resetSelection(session);
+    await sendWelcomeMessage(to);
+    return;
+  }
+
+  if (id === "nav:back_categories" || id === "back_categories" || id === "add_more") {
+    resetSelection(session);
+    if (!session.type) return sendWelcomeMessage(to);
+    await sendCategoryList(to, 0);
+    return;
+  }
+
+  if (id === "back_items") {
+    resetSelection(session);
+    if (!session.type || !session.category) return sendWelcomeMessage(to);
+    await sendItemList(to, 0);
+    return;
+  }
+
+  // ---------- CATEGORY / ITEM LISTS ----------
+  if (id.startsWith("cat:")) {
+    session.category = id.slice(4);
+    await sendItemList(to, 0);
+    return;
+  }
+
+  if (id.startsWith("catpage:")) {
+    await sendCategoryList(to, Number(id.split(":")[1]));
+    return;
+  }
 
   if (id.startsWith("itempage:")) {
-
-    const page =
-      Number(
-        id.replace("itempage:", "")
-      );
-
-    await sendItemList(
-      to,
-      session.currentType,
-      session.category,
-      page
-    );
-
+    await sendItemList(to, Number(id.split(":")[1]));
     return;
   }
 
-  // -----------------------------------------------
-  // REMOVE
-  // -----------------------------------------------
+  if (id.startsWith("item:")) {
+    const items = getItems(session.type, session.category);
+    const item = items[Number(id.split(":")[1])];
+    if (!item) return;
+
+    resetSelection(session);
+    session.item = item;
+    await nextItemStep(to);
+    return;
+  }
+
+  // ---------- ITEM OPTIONS ----------
+  if (id === "variant_half" || id === "variant_full") {
+    if (!session.item) return sendWelcomeMessage(to);
+    session.variant = id === "variant_half" ? "HALF" : "FULL";
+    await nextItemStep(to);
+    return;
+  }
+
+  if (id === "bone_yes" || id === "bone_no") {
+    if (!session.item) return sendWelcomeMessage(to);
+    session.boneless = id === "bone_yes";
+    await nextItemStep(to);
+    return;
+  }
+
+  if (id === "cheese_yes" || id === "cheese_no") {
+    if (!session.item) return sendWelcomeMessage(to);
+    session.cheese = id === "cheese_yes";
+    await nextItemStep(to);
+    return;
+  }
+
+  // ---------- QUANTITY ----------
+  if (id === "qty_plus") {
+    if (!session.item) return sendCart(to);
+    session.quantity = Math.min(session.quantity + 1, MAX_QTY);
+    await sendQuantityScreen(to);
+    return;
+  }
+
+  if (id === "qty_minus") {
+    if (!session.item) return sendCart(to);
+    if (session.quantity > 1) session.quantity -= 1;
+    await sendQuantityScreen(to);
+    return;
+  }
+
+  if (id === "qty_type") {
+    if (!session.item) return sendCart(to);
+    session.awaiting = "qty";
+    await sendText(
+      to,
+      "✍️ Kitne chahiye? Number type karke bhejo (e.g. 4, 10, 25).\n\n" +
+        `Max ${MAX_QTY}.`
+    );
+    return;
+  }
+
+  if (id === "add_cart") {
+    if (!session.item || pendingStep(session)) return sendCart(to);
+    addCurrentItemToCart(session);
+    await sendCart(to);
+    return;
+  }
+
+  // ---------- CART ----------
+  if (id === "view_cart") {
+    await sendCart(to);
+    return;
+  }
+
+  if (id === "remove_mode") {
+    await sendRemoveList(to, 0);
+    return;
+  }
+
+  if (id.startsWith("rempage:")) {
+    await sendRemoveList(to, Number(id.split(":")[1]));
+    return;
+  }
 
   if (id.startsWith("remove:")) {
-
-    const index =
-      Number(
-        id.replace("remove:", "")
-      );
-
-    if (session.cart[index]) {
-
-      session.cart.splice(
-        index,
-        1
-      );
-
-    }
-
+    const index = Number(id.slice(7));
+    if (session.cart[index]) session.cart.splice(index, 1);
     await sendCart(to);
+    return;
+  }
 
+  if (id === "empty_cart") {
+    session.cart = [];
+    await sendCart(to);
+    return;
+  }
+
+  // ---------- CHECKOUT ----------
+  if (id === "checkout") {
+    await startCheckout(to);
+    return;
+  }
+
+  if (id === "ot_dinein") {
+    session.orderType = "DINE-IN";
+    session.address = null;
+    session.distanceKm = null;
+    session.awaiting = "table";
+    await sendText(to, "🪑 Apna *table number* type karke bhejo.");
+    return;
+  }
+
+  if (id === "ot_takeaway") {
+    session.orderType = "TAKEAWAY";
+    session.address = null;
+    session.table = null;
+    session.distanceKm = null;
+    session.awaiting = null;
+    await sendBill(to);
+    return;
+  }
+
+  if (id === "ot_delivery") {
+    session.orderType = "DELIVERY";
+    session.table = null;
+    session.awaiting = "address";
+    await sendText(to, "🏠 Apna *poora delivery address* type karke bhejo (house no., area, landmark).");
+    return;
+  }
+
+  if (id === "pay_online") {
+    await placeOrder(to, "ONLINE");
+    return;
+  }
+
+  if (id === "pay_cash") {
+    await placeOrder(to, "CASH");
     return;
   }
 }
 
-// =====================================================
+// ======================================================
+// WELCOME
+// ======================================================
+
+async function sendWelcomeMessage(to) {
+  await sendWhatsAppMessage(to, {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to,
+    type: "interactive",
+    interactive: {
+      type: "button",
+      body: {
+        text:
+          "Hey! Welcome to TREAT RESTAURANT 🍽️\n\n" +
+          "What would you like to order?"
+      },
+      action: {
+        buttons: [
+          { type: "reply", reply: { id: "veg", title: "VEG" } },
+          { type: "reply", reply: { id: "non_veg", title: "NON-VEG" } },
+          { type: "reply", reply: { id: "both", title: "VEG + NON-VEG" } }
+        ]
+      }
+    }
+  });
+}
+
+// ======================================================
+// PAGED LIST HELPER
+// WhatsApp list = max 10 rows total. Page size 7 + up to 3 nav rows = 10.
+// ======================================================
+
+const PAGE_SIZE = 7;
+
+async function sendPagedList(to, { body, button, sectionTitle, entries, page, pagePrefix, extraNavRow }) {
+  const totalPages = Math.max(1, Math.ceil(entries.length / PAGE_SIZE));
+  page = Math.min(Math.max(page, 0), totalPages - 1);
+
+  const start = page * PAGE_SIZE;
+  const rows = entries.slice(start, start + PAGE_SIZE);
+
+  if (page > 0) {
+    rows.push({
+      id: `${pagePrefix}:${page - 1}`,
+      title: "⬅ PREVIOUS",
+      description: `Go back (page ${page} of ${totalPages})`
+    });
+  }
+
+  if (start + PAGE_SIZE < entries.length) {
+    rows.push({
+      id: `${pagePrefix}:${page + 1}`,
+      title: "➡ MORE",
+      description: `See more (page ${page + 2} of ${totalPages})`
+    });
+  }
+
+  if (extraNavRow) rows.push(extraNavRow);
+
+  await sendWhatsAppMessage(to, {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to,
+    type: "interactive",
+    interactive: {
+      type: "list",
+      body: { text: totalPages > 1 ? `${body}\n\nPage ${page + 1}/${totalPages}` : body },
+      action: {
+        button,
+        sections: [{ title: sectionTitle.substring(0, 24), rows }]
+      }
+    }
+  });
+}
+
+// ======================================================
 // CATEGORY LIST
-// =====================================================
+// ======================================================
 
-async function sendCategoryList(
-  to,
-  type,
-  page = 0
-) {
+async function sendCategoryList(to, page = 0) {
+  const session = getSession(to);
+  const label = typeLabel(session.type);
 
-  const categories =
-    Object.keys(
-      MENU[type]
-    );
+  const entries = getCategories(session.type).map((category) => ({
+    id: `cat:${category}`,
+    title: category.substring(0, 24),
+    description: `View ${category}`.substring(0, 72)
+  }));
 
-  const rows =
-    createCategoryRows(
-      type,
-      categories,
-      page
-    );
-
-  await sendWhatsAppMessage(to, {
-
-    messaging_product: "whatsapp",
-
-    recipient_type: "individual",
-
-    to,
-
-    type: "interactive",
-
-    interactive: {
-
-      type: "list",
-
-      body: {
-
-        text:
-          `🍽️ ${type} MENU\n\n` +
-          "Choose a category:"
-
-      },
-
-      action: {
-
-        button:
-          "VIEW CATEGORIES",
-
-        sections: [
-
-          {
-            title:
-              `${type} CATEGORIES`,
-
-            rows
-          }
-
-        ]
-      }
+  await sendPagedList(to, {
+    body: `🍽️ ${label} MENU\n\nChoose a category:` +
+      (session.type === "BOTH" ? "\n🟢 veg  🔴 non-veg" : ""),
+    button: "VIEW CATEGORIES",
+    sectionTitle: `${label} CATEGORIES`,
+    entries,
+    page,
+    pagePrefix: "catpage",
+    extraNavRow: {
+      id: "nav:back_main",
+      title: "🔙 VEG/NON-VEG",
+      description: "Change VEG / NON-VEG / BOTH"
     }
   });
 }
 
-// =====================================================
-// BOTH CATEGORY LIST
-// =====================================================
-
-async function sendBothCategoryList(
-  to,
-  page = 0
-) {
-
-  const rows = [];
-
-  const vegCategories =
-    Object.keys(
-      MENU.VEG
-    );
-
-  const nonVegCategories =
-    Object.keys(
-      MENU.NON_VEG
-    );
-
-  const commonCategories =
-    Object.keys(
-      MENU.COMMON
-    );
-
-  vegCategories.forEach(
-    category => {
-
-      rows.push({
-
-        id:
-          `cat:VEG|${category}`,
-
-        title:
-          `VEG - ${category}`
-            .substring(0, 24),
-
-        description:
-          "Vegetarian items"
-
-      });
-
-    }
-  );
-
-  nonVegCategories.forEach(
-    category => {
-
-      rows.push({
-
-        id:
-          `cat:NON_VEG|${category}`,
-
-        title:
-          `NON-VEG - ${category}`
-            .substring(0, 24),
-
-        description:
-          "Non-vegetarian items"
-
-      });
-
-    }
-  );
-
-  commonCategories.forEach(
-    category => {
-
-      rows.push({
-
-        id:
-          `cat:COMMON|${category}`,
-
-        title:
-          category
-            .substring(0, 24),
-
-        description:
-          "Available for all orders"
-
-      });
-
-    }
-  );
-
-  const PAGE_SIZE = 8;
-
-  const start =
-    page * PAGE_SIZE;
-
-  const pageRows =
-    rows.slice(
-      start,
-      start + PAGE_SIZE
-    );
-
-  if (page > 0) {
-    pageRows.push({
-      id: `catpage:${page - 1}`,
-      title: "PREVIOUS CATEGORY",
-      description: "Go to previous category page"
-    });
-  }
-
-  if (start + PAGE_SIZE < rows.length) {
-    pageRows.push({
-      id: `catpage:${page + 1}`,
-      title: "MORE CATEGORIES",
-      description: "View more categories"
-    });
-  }
-
-  pageRows.push({
-    id: "catback:main",
-    title: "BACK TO MENU",
-    description: "Back to VEG / NON-VEG selection"
-  });
-
-  await sendWhatsAppMessage(to, {
-
-    messaging_product: "whatsapp",
-
-    recipient_type: "individual",
-
-    to,
-
-    type: "interactive",
-
-    interactive: {
-
-      type: "list",
-
-      body: {
-
-        text:
-          "🍽️ VEG + NON-VEG MENU\n\n" +
-          "You can add items from both menus."
-
-      },
-
-      action: {
-
-        button:
-          "VIEW CATEGORIES",
-
-        sections: [
-
-          {
-            title:
-              "COMBINED MENU",
-
-            rows:
-              pageRows
-          }
-
-        ]
-      }
-    }
-  });
-}
-
-// =====================================================
-// CATEGORY ROW HELPER
-// =====================================================
-
-function createCategoryRows(
-  type,
-  categories,
-  page
-) {
-
-  const PAGE_SIZE = 8;
-
-  const start =
-    page * PAGE_SIZE;
-
-  const rows =
-    categories
-      .slice(
-        start,
-        start + PAGE_SIZE
-      )
-      .map(category => ({
-
-        id:
-          `cat:${type}|${category}`,
-
-        title:
-          category.substring(
-            0,
-            24
-          ),
-
-        description:
-          `View ${category}`
-
-      }));
-
-  if (page > 0) {
-    rows.push({
-      id: `catpage:${page - 1}`,
-      title: "PREVIOUS CATEGORY",
-      description: "Go to previous category page"
-    });
-  }
-
-  if (start + PAGE_SIZE < categories.length) {
-    rows.push({
-      id: `catpage:${page + 1}`,
-      title: "MORE CATEGORIES",
-      description: "View more categories"
-    });
-  }
-
-  rows.push({
-    id: "catback:main",
-    title: "BACK TO MENU",
-    description: "Back to VEG / NON-VEG selection"
-  });
-
-  return rows;
-}
-
-// =====================================================
+// ======================================================
 // ITEM LIST
-// =====================================================
+// ======================================================
 
-async function sendItemList(
-  to,
-  type,
-  category,
-  page = 0
-) {
+async function sendItemList(to, page = 0) {
+  const session = getSession(to);
+  const items = getItems(session.type, session.category);
 
-  const items =
-    MENU[type][category];
+  const entries = items.map((item, index) => {
+    const description = isHalfFull(item)
+      ? `Half ₹${item.price.half} | Full ₹${item.price.full}`
+      : `₹${item.price}`;
 
-  const PAGE_SIZE = 9;
+    return {
+      id: `item:${index}`,
+      title: (marker(item, session.type) + item.name).substring(0, 24),
+      description: description.substring(0, 72)
+    };
+  });
 
-  const start =
-    page * PAGE_SIZE;
-
-  const rows =
-    items
-      .slice(
-        start,
-        start + PAGE_SIZE
-      )
-      .map(
-        (item, index) => {
-
-          const actualIndex =
-            start + index;
-
-          let description;
-
-          if (
-            typeof item[1] ===
-            "object"
-          ) {
-
-            description =
-              `Half ₹${item[1].half} | Full ₹${item[1].full}`;
-
-          } else {
-
-            description =
-              `₹${item[1]}`;
-
-          }
-
-          return {
-
-            id:
-              `item:${actualIndex}`,
-
-            title:
-              item[0].substring(
-                0,
-                24
-              ),
-
-            description:
-              description.substring(
-                0,
-                72
-              )
-
-          };
-        }
-      );
-
-  if (
-    start + PAGE_SIZE <
-    items.length
-  ) {
-
-    rows.push({
-
-      id:
-        `itempage:${page + 1}`,
-
-      title:
-        "MORE ITEMS",
-
-      description:
-        "View more items"
-
-    });
-
-  }
-
-  await sendWhatsAppMessage(to, {
-
-    messaging_product: "whatsapp",
-
-    recipient_type: "individual",
-
-    to,
-
-    type: "interactive",
-
-    interactive: {
-
-      type: "list",
-
-      body: {
-
-        text:
-          `🍽️ ${category}\n\n` +
-          "Select your food:"
-
-      },
-
-      action: {
-
-        button:
-          "VIEW FOOD",
-
-        sections: [
-
-          {
-            title:
-              category,
-
-            rows
-          }
-
-        ]
-      }
+  await sendPagedList(to, {
+    body: `🍽️ ${session.category}\n\nSelect an item:` +
+      (session.type === "BOTH" ? "\n🟢 veg  🔴 non-veg" : ""),
+    button: "VIEW FOOD",
+    sectionTitle: session.category,
+    entries,
+    page,
+    pagePrefix: "itempage",
+    extraNavRow: {
+      id: "nav:back_categories",
+      title: "🔙 CATEGORIES",
+      description: "Back to categories"
     }
   });
 }
 
-// =====================================================
-// HALF / FULL
-// =====================================================
+// ======================================================
+// ITEM OPTION STEPS
+// ======================================================
+
+async function nextItemStep(to) {
+  const session = getSession(to);
+  const step = pendingStep(session);
+
+  if (step === "variant") return sendVariantButtons(to);
+  if (step === "boneless") return sendBonelessButtons(to);
+  if (step === "cheese") return sendCheeseButtons(to);
+  return sendQuantityScreen(to);
+}
+
+async function sendButtons(to, text, buttons) {
+  await sendWhatsAppMessage(to, {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to,
+    type: "interactive",
+    interactive: {
+      type: "button",
+      body: { text },
+      action: {
+        buttons: buttons.map(([id, title]) => ({
+          type: "reply",
+          reply: { id, title: title.substring(0, 20) }
+        }))
+      }
+    }
+  });
+}
 
 async function sendVariantButtons(to) {
+  const item = getSession(to).item;
 
-  const session =
-    getSession(to);
+  await sendButtons(to, `🍽️ ${item.name}\n\nChoose plate size:`, [
+    ["variant_half", `HALF ₹${item.price.half}`],
+    ["variant_full", `FULL ₹${item.price.full}`]
+  ]);
+}
 
-  const item =
-    session.item;
+async function sendBonelessButtons(to) {
+  const item = getSession(to).item;
 
-  await sendWhatsAppMessage(to, {
-
-    messaging_product: "whatsapp",
-
-    recipient_type: "individual",
-
+  await sendButtons(
     to,
-
-    type: "interactive",
-
-    interactive: {
-
-      type: "button",
-
-      body: {
-
-        text:
-          `🍽️ ${item[0]}\n\n` +
-          "Choose plate size:"
-
-      },
-
-      action: {
-
-        buttons: [
-
-          {
-            type: "reply",
-
-            reply: {
-
-              id:
-                "variant_half",
-
-              title:
-                `HALF ₹${item[1].half}`
-
-            }
-          },
-
-          {
-            type: "reply",
-
-            reply: {
-
-              id:
-                "variant_full",
-
-              title:
-                `FULL ₹${item[1].full}`
-
-            }
-          },
-
-          {
-            type: "reply",
-
-            reply: {
-
-              id:
-                "back_categories",
-
-              title:
-                "BACK"
-
-            }
-          }
-
-        ]
-      }
-    }
-  });
+    `🍗 ${item.name}\n\nBone-in ya Boneless?\nBoneless = +₹${BONELESS_CHARGE} per plate`,
+    [
+      ["bone_no", "WITH BONE"],
+      ["bone_yes", `BONELESS +₹${BONELESS_CHARGE}`]
+    ]
+  );
 }
 
-// =====================================================
-// ADD-ON OPTIONS
-// =====================================================
-
-async function sendAddOnOptions(to) {
-
-  const session =
-    getSession(to);
-
-  const item =
-    session.item;
-
-  const price =
-    item[1];
-
-  // Boneless option
-  if (
-    session.currentType ===
-      "NON_VEG" &&
-    session.category ===
-      "MAIN COURSE" &&
-    typeof price ===
-      "object" &&
-    price.boneless
-  ) {
-
-    await sendWhatsAppMessage(to, {
-
-      messaging_product: "whatsapp",
-
-      recipient_type: "individual",
-
-      to,
-
-      type: "interactive",
-
-      interactive: {
-
-        type: "button",
-
-        body: {
-
-          text:
-            `🍗 ${item[0]}\n\n` +
-            "Would you like Boneless?\n" +
-            "+₹50"
-
-        },
-
-        action: {
-
-          buttons: [
-
-            {
-              type: "reply",
-
-              reply: {
-
-                id:
-                  "boneless_yes",
-
-                title:
-                  "BONELESS +₹50"
-
-              }
-            },
-
-            {
-              type: "reply",
-
-              reply: {
-
-                id:
-                  "boneless_no",
-
-                title:
-                  "REGULAR"
-
-              }
-            },
-
-            {
-              type: "reply",
-
-              reply: {
-
-                id:
-                  "back_categories",
-
-                title:
-                  "BACK"
-
-              }
-            }
-
-          ]
-        }
-      }
-    });
-
-    return;
-  }
-
-  // Pizza extra cheese
-  if (
-    session.category ===
-      "PIZZA"
-  ) {
-
-    await sendWhatsAppMessage(to, {
-
-      messaging_product: "whatsapp",
-
-      recipient_type: "individual",
-
-      to,
-
-      type: "interactive",
-
-      interactive: {
-
-        type: "button",
-
-        body: {
-
-          text:
-            `🍕 ${item[0]}\n\n` +
-            "Add Extra Cheese?\n" +
-            "+₹30"
-
-        },
-
-        action: {
-
-          buttons: [
-
-            {
-              type: "reply",
-
-              reply: {
-
-                id:
-                  "cheese_yes",
-
-                title:
-                  "YES +₹30"
-
-              }
-            },
-
-            {
-              type: "reply",
-
-              reply: {
-
-                id:
-                  "cheese_no",
-
-                title:
-                  "NO"
-
-              }
-            },
-
-            {
-              type: "reply",
-
-              reply: {
-
-                id:
-                  "back_categories",
-
-                title:
-                  "BACK"
-
-              }
-            }
-
-          ]
-        }
-      }
-    });
-
-    return;
-  }
-
-  await sendQuantityScreen(to);
+async function sendCheeseButtons(to) {
+  const item = getSession(to).item;
+
+  await sendButtons(
+    to,
+    `🍕 ${item.name}\n\nExtra cheese chahiye?\nExtra cheese = +₹${EXTRA_CHEESE_CHARGE} per pizza`,
+    [
+      ["cheese_no", "NO EXTRA CHEESE"],
+      ["cheese_yes", `EXTRA CHEESE +₹${EXTRA_CHEESE_CHARGE}`]
+    ]
+  );
 }
 
-// =====================================================
-// PRICE CALCULATION
-// =====================================================
-
-function getCurrentUnitPrice(session) {
-
-  const item =
-    session.item;
-
-  const base =
-    item[1];
-
-  let price;
-
-  if (
-    typeof base ===
-    "object"
-  ) {
-
-    price =
-      session.variant ===
-      "HALF"
-        ? base.half
-        : base.full;
-
-  } else {
-
-    price = base;
-
-  }
-
-  if (
-    session.boneless
-  ) {
-
-    price += 50;
-
-  }
-
-  if (
-    session.extraCheese
-  ) {
-
-    price += 30;
-
-  }
-
-  return price;
-}
-
-// =====================================================
-// QUANTITY
-// =====================================================
+// ======================================================
+// QUANTITY  (WhatsApp allows max 3 buttons -> 2 messages)
+// ======================================================
 
 async function sendQuantityScreen(to) {
+  const session = getSession(to);
+  const item = session.item;
 
-  const session =
-    getSession(to);
-
-  const unitPrice =
-    getCurrentUnitPrice(
-      session
-    );
-
-  const total =
-    unitPrice *
-    session.quantity;
-
-  let details = "";
-
-  if (
-    session.variant
-  ) {
-
-    details +=
-      `\nSize: ${session.variant}`;
-
+  if (!item) {
+    await sendCart(to);
+    return;
   }
 
-  if (
-    session.boneless
-  ) {
+  const price = unitPrice(item, session.variant, session.boneless, session.cheese);
+  const total = price * session.quantity;
 
-    details +=
-      "\nBoneless: +₹50";
+  const opts = optionsText({
+    variant: session.variant,
+    boneless: session.boneless,
+    cheese: session.cheese
+  });
 
-  }
-
-  if (
-    session.extraCheese
-  ) {
-
-    details +=
-      "\nExtra Cheese: +₹30";
-
-  }
-
-  await sendWhatsAppMessage(to, {
-
-    messaging_product: "whatsapp",
-
-    recipient_type: "individual",
-
+  await sendButtons(
     to,
-
-    type: "interactive",
-
-    interactive: {
-
-      type: "button",
-
-      body: {
-
-        text:
-          `🍽️ ${session.item[0]}` +
-          details +
-          `\n\nUnit Price: ₹${unitPrice}` +
-          `\nQuantity: ${session.quantity}` +
-          `\nTotal: ₹${total}` +
-          "\n\nChoose quantity:"
-
-      },
-
-      action: {
-
-        buttons: [
-
-          {
-            type: "reply",
-
-            reply: {
-
-              id:
-                "qty_minus",
-
-              title:
-                "−"
-
-            }
-          },
-
-          {
-            type: "reply",
-
-            reply: {
-
-              id:
-                "qty_plus",
-
-              title:
-                "+"
-
-            }
-          },
-
-          {
-            type: "reply",
-
-            reply: {
-
-              id:
-                "add_cart",
-
-              title:
-                "ADD TO CART"
-
-            }
-          }
-
-        ]
-      }
-    }
-  });
-
-  await sendWhatsAppMessage(to, {
-    messaging_product: "whatsapp",
-    recipient_type: "individual",
-    to,
-    type: "interactive",
-    interactive: {
-      type: "button",
-      body: {
-        text: "Ready? Add this item to your cart."
-      },
-      action: {
-        buttons: [
-          {
-            type: "reply",
-            reply: {
-              id: "add_cart",
-              title: "ADD TO CART"
-            }
-          }
-        ]
-      }
-    }
-  });
-}
-
-// =====================================================
-// ADD TO CART
-// =====================================================
-
-function addCurrentItemToCart(
-  session
-) {
-
-  const price =
-    getCurrentUnitPrice(
-      session
-    );
-
-  const options = [];
-
-  if (
-    session.variant
-  ) {
-
-    options.push(
-      session.variant
-    );
-
-  }
-
-  if (
-    session.boneless
-  ) {
-
-    options.push(
-      "Boneless"
-    );
-
-  }
-
-  if (
-    session.extraCheese
-  ) {
-
-    options.push(
-      "Extra Cheese"
-    );
-
-  }
-
-  session.cart.push({
-
-    name:
-      session.item[0],
-
-    options,
-
-    price,
-
-    quantity:
-      session.quantity
-
-  });
-
-  session.item = null;
-  session.variant = null;
-  session.boneless = false;
-  session.extraCheese = false;
-  session.quantity = 1;
-}
-
-// =====================================================
-// CART
-// =====================================================
-
-function getFoodSubtotal(
-  session
-) {
-
-  return session.cart.reduce(
-    (
-      total,
-      item
-    ) =>
-      total +
-      item.price *
-        item.quantity,
-    0
+    `🍽️ ${item.name}${opts}\n\n` +
+      `Price: ₹${price}\n` +
+      `Quantity: ${session.quantity}\n` +
+      `Item Total: ₹${total}\n\n` +
+      `Zyada chahiye? ✍️ TYPE QTY dabao aur number likho.`,
+    [
+      ["qty_minus", "➖"],
+      ["qty_plus", "➕"],
+      ["qty_type", "✍️ TYPE QTY"]
+    ]
   );
+
+  await sendButtons(to, "Quantity final hai?", [
+    ["add_cart", "✅ ADD TO CART"],
+    ["back_items", "🔙 BACK"]
+  ]);
+}
+
+// ======================================================
+// CART
+// ======================================================
+
+function addCurrentItemToCart(session) {
+  const item = session.item;
+
+  const line = {
+    name: item.name,
+    variant: isHalfFull(item) ? session.variant : null,
+    boneless: !!session.boneless,
+    cheese: !!session.cheese,
+    price: unitPrice(item, session.variant, session.boneless, session.cheese),
+    quantity: session.quantity
+  };
+
+  // Merge identical lines
+  const existing = session.cart.find(
+    (l) =>
+      l.name === line.name &&
+      l.variant === line.variant &&
+      l.boneless === line.boneless &&
+      l.cheese === line.cheese
+  );
+
+  if (existing) {
+    existing.quantity = Math.min(existing.quantity + line.quantity, MAX_QTY);
+  } else {
+    session.cart.push(line);
+  }
+
+  resetSelection(session);
+}
+
+function cartSubtotal(session) {
+  return session.cart.reduce((sum, l) => sum + l.price * l.quantity, 0);
+}
+
+function buildCartText(session) {
+  let text = "🛒 YOUR CART\n\n";
+
+  session.cart.forEach((line, index) => {
+    text +=
+      `${index + 1}. ${line.name}${optionsText(line)}\n` +
+      `   ₹${line.price} × ${line.quantity} = ₹${line.price * line.quantity}\n\n`;
+  });
+
+  text += `Subtotal: ₹${cartSubtotal(session)}`;
+  return text;
 }
 
 async function sendCart(to) {
+  const session = getSession(to);
 
-  const session =
-    getSession(to);
-
-  if (
-    session.cart.length ===
-    0
-  ) {
-
-    await sendWhatsAppMessage(
-      to,
-      {
-
-        messaging_product:
-          "whatsapp",
-
-        recipient_type:
-          "individual",
-
-        to,
-
-        type:
-          "interactive",
-
-        interactive: {
-
-          type:
-            "button",
-
-          body: {
-
-            text:
-              "🛒 Your cart is empty."
-
-          },
-
-          action: {
-
-            buttons: [
-
-              {
-                type:
-                  "reply",
-
-                reply: {
-
-                  id:
-                    "add_more",
-
-                  title:
-                    "VIEW MENU"
-
-                }
-              },
-
-              {
-                type:
-                  "reply",
-
-                reply: {
-
-                  id:
-                    "back_main",
-
-                  title:
-                    "BACK"
-
-                }
-              }
-
-            ]
-          }
-        }
-      }
-    );
-
+  if (session.cart.length === 0) {
+    await sendButtons(to, "🛒 Your cart is empty.\n\nWould you like to view the menu?", [
+      ["add_more", "VIEW MENU"],
+      ["back_main", "BACK"]
+    ]);
     return;
   }
 
-  let text =
-    "🛒 YOUR CART\n\n";
+  let body = buildCartText(session);
 
-  let subtotal = 0;
+  // Button message body limit is 1024 chars -> send long carts as plain text first
+  if (body.length > 900) {
+    await sendText(to, body);
+    body = `Subtotal: ₹${cartSubtotal(session)}\n\nWhat next?`;
+  }
 
-  session.cart.forEach(
-    (
-      item,
-      index
-    ) => {
-
-      const total =
-        item.price *
-        item.quantity;
-
-      subtotal += total;
-
-      const options =
-        item.options.length
-          ? ` (${item.options.join(", ")})`
-          : "";
-
-      text +=
-        `${index + 1}. ${item.name}${options}\n` +
-        `   ₹${item.price} × ${item.quantity} = ₹${total}\n\n`;
-
-    }
-  );
-
-  text +=
-    `Food Subtotal: ₹${subtotal}`;
-
-  await sendWhatsAppMessage(
-    to,
-    {
-
-      messaging_product:
-        "whatsapp",
-
-      recipient_type:
-        "individual",
-
-      to,
-
-      type:
-        "interactive",
-
-      interactive: {
-
-        type:
-          "button",
-
-        body: {
-          text
-        },
-
-        action: {
-
-          buttons: [
-
-            {
-              type:
-                "reply",
-
-              reply: {
-
-                id:
-                  "add_more",
-
-                title:
-                  "ADD MORE"
-
-              }
-            },
-
-            {
-              type:
-                "reply",
-
-              reply: {
-
-                id:
-                  "remove_mode",
-
-                title:
-                  "REMOVE"
-
-              }
-            },
-
-            {
-              type:
-                "reply",
-
-              reply: {
-
-                id:
-                  "checkout",
-
-                title:
-                  "CHECKOUT"
-
-              }
-            }
-
-          ]
-        }
-      }
-    }
-  );
+  await sendButtons(to, body, [
+    ["add_more", "ADD MORE"],
+    ["remove_mode", "REMOVE"],
+    ["checkout", "CHECKOUT"]
+  ]);
 }
 
-// =====================================================
-// REMOVE LIST
-// =====================================================
+async function sendRemoveList(to, page = 0) {
+  const session = getSession(to);
 
-async function sendRemoveList(
-  to
-) {
-
-  const session =
-    getSession(to);
-
-  const rows =
-    session.cart
-      .map(
-        (
-          item,
-          index
-        ) => {
-
-          const options =
-            item.options.length
-              ? ` (${item.options.join(", ")})`
-              : "";
-
-          return {
-
-            id:
-              `remove:${index}`,
-
-            title:
-              `${index + 1}. ${item.name}`
-                .substring(
-                  0,
-                  24
-                ),
-
-            description:
-              `${options} × ${item.quantity} — ₹${item.price * item.quantity}`
-
-          };
-
-        }
-      )
-      .slice(
-        0,
-        10
-      );
-
-  await sendWhatsAppMessage(
-    to,
-    {
-
-      messaging_product:
-        "whatsapp",
-
-      recipient_type:
-        "individual",
-
-      to,
-
-      type:
-        "interactive",
-
-      interactive: {
-
-        type:
-          "list",
-
-        body: {
-
-          text:
-            "🗑️ REMOVE ITEM\n\n" +
-            "Select the item to remove."
-
-        },
-
-        action: {
-
-          button:
-            "REMOVE ITEM",
-
-          sections: [
-
-            {
-              title:
-                "YOUR CART",
-
-              rows
-            }
-
-          ]
-        }
-      }
-    }
-  );
-}
-
-// =====================================================
-// CHECKOUT START
-// =====================================================
-
-async function startCheckout(
-  to
-) {
-
-  const session =
-    getSession(to);
-
-  const subtotal =
-    getFoodSubtotal(
-      session
-    );
-
-  if (
-    subtotal < 300
-  ) {
-
-    await sendText(
-      to,
-      `Minimum food order is ₹300.\n\n` +
-      `Your current food subtotal is ₹${subtotal}.\n\n` +
-      `Please add ₹${300 - subtotal} more food items.`
-    );
-
+  if (session.cart.length === 0) {
+    await sendCart(to);
     return;
   }
 
-  session.checkoutStep =
-    "name";
+  const entries = session.cart.map((line, index) => ({
+    id: `remove:${index}`,
+    title: `${index + 1}. ${line.name}`.substring(0, 24),
+    description:
+      `${optionsText(line).trim()} × ${line.quantity} — ₹${line.price * line.quantity}`.trim().substring(0, 72)
+  }));
 
-  await sendText(
-    to,
-    "CHECKOUT\n\nPlease enter your name."
-  );
-}
-
-// =====================================================
-// LOCATION REQUEST
-// =====================================================
-
-async function sendLocationRequest(
-  to
-) {
-
-  await sendWhatsAppMessage(
-    to,
-    {
-
-      messaging_product:
-        "whatsapp",
-
-      recipient_type:
-        "individual",
-
-      to,
-
-      type:
-        "interactive",
-
-      interactive: {
-
-        type:
-          "location_request_message",
-
-        body: {
-
-          text:
-            "Please share your delivery location so we can calculate delivery charges."
-
-        },
-
-        action: {
-
-          name:
-            "send_location"
-
-        }
-      }
+  await sendPagedList(to, {
+    body: "🗑️ REMOVE ITEM\n\nSelect the item you want to remove:",
+    button: "REMOVE ITEM",
+    sectionTitle: "YOUR CART",
+    entries,
+    page,
+    pagePrefix: "rempage",
+    extraNavRow: {
+      id: "empty_cart",
+      title: "🗑 CLEAR CART",
+      description: "Remove everything"
     }
-  );
+  });
 }
 
-// =====================================================
-// DISTANCE
-// =====================================================
+// ======================================================
+// CHECKOUT
+// ======================================================
 
-function calculateDistanceKm(
-  lat1,
-  lon1,
-  lat2,
-  lon2
-) {
+async function startCheckout(to) {
+  const session = getSession(to);
 
-  const R =
-    6371;
-
-  const dLat =
-    toRadians(
-      lat2 - lat1
-    );
-
-  const dLon =
-    toRadians(
-      lon2 - lon1
-    );
-
-  const a =
-    Math.sin(
-      dLat / 2
-    ) ** 2 +
-    Math.cos(
-      toRadians(lat1)
-    ) *
-    Math.cos(
-      toRadians(lat2)
-    ) *
-    Math.sin(
-      dLon / 2
-    ) ** 2;
-
-  const c =
-    2 *
-    Math.atan2(
-      Math.sqrt(a),
-      Math.sqrt(1 - a)
-    );
-
-  return R * c;
-}
-
-function toRadians(
-  degrees
-) {
-
-  return degrees *
-    Math.PI /
-    180;
-}
-
-// =====================================================
-// DELIVERY CHARGE
-// =====================================================
-
-function getDeliveryCharge(
-  distance
-) {
-
-  for (
-    const rule
-    of DELIVERY_RULES
-  ) {
-
-    if (
-      distance <=
-      rule.max
-    ) {
-
-      return rule.charge;
-
-    }
+  if (session.cart.length === 0) {
+    await sendCart(to);
+    return;
   }
 
-  return null;
+  const subtotal = cartSubtotal(session);
+
+  if (subtotal < MIN_FOOD_ORDER) {
+    await sendButtons(
+      to,
+      `⚠️ Minimum food order ₹${MIN_FOOD_ORDER} hai.\n` +
+        `Aapka subtotal ₹${subtotal} hai. ₹${MIN_FOOD_ORDER - subtotal} ka aur order add karo.`,
+      [
+        ["add_more", "ADD MORE"],
+        ["view_cart", "VIEW CART"]
+      ]
+    );
+    return;
+  }
+
+  await sendOrderTypeButtons(to);
 }
 
-// =====================================================
-// CHECKOUT SUMMARY
-// =====================================================
+async function sendOrderTypeButtons(to) {
+  await sendButtons(to, "How would you like to receive your order?", [
+    ["ot_dinein", "🪑 DINE-IN"],
+    ["ot_takeaway", "🥡 TAKEAWAY"],
+    ["ot_delivery", "🛵 DELIVERY"]
+  ]);
+}
 
-async function sendCheckoutSummary(
-  to
-) {
-
-  const session =
-    getSession(to);
-
-  const subtotal =
-    getFoodSubtotal(
-      session
-    );
+function calcBill(session) {
+  const subtotal = cartSubtotal(session);
 
   const packing =
-    Math.round(
-      subtotal * 0.07
-    );
-
-  const distance =
-    calculateDistanceKm(
-      RESTAURANT_LAT,
-      RESTAURANT_LNG,
-      session.latitude,
-      session.longitude
-    );
+    session.orderType === "DINE-IN" ? 0 : round2((subtotal * PACKING_PERCENT) / 100);
 
   const delivery =
-    getDeliveryCharge(
-      distance
-    );
+    session.orderType === "DELIVERY" && session.distanceKm !== null
+      ? deliveryChargeFor(session.distanceKm) || 0
+      : 0;
 
-  if (
-    delivery === null
-  ) {
+  const total = round2(subtotal + packing + delivery);
 
-    await sendText(
-      to,
-
-      "Sorry, TREAT RESTAURANT delivers only within 10 km.\n\n" +
-      `Your location is approximately ${distance.toFixed(2)} km away.\n\n` +
-      "Please use a delivery location within 10 km."
-    );
-
-    session.checkoutStep =
-      "location";
-
-    await sendLocationRequest(
-      to
-    );
-
-    return;
-  }
-
-  const total =
-    subtotal +
-    packing +
-    delivery;
-
-  let items =
-    "";
-
-  session.cart.forEach(
-    item => {
-
-      const options =
-        item.options.length
-          ? ` (${item.options.join(", ")})`
-          : "";
-
-      items +=
-        `${item.name}${options} × ${item.quantity}\n` +
-        `₹${item.price * item.quantity}\n\n`;
-
-    }
-  );
-
-  const summary =
-    `🧾 CHECKOUT\n\n` +
-
-    `${items}` +
-
-    `Food Subtotal: ₹${subtotal}\n` +
-    `Packing (7%): ₹${packing}\n` +
-    `Delivery: ₹${delivery}\n` +
-    `Distance: ${distance.toFixed(2)} km\n\n` +
-
-    `TOTAL: ₹${total}\n\n` +
-
-    `Name: ${session.customerName}\n` +
-    `Address: ${session.address}\n\n` +
-
-    "Choose payment method:";
-
-  await sendWhatsAppMessage(
-    to,
-    {
-
-      messaging_product:
-        "whatsapp",
-
-      recipient_type:
-        "individual",
-
-      to,
-
-      type:
-        "interactive",
-
-      interactive: {
-
-        type:
-          "button",
-
-        body: {
-          text:
-            summary
-        },
-
-        action: {
-
-          buttons: [
-
-            {
-              type:
-                "reply",
-
-              reply: {
-
-                id:
-                  "payment_cod",
-
-                title:
-                  "COD"
-
-              }
-            },
-
-            {
-              type:
-                "reply",
-
-              reply: {
-
-                id:
-                  "payment_online",
-
-                title:
-                  "PAY ONLINE"
-
-              }
-            },
-
-            {
-              type:
-                "reply",
-
-              reply: {
-
-                id:
-                  "back_categories",
-
-                title:
-                  "BACK"
-
-              }
-            }
-
-          ]
-        }
-      }
-    }
-  );
+  return { subtotal, packing, delivery, total };
 }
 
-// =====================================================
-// COD CONFIRMATION
-// =====================================================
+function billText(session, bill) {
+  let text = buildCartText(session).replace(/\n\nSubtotal: ₹\d+$/, "") + "\n\n";
 
-async function confirmCOD(
-  to
-) {
+  text += "━━━━━━━━━━━━\n";
+  text += `Subtotal: ₹${bill.subtotal}\n`;
+  if (session.orderType !== "DINE-IN") {
+    text += `Packing (${PACKING_PERCENT}%): ₹${bill.packing}\n`;
+  }
+  if (session.orderType === "DELIVERY") {
+    text += `Delivery (${session.distanceKm} km): ₹${bill.delivery}\n`;
+  }
+  text += `*TOTAL: ₹${bill.total}*\n`;
+  text += "━━━━━━━━━━━━\n\n";
+  text += `Order type: ${session.orderType}\n`;
+  if (session.table) text += `Table: ${session.table}\n`;
+  if (session.address) text += `Address: ${session.address}\n`;
 
-  const session =
-    getSession(to);
+  return text;
+}
 
-  const subtotal =
-    getFoodSubtotal(
-      session
-    );
+async function sendBill(to) {
+  const session = getSession(to);
 
-  const packing =
-    Math.round(
-      subtotal * 0.07
-    );
-
-  const distance =
-    calculateDistanceKm(
-      RESTAURANT_LAT,
-      RESTAURANT_LNG,
-      session.latitude,
-      session.longitude
-    );
-
-  const delivery =
-    getDeliveryCharge(
-      distance
-    );
-
-  if (
-    delivery === null
-  ) {
-
-    await sendText(
-      to,
-      "Delivery is unavailable for this location because it is beyond 10 km."
-    );
-
+  if (session.cart.length === 0) {
+    await sendCart(to);
     return;
   }
 
-  const total =
-    subtotal +
-    packing +
-    delivery;
+  const bill = calcBill(session);
+  await sendText(to, billText(session, bill));
 
-  const orderId =
-    "TR" +
-    Math.floor(
-      1000 +
-      Math.random() *
-      9000
+  await sendButtons(to, "Payment method choose karo:", [
+    ["pay_online", "💳 PAY ONLINE"],
+    ["pay_cash", session.orderType === "DELIVERY" ? "💵 CASH ON DELIVERY" : "💵 PAY AT COUNTER"],
+    ["view_cart", "✏️ EDIT CART"]
+  ]);
+}
+
+// ======================================================
+// PLACE ORDER
+// ======================================================
+
+function makeOrderId() {
+  return "TR" + Date.now().toString(36).toUpperCase();
+}
+
+async function placeOrder(to, method) {
+  const session = getSession(to);
+
+  if (session.cart.length === 0) {
+    await sendCart(to);
+    return;
+  }
+
+  if (!session.orderType) {
+    await startCheckout(to);
+    return;
+  }
+
+  const bill = calcBill(session);
+
+  const order = {
+    id: makeOrderId(),
+    phone: to,
+    name: session.name,
+    orderType: session.orderType,
+    table: session.table,
+    address: session.address,
+    distanceKm: session.distanceKm,
+    items: JSON.parse(JSON.stringify(session.cart)),
+    bill,
+    method,
+    status: method === "ONLINE" ? "AWAITING_PAYMENT" : "CONFIRMED_CASH",
+    createdAt: new Date().toISOString()
+  };
+
+  orders[order.id] = order;
+
+  if (method === "CASH") {
+    session.cart = [];
+    session.orderType = null;
+
+    await sendText(
+      to,
+      `✅ Order confirmed!\n\nOrder ID: *${order.id}*\nTotal: ₹${bill.total}\n` +
+        `Payment: ${order.orderType === "DELIVERY" ? "Cash on delivery" : "Pay at counter"}\n\n` +
+        "Thank you for ordering from TREAT RESTAURANT 🙏"
     );
+    await notifyOwner(order);
+    return;
+  }
 
-  await sendText(
-    to,
+  // ONLINE
+  let link = null;
+  try {
+    link = await createRazorpayPaymentLink(order);
+  } catch (err) {
+    console.error("Razorpay link error:", err.message);
+  }
 
-    `✅ ORDER RECEIVED\n\n` +
+  if (!link) {
+    order.status = "PAYMENT_LINK_FAILED";
+    await sendButtons(
+      to,
+      "😔 Online payment abhi available nahi hai. Cash se order karna chahoge?",
+      [
+        ["pay_cash", "💵 PAY CASH"],
+        ["view_cart", "VIEW CART"]
+      ]
+    );
+    // Order was registered as online; drop it so it can be re-placed as cash
+    delete orders[order.id];
+    return;
+  }
 
-    `Order ID: ${orderId}\n` +
-    `Payment: COD\n\n` +
-
-    `Food: ₹${subtotal}\n` +
-    `Packing: ₹${packing}\n` +
-    `Delivery: ₹${delivery}\n` +
-    `TOTAL: ₹${total}\n\n` +
-
-    `Thank you for ordering from TREAT RESTAURANT!\n` +
-    `Your order has been sent to the restaurant.`
-  );
-
-  // Clear cart after order
+  order.paymentLink = link;
   session.cart = [];
-  session.checkoutStep = null;
+  session.orderType = null;
+
+  await sendText(
+    to,
+    `💳 Order ID: *${order.id}*\nAmount: *₹${bill.total}*\n\n` +
+      `Pay karne ke liye link kholo:\n${link}\n\n` +
+      "Payment hone par yahin confirmation mil jayega. Link 30 minute mein expire hoga."
+  );
 }
 
-// =====================================================
-// TEXT SENDER
-// =====================================================
+// ======================================================
+// RAZORPAY  (works once env vars are set)
+// ======================================================
 
-async function sendText(
-  to,
-  text
-) {
+async function createRazorpayPaymentLink(order) {
+  if (!RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+    console.log("Razorpay keys not set - skipping payment link");
+    return null;
+  }
 
-  await sendWhatsAppMessage(
-    to,
-    {
+  const auth = Buffer.from(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`).toString("base64");
 
-      messaging_product:
-        "whatsapp",
+  const response = await fetch("https://api.razorpay.com/v1/payment_links", {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${auth}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      amount: Math.round(order.bill.total * 100), // paise
+      currency: "INR",
+      accept_partial: false,
+      reference_id: order.id,
+      description: `TREAT RESTAURANT order ${order.id}`,
+      customer: {
+        name: order.name || "Customer",
+        contact: `+${order.phone}`
+      },
+      notify: { sms: false, email: false },
+      reminder_enable: false,
+      expire_by: Math.floor(Date.now() / 1000) + 30 * 60,
+      notes: { order_id: order.id, phone: order.phone }
+    })
+  });
 
-      recipient_type:
-        "individual",
+  const data = await response.json();
 
-      to,
+  if (!response.ok) {
+    throw new Error(`Razorpay API error: ${JSON.stringify(data)}`);
+  }
 
-      type:
-        "text",
+  return data.short_url;
+}
 
-      text: {
-        body: text
+// Razorpay -> Dashboard -> Webhooks: URL = https://<your-render-url>/razorpay-webhook
+// Event: payment_link.paid   Secret = RAZORPAY_WEBHOOK_SECRET
+app.post("/razorpay-webhook", async (req, res) => {
+  try {
+    const signature = req.get("x-razorpay-signature");
+
+    if (!RAZORPAY_WEBHOOK_SECRET || !signature || !req.rawBody) {
+      return res.sendStatus(400);
+    }
+
+    const expected = crypto
+      .createHmac("sha256", RAZORPAY_WEBHOOK_SECRET)
+      .update(req.rawBody)
+      .digest("hex");
+
+    const a = Buffer.from(expected);
+    const b = Buffer.from(signature);
+
+    if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+      console.log("Razorpay webhook: invalid signature");
+      return res.sendStatus(400);
+    }
+
+    // Verified. Acknowledge first.
+    res.sendStatus(200);
+
+    if (req.body.event !== "payment_link.paid") return;
+
+    const entity = req.body.payload?.payment_link?.entity;
+    if (!entity) return;
+
+    const order = orders[entity.reference_id];
+
+    if (order) {
+      if (order.status === "PAID") return; // duplicate event
+      order.status = "PAID";
+      order.paidAt = new Date().toISOString();
+
+      await sendText(
+        order.phone,
+        `✅ Payment received!\n\nOrder ID: *${order.id}*\nAmount: ₹${order.bill.total}\n\n` +
+          "Aapka order confirm ho gaya hai. Thank you 🙏"
+      );
+      await notifyOwner(order);
+    } else {
+      // Server restarted and lost in-memory orders: still tell the customer
+      const phone = entity.notes?.phone;
+      console.error("Paid link for unknown order:", entity.reference_id);
+      if (phone) {
+        await sendText(
+          phone,
+          `✅ Payment received for order ${entity.reference_id}. Restaurant aapse contact karega.`
+        );
       }
     }
-  );
+  } catch (err) {
+    console.error("Razorpay webhook error:", err);
+    if (!res.headersSent) res.sendStatus(500);
+  }
+});
+
+// ======================================================
+// OWNER NOTIFICATION
+// ======================================================
+
+async function notifyOwner(order) {
+  if (!OWNER_PHONE) {
+    console.log("OWNER_PHONE not set - order:", JSON.stringify(order));
+    return;
+  }
+
+  let text = `🔔 NEW ORDER ${order.id}\n`;
+  text += `Customer: ${order.name || "-"} (+${order.phone})\n`;
+  text += `Type: ${order.orderType}\n`;
+  if (order.table) text += `Table: ${order.table}\n`;
+  if (order.address) text += `Address: ${order.address} (${order.distanceKm} km)\n`;
+  text += "\n";
+
+  order.items.forEach((l, i) => {
+    text += `${i + 1}. ${l.name}${optionsText(l)} × ${l.quantity} = ₹${l.price * l.quantity}\n`;
+  });
+
+  text += `\nTotal: ₹${order.bill.total}\n`;
+  text += `Payment: ${order.status === "PAID" ? "PAID ONLINE" : "CASH"}`;
+
+  try {
+    await sendText(OWNER_PHONE, text);
+  } catch (err) {
+    console.error("Owner notification failed:", err.message);
+  }
 }
 
-// =====================================================
-// WHATSAPP API
-// =====================================================
+// ======================================================
+// WHATSAPP API SENDERS
+// ======================================================
 
-async function sendWhatsAppMessage(
-  to,
-  message
-) {
+async function sendText(to, body) {
+  return sendWhatsAppMessage(to, {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to,
+    type: "text",
+    text: { body }
+  });
+}
 
-  const url =
-    `https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages`;
+async function sendWhatsAppMessage(to, message) {
+  const url = `https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages`;
 
-  const response =
-    await fetch(
-      url,
-      {
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${ACCESS_TOKEN}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(message)
+  });
 
-        method:
-          "POST",
+  const data = await response.json();
 
-        headers: {
-
-          "Authorization":
-            `Bearer ${ACCESS_TOKEN}`,
-
-          "Content-Type":
-            "application/json"
-
-        },
-
-        body:
-          JSON.stringify(
-            message
-          )
-
-      }
-    );
-
-  const data =
-    await response.json();
-
-  console.log(
-    "WhatsApp API response:",
-    JSON.stringify(
-      data,
-      null,
-      2
-    )
-  );
-
-  if (
-    !response.ok
-  ) {
-
-    throw new Error(
-      `WhatsApp API error: ${JSON.stringify(data)}`
-    );
-
+  if (!response.ok) {
+    console.error("WhatsApp API error:", JSON.stringify(data));
+    throw new Error(`WhatsApp API error: ${JSON.stringify(data)}`);
   }
 
   return data;
 }
 
-// =====================================================
-// SERVER
-// =====================================================
+// ======================================================
+// START SERVER
+// ======================================================
 
-app.listen(
-  PORT,
-  "0.0.0.0",
-  () => {
-
-    console.log(
-      `TREAT RESTAURANT bot running on port ${PORT}`
-    );
-
-  }
-);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`TREAT RESTAURANT bot running on port ${PORT}`);
+});
