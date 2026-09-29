@@ -11,7 +11,7 @@
 // ======================================================
 
 const PACKING_PERCENT = 5;        // internal only - never printed anywhere
-const SHAKE_TAKEAWAY_EXTRA = 10;  // per item, shake + mocktail, takeaway/delivery only
+const GLASS_PACKING_CHARGE = 10;  // internal only - flat per Shake / Mocktail glass, goes INTO Packing Charges
 
 // 0-2.5 km = 30 | 2.5-5 km = 50 | 5-7 km = 80 | 7-10 km = 100. Last maxKm = limit.
 const DELIVERY_TIERS = [
@@ -38,32 +38,33 @@ function categoryOf(line) {
 
 // order types are stored as "DINE-IN" | "TAKEAWAY" | "DELIVERY"
 function calculateOrderTotal({ items, orderType, distanceKm = null, discount = 0 }) {
-  const isDineIn = orderType === "DINE-IN";
   const isDelivery = orderType === "DELIVERY";
 
-  let normalFoodSubtotal = 0;
+  let normalFoodSubtotal = 0; // gets the 5% packing
+  let glassCount = 0;         // shakes + mocktails: flat Rs.10 packing each
   let foodSubtotal = 0;
 
   const lines = items.map((line) => {
     const cat = categoryOf(line);
     const qty = line.quantity;
 
-    let unitPrice = line.price; // menu price (incl. boneless / cheese add-ons)
-
-    if ((cat === "SHAKE" || cat === "MOCKTAIL") && !isDineIn) {
-      unitPrice += SHAKE_TAKEAWAY_EXTRA;
-    }
-    // COLD_DRINK / WATER: menu price only, nothing added
-
+    // Menu price is NEVER changed (shake / mocktail stay at their menu price).
+    const unitPrice = line.price; // incl. boneless / cheese add-ons
     const lineTotal = unitPrice * qty;
     foodSubtotal += lineTotal;
+
     if (cat === "NORMAL_FOOD") normalFoodSubtotal += lineTotal;
+    else if (cat === "SHAKE" || cat === "MOCKTAIL") glassCount += qty;
+    // COLD_DRINK / WATER: menu price only, no packing of any kind
 
     return { ...line, chargeCat: cat, unitPrice, lineTotal };
   });
 
-  // 5% packing on NORMAL_FOOD only (all 3 order types)
-  const packingCharges = round2((normalFoodSubtotal * PACKING_PERCENT) / 100);
+  // Packing = 5% of normal food + Rs.10 per shake/mocktail glass (all order types).
+  // Only the combined amount is returned - the formula is never exposed.
+  const packingCharges = round2(
+    (normalFoodSubtotal * PACKING_PERCENT) / 100 + glassCount * GLASS_PACKING_CHARGE
+  );
 
   // Delivery charge: DELIVERY orders only
   let deliveryCharges = 0;
@@ -97,6 +98,6 @@ module.exports = {
   deliveryChargeFor,
   DELIVERY_TIERS,
   PACKING_PERCENT,
-  SHAKE_TAKEAWAY_EXTRA,
+  GLASS_PACKING_CHARGE,
   round2
 };

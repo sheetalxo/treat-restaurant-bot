@@ -295,7 +295,7 @@ const S = {
   },
 
   // ---------- bill ----------
-  billSubtotal: { en: "Subtotal", hi: "सबटोटल" },
+  billSubtotal: { en: "Food Subtotal", hi: "फूड सबटोटल" },
   billPacking: { en: "Packing Charges", hi: "पैकिंग चार्ज" },
   billDelivery: { en: "Delivery Charges", hi: "डिलीवरी चार्ज" },
   billDiscount: { en: "Discount", hi: "छूट" },
