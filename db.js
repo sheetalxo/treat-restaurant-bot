@@ -19,7 +19,9 @@ async function rest(method, path, { body, prefer } = {}) {
     method,
     headers: {
       apikey: KEY,
-      Authorization: `Bearer ${KEY}`,
+      // legacy service_role keys are JWTs (eyJ...) -> also send as Bearer.
+      // New-style sb_secret_... keys are NOT JWTs -> apikey header alone is correct.
+      ...(KEY.startsWith("eyJ") ? { Authorization: `Bearer ${KEY}` } : {}),
       "Content-Type": "application/json",
       ...(prefer ? { Prefer: prefer } : {})
     },
