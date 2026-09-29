@@ -257,12 +257,19 @@ const isBonelessEligible = (item) =>
 const isPizza = (item) => item.category === "PIZZA";
 
 // Charging category used by billing.js:
-// NORMAL_FOOD | SHAKE | MOCKTAIL | COLD_DRINK | WATER
+// NORMAL_FOOD | SHAKE | MOCKTAIL | COFFEE | ICE_CREAM | COLD_DRINK | WATER
 // COLD_DRINK / WATER (incl. cans and disposable glass) are exempt from all extra charges.
 function chargeCategory(item) {
   const cat = String(item.category || "").toUpperCase();
   if (cat === "SHAKES") return "SHAKE";
   if (cat === "MOCKTAILS") return "MOCKTAIL";
+
+  if (cat === "COFFEE & DESSERTS") {
+    const n = String(item.name || "").toLowerCase();
+    if (n.includes("coffee")) return "COFFEE";                        // Hot / Cold / Oreo Cold Coffee
+    if (/ice cream|butterscotch/.test(n)) return "ICE_CREAM";         // incl. Vanilla & Butterscotch Mix
+    // Gulab Jamun stays NORMAL_FOOD
+  }
 
   if (cat === "EXTRAS") {
     const n = String(item.name || "").toLowerCase();

@@ -11,7 +11,8 @@
 // ======================================================
 
 const PACKING_PERCENT = 5;        // internal only - never printed anywhere
-const GLASS_PACKING_CHARGE = 10;  // internal only - flat per Shake / Mocktail glass, goes INTO Packing Charges
+// internal only - flat packing per unit (goes INTO Packing Charges, no 5% on these)
+const FLAT_PACKING = { SHAKE: 10, MOCKTAIL: 10, COFFEE: 10, ICE_CREAM: 5 };
 
 // 0-2.5 km = 30 | 2.5-5 km = 50 | 5-7 km = 80 | 7-10 km = 100. Last maxKm = limit.
 const DELIVERY_TIERS = [
@@ -41,7 +42,7 @@ function calculateOrderTotal({ items, orderType, distanceKm = null, discount = 0
   const isDelivery = orderType === "DELIVERY";
 
   let normalFoodSubtotal = 0; // gets the 5% packing
-  let glassCount = 0;         // shakes + mocktails: flat Rs.10 packing each
+  let flatPacking = 0;        // shake/mocktail/coffee Rs.10, ice cream Rs.5 per unit
   let foodSubtotal = 0;
 
   const lines = items.map((line) => {
@@ -54,16 +55,16 @@ function calculateOrderTotal({ items, orderType, distanceKm = null, discount = 0
     foodSubtotal += lineTotal;
 
     if (cat === "NORMAL_FOOD") normalFoodSubtotal += lineTotal;
-    else if (cat === "SHAKE" || cat === "MOCKTAIL") glassCount += qty;
+    else if (FLAT_PACKING[cat]) flatPacking += FLAT_PACKING[cat] * qty;
     // COLD_DRINK / WATER: menu price only, no packing of any kind
 
     return { ...line, chargeCat: cat, unitPrice, lineTotal };
   });
 
-  // Packing = 5% of normal food + Rs.10 per shake/mocktail glass (all order types).
+  // Packing = 5% of normal food + flat per-unit packing (shake/mocktail/coffee Rs.10, ice cream Rs.5).
   // Only the combined amount is returned - the formula is never exposed.
   const packingCharges = round2(
-    (normalFoodSubtotal * PACKING_PERCENT) / 100 + glassCount * GLASS_PACKING_CHARGE
+    (normalFoodSubtotal * PACKING_PERCENT) / 100 + flatPacking
   );
 
   // Delivery charge: DELIVERY orders only
@@ -98,6 +99,6 @@ module.exports = {
   deliveryChargeFor,
   DELIVERY_TIERS,
   PACKING_PERCENT,
-  GLASS_PACKING_CHARGE,
+  FLAT_PACKING,
   round2
 };
