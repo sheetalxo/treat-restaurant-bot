@@ -17,17 +17,15 @@ const { t } = require("./i18n");
 const { parseTypedOrder } = require("./matcher");
 const { buildInvoicePdf } = require("./invoice");
 const { notifyTelegram, orderSummaryText } = require("./telegram");
-const {
-  calculateOrderTotal,
-  deliveryChargeFor,
-  DELIVERY_TIERS
-} = require("./billing");
+const { calculateOrderTotal, deliveryChargeFor } = require("./billing");
 
 const app = express();
+app.disable("x-powered-by");
 
-// Keep raw body: needed to verify Razorpay webhook signature
+// Keep raw body: needed to verify the Meta (WhatsApp) AND Razorpay webhook signatures
 app.use(
   express.json({
+    limit: "200kb",
     verify: (req, res, buf) => {
       req.rawBody = buf;
     }
@@ -45,6 +43,10 @@ const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 // Free-form messages to the owner only work if the owner messaged the bot
 // in the last 24h. For reliable alerts use an approved template message.
 const OWNER_PHONE = process.env.OWNER_PHONE;
+
+// Meta App Secret (Meta App Dashboard -> Settings -> Basic -> App secret).
+// REQUIRED: used to verify the X-Hub-Signature-256 header on every webhook POST.
+const WHATSAPP_APP_SECRET = process.env.WHATSAPP_APP_SECRET;
 
 // ---------------- Razorpay (add keys at the end) ----------------
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID;
@@ -104,11 +106,54 @@ const MENU_PDF_PATH = fs.existsSync(path.join(__dirname, "menu.pdf"))
 
 const sessions = {};
 const orders = {};
-const processedMessages = new Set();
+
+// message-id dedupe with expiry (Meta retries; also blocks replays)
+const processedMessages = new Map(); // id -> timestamp
+const DEDUPE_TTL_MS = 60 * 60 * 1000;
+
+// per-phone rate limit: max 40 messages per minute
+const rateBuckets = new Map(); // phone -> { start, count }
+function rateLimited(phone) {
+  const now = Date.now();
+  const b = rateBuckets.get(phone);
+  if (!b || now - b.start > 60 * 1000) {
+    rateBuckets.set(phone, { start: now, count: 1 });
+    return false;
+  }
+  b.count += 1;
+  return b.count > 40;
+}
+
+const MAX_TEXT_LEN = 500;     // any typed message
+const MAX_ADDRESS_LEN = 250;
+const MAX_CART_LINES = 40;
+
+// remove control / zero-width / bidi characters and trim
+function cleanText(s, max) {
+  return String(s ?? "")
+    .replace(/[\u0000-\u001f\u007f\u200b-\u200f\u202a-\u202e\u2066-\u2069]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, max);
+}
+
+// memory cleanup: idle sessions after 6h, old orders after 48h, stale dedupe/rate entries
+setInterval(() => {
+  const now = Date.now();
+  for (const [id, ts] of processedMessages) if (now - ts > DEDUPE_TTL_MS) processedMessages.delete(id);
+  for (const [ph, b] of rateBuckets) if (now - b.start > 120 * 1000) rateBuckets.delete(ph);
+  for (const ph of Object.keys(sessions)) {
+    if (now - (sessions[ph].lastSeen || 0) > 6 * 60 * 60 * 1000) delete sessions[ph];
+  }
+  for (const id of Object.keys(orders)) {
+    if (now - new Date(orders[id].createdAt).getTime() > 48 * 60 * 60 * 1000) delete orders[id];
+  }
+}, 10 * 60 * 1000).unref();
 
 function getSession(phone) {
   if (!sessions[phone]) {
     sessions[phone] = {
+      lastSeen: Date.now(),
       lang: null, // "en" | "hi" | "hg"
       type: null, // "VEG" | "NON-VEG" | "BOTH"
       category: null,
@@ -136,6 +181,7 @@ function getSession(phone) {
       autoAdd: false
     };
   }
+  sessions[phone].lastSeen = Date.now();
   return sessions[phone];
 }
 
@@ -240,23 +286,68 @@ app.get("/webhook", (req, res) => {
 // RECEIVE WHATSAPP MESSAGES
 // ======================================================
 
-app.post("/webhook", async (req, res) => {
+// Verifies that the POST really comes from Meta (HMAC-SHA256 of the raw body).
+// Without this ANYONE can POST fake "customer messages" to /webhook.
+function verifyMetaSignature(req, res, next) {
+  if (!WHATSAPP_APP_SECRET) {
+    console.error("WHATSAPP_APP_SECRET is not set - rejecting webhook POST (fail closed)");
+    return res.sendStatus(503);
+  }
+
+  const header = req.get("x-hub-signature-256") || "";
+  if (!header.startsWith("sha256=") || !req.rawBody) return res.sendStatus(403);
+
+  const expected = crypto
+    .createHmac("sha256", WHATSAPP_APP_SECRET)
+    .update(req.rawBody)
+    .digest("hex");
+
+  const a = Buffer.from(expected, "utf8");
+  const b = Buffer.from(header.slice(7), "utf8");
+
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+    console.warn("WhatsApp webhook: invalid signature");
+    return res.sendStatus(403);
+  }
+  next();
+}
+
+app.post("/webhook", verifyMetaSignature, async (req, res) => {
   // Reply to Meta immediately so it doesn't retry while we process
   res.sendStatus(200);
 
   try {
-    const value = req.body.entry?.[0]?.changes?.[0]?.value;
-    const message = value?.messages?.[0];
-    if (!message) return;
+    // Meta can batch several entries / changes / messages in ONE request
+    for (const entry of req.body?.entry || []) {
+      for (const change of entry?.changes || []) {
+        const value = change?.value;
+        for (const message of value?.messages || []) {
+          try {
+            await processIncoming(value, message);
+          } catch (error) {
+            console.error("Message processing error:", error);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Webhook error:", error);
+  }
+});
+
+async function processIncoming(value, message) {
+  {
+    if (!message?.id || !/^\d{6,15}$/.test(String(message.from || ""))) return;
 
     if (processedMessages.has(message.id)) return;
-    processedMessages.add(message.id);
-    if (processedMessages.size > 2000) processedMessages.clear();
+    processedMessages.set(message.id, Date.now());
 
     const from = message.from;
+    if (rateLimited(from)) return;
+
     const session = getSession(from);
     const profileName = value.contacts?.[0]?.profile?.name;
-    if (profileName) session.name = profileName;
+    if (profileName) session.name = cleanText(profileName, 60);
 
     // Closed outside 10:30 AM - 10:30 PM
     if (!isOpenNow()) {
@@ -285,10 +376,8 @@ app.post("/webhook", async (req, res) => {
     // image / sticker / audio etc.
     if (!session.lang) await sendLanguagePrompt(from);
     else await sendWelcomeMessage(from);
-  } catch (error) {
-    console.error("Webhook error:", error);
   }
-});
+}
 
 // ======================================================
 // TEXT HANDLER
@@ -306,7 +395,7 @@ const CHANGE_TYPE_WORDS = ["change", "change type", "order type"];
 
 async function handleText(from, raw) {
   const session = getSession(from);
-  const text = raw.trim();
+  const text = cleanText(raw, MAX_TEXT_LEN);
   const lower = text.toLowerCase();
 
   // 1. language first
@@ -359,7 +448,7 @@ async function handleText(from, raw) {
       await sendText(from, T(from, "addressShort"));
       return;
     }
-    session.address = text;
+    session.address = cleanText(text, MAX_ADDRESS_LEN);
     session.awaiting = null;
     await sendText(from, T(from, "addressSaved"));
     await sendMenuStart(from);
@@ -626,15 +715,6 @@ async function getDistanceKm(lat, lng) {
   return round2(haversineKm(RESTAURANT_LAT, RESTAURANT_LNG, lat, lng));
 }
 
-function tiersText() {
-  let from = 0;
-  return DELIVERY_TIERS.map((tier) => {
-    const line = `${from}-${tier.maxKm} km: ₹${tier.charge}`;
-    from = tier.maxKm;
-    return line;
-  }).join("\n");
-}
-
 // WhatsApp "Send location" button. Falls back to plain instructions.
 async function sendLocationRequest(to) {
   try {
@@ -645,7 +725,7 @@ async function sendLocationRequest(to) {
       type: "interactive",
       interactive: {
         type: "location_request_message",
-        body: { text: cut(T(to, "askLocationBtn", tiersText()), 1000) },
+        body: { text: cut(T(to, "askLocationBtn"), 1000) },
         action: { name: "send_location" }
       }
     });
@@ -672,7 +752,17 @@ async function handleLocation(from, loc) {
     return;
   }
 
-  const km = await getDistanceKm(loc.latitude, loc.longitude);
+  const lat = Number(loc?.latitude);
+  const lng = Number(loc?.longitude);
+  if (
+    !Number.isFinite(lat) || !Number.isFinite(lng) ||
+    Math.abs(lat) > 90 || Math.abs(lng) > 180
+  ) {
+    await sendText(from, T(from, "needLocation"));
+    return;
+  }
+
+  const km = await getDistanceKm(lat, lng);
   const charge = deliveryChargeFor(km);
 
   if (charge === null) {
@@ -683,17 +773,17 @@ async function handleLocation(from, loc) {
   }
 
   session.distanceKm = km;
-  session.lat = loc.latitude;
-  session.lng = loc.longitude;
+  session.lat = lat;
+  session.lng = lng;
 
   // Ask for the written address once (keep it if the pin was re-shared)
   if (!session.address) {
     session.awaiting = "address";
-    await sendText(from, T(from, "deliveryInfo", charge));
+    await sendText(from, T(from, "deliveryInfo"));
     await sendText(from, T(from, "askAddress"));
   } else {
     session.awaiting = null;
-    await sendText(from, T(from, "deliveryInfo", charge));
+    await sendText(from, T(from, "deliveryInfo"));
     await sendMenuStart(from);
   }
 }
@@ -1311,7 +1401,7 @@ function addCurrentItemToCart(session) {
 
   if (existing) {
     existing.quantity = Math.min(existing.quantity + line.quantity, MAX_QTY);
-  } else {
+  } else if (session.cart.length < MAX_CART_LINES) {
     session.cart.push(line);
   }
 
@@ -1531,9 +1621,23 @@ async function sendBill(to) {
 // PLACE ORDER
 // ======================================================
 
+const ID_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I
+
 function makeOrderId() {
-  // always starts with TR
-  return "TR" + Date.now().toString(36).toUpperCase();
+  const p = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata", day: "2-digit", month: "2-digit"
+  }).formatToParts(new Date());
+  const dd = p.find((x) => x.type === "day").value;
+  const mm = p.find((x) => x.type === "month").value;
+
+  for (let tries = 0; tries < 20; tries++) {
+    let suffix = "";
+    const bytes = crypto.randomBytes(4);
+    for (const byte of bytes) suffix += ID_ALPHABET[byte % ID_ALPHABET.length];
+    const id = `TR-${dd}${mm}-${suffix}`;
+    if (!orders[id]) return id; // never overwrite an existing order
+  }
+  throw new Error("Could not generate a unique order id");
 }
 
 async function placeOrder(to, method) {
@@ -1549,7 +1653,24 @@ async function placeOrder(to, method) {
     return;
   }
 
-  const bill = calcBill(session);
+  // spam guard: max 3 orders per phone per 10 minutes
+  const recent = Object.values(orders).filter(
+    (o) => o.phone === to && Date.now() - new Date(o.createdAt).getTime() < 10 * 60 * 1000
+  ).length;
+  if (recent >= 3) {
+    await sendText(to, "Too many orders in a short time. Please call the restaurant to place another order.");
+    return;
+  }
+
+  let bill;
+  try {
+    bill = calcBill(session);
+  } catch (err) {
+    // e.g. delivery location missing / out of range: never place a broken order
+    console.error("Billing error:", err.message);
+    await startCheckout(to);
+    return;
+  }
 
   const order = {
     id: makeOrderId(),
@@ -1703,6 +1824,20 @@ app.post("/razorpay-webhook", async (req, res) => {
 
     if (order) {
       if (order.status === "PAID") return; // duplicate event
+
+      // Never trust "paid" blindly: amount, currency and status must match the order
+      const paidPaise = Number(entity.amount_paid ?? entity.amount);
+      const expectedPaise = Math.round(order.bill.total * 100);
+      if (entity.status !== "paid" || entity.currency !== "INR" || paidPaise !== expectedPaise) {
+        console.error("Razorpay mismatch:", order.id, entity.status, entity.currency, paidPaise, expectedPaise);
+        if (OWNER_PHONE) {
+          await sendText(
+            OWNER_PHONE,
+            `⚠️ Payment mismatch for order ${order.id}. Expected ₹${order.bill.total}, got ₹${paidPaise / 100}. Order NOT marked paid - please verify in Razorpay.`
+          );
+        }
+        return;
+      }
 
       order.status = "PAID";
       order.paidAt = new Date().toISOString();

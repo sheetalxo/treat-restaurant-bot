@@ -117,13 +117,15 @@ function buildLines(order, cols) {
   if (order.orderType === "DINE-IN" && order.visitTime) {
     wrap("Expected Visit: " + order.visitTime, cols).forEach((l) => push(l));
   }
-  wrap("Customer: " + (order.name || "-"), cols).forEach((l) => push(l));
+  wrap("Customer: " + String(order.name || "-").slice(0, 60), cols).forEach((l) => push(l));
   push("Phone: +" + ascii(order.phone));
   if (order.orderType === "DELIVERY") {
-    if (order.address) wrap("Address: " + order.address, cols).forEach((l) => push(l));
-    if (order.lat && order.lng) {
+    if (order.address) wrap("Address: " + String(order.address).slice(0, 250), cols).forEach((l) => push(l));
+    const lat = Number(order.lat);
+    const lng = Number(order.lng);
+    if (Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180) {
       // clickable in the PDF; no distance is ever printed
-      push("Google Maps Location", false, `https://www.google.com/maps?q=${order.lat},${order.lng}`);
+      push("Google Maps Location", false, `https://www.google.com/maps?q=${lat},${lng}`);
     }
   }
   dash();
@@ -208,10 +210,21 @@ function buildInvoicePdf(order) {
 
       let y = marginPt;
       for (const line of lines) {
-        doc
-          .font(line.bold ? "Courier-Bold" : "Courier")
-          .fontSize(FONT_SIZE)
-          .text(line.text, marginPt, y, { lineBreak: false, link: line.link || undefined });
+        doc.font(line.bold ? "Courier-Bold" : "Courier").fontSize(FONT_SIZE);
+        try {
+          // pdfkit computes the link rectangle from the text width; with
+          // lineBreak:false and no explicit width it becomes NaN and the whole
+          // PDF throws. Passing width fixes it.
+          doc.text(line.text, marginPt, y, {
+            lineBreak: false,
+            width: widthPt - marginPt * 2,
+            link: line.link || undefined
+          });
+        } catch (e) {
+          // a broken link must never kill the invoice: print the line without it
+          console.error("Invoice line/link failed, printing plain:", e.message);
+          doc.text(line.text, marginPt, y, { lineBreak: false });
+        }
         y += LINE_H;
       }
 

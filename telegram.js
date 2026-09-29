@@ -74,13 +74,16 @@ function orderSummaryText(order) {
   if (order.orderType === "DELIVERY") {
     L.push("", "Delivery Location:");
     if (order.address) L.push(order.address);
-    if (order.lat && order.lng) {
-      L.push(`Google Maps: https://www.google.com/maps?q=${order.lat},${order.lng}`);
+    const lat = Number(order.lat);
+    const lng = Number(order.lng);
+    if (Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat) <= 90 && Math.abs(lng) <= 180) {
+      L.push(`Google Maps: https://www.google.com/maps?q=${lat},${lng}`);
     }
   }
 
   L.push("", `PDF Invoice: ${order.pdfAttached === false ? "Not available" : "Attached"}`);
-  return L.join("\n");
+  // Telegram rejects messages over 4096 chars
+  return L.join("\n").slice(0, 4000);
 }
 
 async function tgCall(method, body, headers) {
