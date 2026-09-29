@@ -18,6 +18,7 @@ const { parseTypedOrder } = require("./matcher");
 const { buildInvoicePdf } = require("./invoice");
 const { notifyTelegram, orderSummaryText } = require("./telegram");
 const { calculateOrderTotal, deliveryChargeFor } = require("./billing");
+const db = require("./db");
 
 const app = express();
 app.disable("x-powered-by");
@@ -148,7 +149,31 @@ setInterval(() => {
   for (const id of Object.keys(orders)) {
     if (now - new Date(orders[id].createdAt).getTime() > 48 * 60 * 60 * 1000) delete orders[id];
   }
+  db.cleanup().catch(() => {});
 }, 10 * 60 * 1000).unref();
+
+// One customer = one queue. Messages from the SAME phone are processed strictly in order
+// (no two handlers mutating one session at once); different customers run in parallel.
+const phoneLocks = new Map();
+function withPhoneLock(phone, fn) {
+  const prev = phoneLocks.get(phone) || Promise.resolve();
+  const next = prev.catch(() => {}).then(fn);
+  phoneLocks.set(phone, next);
+  next.finally(() => { if (phoneLocks.get(phone) === next) phoneLocks.delete(phone); }).catch(() => {});
+  return next;
+}
+
+// Load the session from Supabase if this process doesn't have it (after restart / sleep)
+async function hydrateSession(phone) {
+  if (sessions[phone]) return;
+  const saved = await db.loadSession(phone);
+  const fresh = getSession(phone); // creates defaults
+  if (saved && Date.now() - (saved.lastSeen || 0) < 6 * 60 * 60 * 1000) Object.assign(fresh, saved);
+}
+
+async function persistSession(phone) {
+  if (sessions[phone]) await db.saveSession(phone, sessions[phone]);
+}
 
 function getSession(phone) {
   if (!sessions[phone]) {
@@ -268,6 +293,15 @@ app.get("/", (req, res) => {
   res.status(200).send("TREAT RESTAURANT WhatsApp Bot is running");
 });
 
+// For the uptime monitor (UptimeRobot etc.): point it at /health, every 5 minutes
+app.get("/health", (req, res) => {
+  res.status(200).json({ ok: true, db: db.enabled, uptimeSec: Math.round(process.uptime()) });
+});
+
+// Log instead of crashing: a crash = Render restart = memory wiped + webhook replays
+process.on("unhandledRejection", (err) => console.error("unhandledRejection:", err));
+process.on("uncaughtException", (err) => console.error("uncaughtException:", err));
+
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
@@ -323,7 +357,7 @@ app.post("/webhook", verifyMetaSignature, async (req, res) => {
         const value = change?.value;
         for (const message of value?.messages || []) {
           try {
-            await processIncoming(value, message);
+            await withPhoneLock(String(message?.from || "unknown"), () => processIncoming(value, message));
           } catch (error) {
             console.error("Message processing error:", error);
           }
@@ -336,15 +370,55 @@ app.post("/webhook", verifyMetaSignature, async (req, res) => {
 });
 
 async function processIncoming(value, message) {
+  const from = String(message?.from || "");
+  try {
+    await processIncomingInner(value, message);
+  } finally {
+    if (/^\d{6,15}$/.test(from)) await persistSession(from);
+  }
+}
+
+async function processIncomingInner(value, message) {
   {
     if (!message?.id || !/^\d{6,15}$/.test(String(message.from || ""))) return;
 
     if (processedMessages.has(message.id)) return;
     processedMessages.set(message.id, Date.now());
+    if (!(await db.claimMessage(message.id))) return; // already handled (survives restarts)
+
+    // Ignore stale/replayed messages. Render restarts wipe the in-memory dedupe map,
+    // and Meta re-delivers old webhooks -> bot would "reply on its own" to old messages.
+    const ageSec = Date.now() / 1000 - Number(message.timestamp);
+    if (Number.isFinite(ageSec) && ageSec > 5 * 60) {
+      console.warn("Ignoring stale message", message.id, Math.round(ageSec), "s old");
+      return;
+    }
+
+    // Only react to things a customer actually SENT for the bot to answer.
+    // reaction / system / unsupported / unknown / button / order / request_welcome
+    // are NOT messages to reply to.
+    const REPLYABLE = ["text", "location", "interactive", "image", "audio", "video", "document", "sticker"];
+    if (!REPLYABLE.includes(message.type)) {
+      console.log("Ignoring non-reply message type:", message.type);
+      return;
+    }
 
     const from = message.from;
+
+    // Webhook can carry events for OTHER numbers of the same app (test number + real number).
+    // Replying to those from our number = customer gets a message they never asked for.
+    const metaPhoneId = value?.metadata?.phone_number_id;
+    if (metaPhoneId && PHONE_NUMBER_ID && String(metaPhoneId) !== String(PHONE_NUMBER_ID)) {
+      console.warn("Ignoring message for another phone_number_id:", metaPhoneId);
+      return;
+    }
+    // Never answer our own number (self-loop guard)
+    const botNumber = String(value?.metadata?.display_phone_number || "").replace(/\D/g, "");
+    if (botNumber && from === botNumber) return;
+
     if (rateLimited(from)) return;
 
+    await hydrateSession(from);
     const session = getSession(from);
     const profileName = value.contacts?.[0]?.profile?.name;
     if (profileName) session.name = cleanText(profileName, 60);
@@ -816,6 +890,20 @@ async function handleAction(to, id) {
   // Order type (delivery / takeaway / dine-in) must be chosen first
   const NO_TYPE_NEEDED = ["menu_pdf", "ot_dinein", "ot_takeaway", "ot_delivery"];
   if (!session.orderType && !NO_TYPE_NEEDED.includes(id)) {
+    // Old buttons stay tappable forever in the chat. After an order is done (cart empty,
+    // order type cleared) tapping an old PAY / CART button must NOT restart the whole welcome flow.
+    const STALE_IDS = ["pay_online", "pay_cash", "checkout", "view_cart", "empty_cart", "remove_mode",
+      "add_cart", "qty_plus", "qty_minus", "qty_type"];
+    const isStale = STALE_IDS.includes(id) || id.startsWith("remove:") || id.startsWith("rempage:");
+    if (isStale && session.cart.length === 0) {
+      const staleText = {
+        en: "⏳ This button is from an old order. Type *Hi* to start a new order.",
+        hi: "⏳ यह बटन पुराने ऑर्डर का है। नया ऑर्डर शुरू करने के लिए *Hi* लिखें।",
+        hg: "⏳ Ye button purane order ka hai. Naya order shuru karne ke liye *Hi* likho."
+      };
+      await sendText(to, staleText[session.lang] || staleText.hg);
+      return;
+    }
     await sendWelcomeMessage(to);
     return;
   }
@@ -1623,7 +1711,7 @@ async function sendBill(to) {
 
 const ID_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I
 
-function makeOrderId() {
+async function makeOrderId() {
   const p = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Asia/Kolkata", day: "2-digit", month: "2-digit"
   }).formatToParts(new Date());
@@ -1635,7 +1723,7 @@ function makeOrderId() {
     const bytes = crypto.randomBytes(4);
     for (const byte of bytes) suffix += ID_ALPHABET[byte % ID_ALPHABET.length];
     const id = `TR-${dd}${mm}-${suffix}`;
-    if (!orders[id]) return id; // never overwrite an existing order
+    if (!orders[id] && !(await db.orderExists(id))) return id; // never overwrite an existing order
   }
   throw new Error("Could not generate a unique order id");
 }
@@ -1654,9 +1742,10 @@ async function placeOrder(to, method) {
   }
 
   // spam guard: max 3 orders per phone per 10 minutes
-  const recent = Object.values(orders).filter(
+  const recentMem = Object.values(orders).filter(
     (o) => o.phone === to && Date.now() - new Date(o.createdAt).getTime() < 10 * 60 * 1000
   ).length;
+  const recent = Math.max(recentMem, await db.countRecentOrders(to, 10 * 60 * 1000));
   if (recent >= 3) {
     await sendText(to, "Too many orders in a short time. Please call the restaurant to place another order.");
     return;
@@ -1673,7 +1762,7 @@ async function placeOrder(to, method) {
   }
 
   const order = {
-    id: makeOrderId(),
+    id: await makeOrderId(),
     phone: to,
     name: session.name,
     lang: session.lang,
@@ -1690,19 +1779,26 @@ async function placeOrder(to, method) {
   };
 
   orders[order.id] = order;
+  await db.saveOrder(order);
 
   // ---------------- CASH ----------------
   if (method === "CASH") {
     session.cart = [];
     resetOrderFlow(session);
 
-    await sendText(
-      to,
-      T(to, "cashConfirmed", order.id, rs(bill.total), order.orderType === "DELIVERY")
-    );
-
-    await deliverInvoice(order, to, order.lang);
+    // Restaurant must ALWAYS get the order, even if the WhatsApp send to the customer fails
+    // (expired token, customer blocked, 24h window...). Customer messages are best-effort.
     await notifyOwner(order);
+
+    try {
+      await sendText(
+        to,
+        T(to, "cashConfirmed", order.id, rs(bill.total), order.orderType === "DELIVERY")
+      );
+      await deliverInvoice(order, to, order.lang);
+    } catch (err) {
+      console.error("Customer confirmation failed (order already saved + owner notified):", order.id, err.message);
+    }
     return;
   }
 
@@ -1717,6 +1813,7 @@ async function placeOrder(to, method) {
   if (!link) {
     // Order was never payable online -> drop it so it can be re-placed
     delete orders[order.id];
+    await db.deleteOrder(order.id);
     await sendButtons(to, T(to, "payUnavailable"), [
       ["pay_cash", T(to, "btnPayCash")],
       ["view_cart", T(to, "btnViewCart")]
@@ -1725,6 +1822,7 @@ async function placeOrder(to, method) {
   }
 
   order.paymentLink = link;
+  await db.saveOrder(order);
   session.cart = [];
   resetOrderFlow(session);
 
@@ -1820,7 +1918,12 @@ app.post("/razorpay-webhook", async (req, res) => {
     const entity = req.body.payload?.payment_link?.entity;
     if (!entity) return;
 
-    const order = orders[entity.reference_id];
+    let order = orders[entity.reference_id];
+    if (!order) {
+      // process restarted: recover the real order from Supabase
+      order = await db.loadOrder(entity.reference_id);
+      if (order) orders[order.id] = order;
+    }
 
     if (order) {
       if (order.status === "PAID") return; // duplicate event
@@ -1842,10 +1945,16 @@ app.post("/razorpay-webhook", async (req, res) => {
       order.status = "PAID";
       order.paidAt = new Date().toISOString();
       order.paymentId = req.body.payload?.payment?.entity?.id || null;
+      await db.saveOrder(order);
 
-      await sendText(order.phone, t(order.lang || "hg", "payReceived", order.id, rs(order.bill.total)));
-      await deliverInvoice(order, order.phone, order.lang);
-      await notifyOwner(order);
+      await notifyOwner(order); // restaurant first, always
+
+      try {
+        await sendText(order.phone, t(order.lang || "hg", "payReceived", order.id, rs(order.bill.total)));
+        await deliverInvoice(order, order.phone, order.lang);
+      } catch (err) {
+        console.error("Customer payment confirmation failed (owner already notified):", order.id, err.message);
+      }
     } else {
       // Server restarted and lost in-memory orders: still tell the customer
       const phone = entity.notes?.phone;
@@ -1915,7 +2024,25 @@ async function sendText(to, body) {
   });
 }
 
+// Loop safety-net: never send more than 30 WhatsApp messages/minute to one number,
+// whatever the cause (bug, retry storm, ping-pong). Excess is dropped and logged.
+const outBuckets = new Map();
+function outboundAllowed(to) {
+  const now = Date.now();
+  const b = outBuckets.get(to);
+  if (!b || now - b.start > 60 * 1000) {
+    outBuckets.set(to, { start: now, count: 1 });
+    return true;
+  }
+  b.count += 1;
+  return b.count <= 30;
+}
+
 async function sendWhatsAppMessage(to, message) {
+  if (!outboundAllowed(to)) {
+    console.error("OUTBOUND LIMIT hit for", to, "- message dropped (possible loop)");
+    return null;
+  }
   const url = `https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/messages`;
 
   const response = await fetch(url, {
