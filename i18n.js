@@ -3,13 +3,13 @@
 // If a language is missing for a key, English is used.
 // Button titles: max 20 chars. List row titles: max 24 chars.
 // ======================================================
-
+ 
 const S = {
   // ---------- language + welcome ----------
   langPrompt: {
     en: "Please select your language\nअपनी भाषा चुनें\nApni language chuno"
   },
-
+ 
   // step 1: order type first
   welcome: {
     en: "Welcome to TREAT RESTAURANT 🍽️\n\nHow would you like to receive your order?",
@@ -40,7 +40,7 @@ const S = {
   btnMenuPdf: { en: "📄 MENU PDF", hi: "📄 मेनू PDF" },
   btnWrite: { en: "✍️ WRITE ORDER", hi: "✍️ लिखकर ऑर्डर", hg: "✍️ LIKH KE ORDER" },
   btnLang: { en: "🌐 LANGUAGE", hi: "🌐 भाषा" },
-
+ 
   writePrompt: {
     en:
       "✍️ Type your order and send it.\n\n" +
@@ -64,7 +64,7 @@ const S = {
       "• Cart dekhne ke liye kabhi bhi \"cart\" likho.\n\n" +
       "(Item ke naam English letters mein likhna.)"
   },
-
+ 
   menuPdfCaption: { en: "TREAT RESTAURANT — Menu 📄" },
   menuPdfError: {
     en: "Sorry, the menu PDF is not available right now. Please use the buttons to browse the menu.",
@@ -76,7 +76,7 @@ const S = {
     hi: "क्षमा करें, मैं समझ नहीं पाया। कृपया नीचे दिए बटन इस्तेमाल करें, या ✍️ लिखकर ऑर्डर दबाकर तरीका देखें।",
     hg: "Sorry, samajh nahi aaya. Neeche ke buttons use karo, ya ✍️ LIKH KE ORDER dabao aur tarika dekho."
   },
-
+ 
   // ---------- category / item lists ----------
   catBody: {
     en: (label, both) => `🍽️ ${label} MENU\n\nChoose a category:` + (both ? "\n🟢 veg  🔴 non-veg" : ""),
@@ -133,7 +133,7 @@ const S = {
     hi: (c) => `${c} देखें`,
     hg: (c) => `${c} dekho`
   },
-
+ 
   // ---------- item options ----------
   variantBody: {
     en: (n) => `🍽️ ${n}\n\nChoose plate size:`,
@@ -142,7 +142,7 @@ const S = {
   },
   btnHalf: { en: (p) => `HALF ₹${p}`, hi: (p) => `हाफ ₹${p}` },
   btnFull: { en: (p) => `FULL ₹${p}`, hi: (p) => `फुल ₹${p}` },
-
+ 
   boneBody: {
     en: (n, c) => `🍗 ${n}\n\nBone-in or Boneless?\nBoneless = +₹${c} per plate`,
     hi: (n, c) => `🍗 ${n}\n\nहड्डी सहित या बोनलेस?\nबोनलेस = +₹${c} प्रति प्लेट`,
@@ -150,7 +150,7 @@ const S = {
   },
   btnWithBone: { en: "WITH BONE", hi: "हड्डी सहित" },
   btnBoneless: { en: (c) => `BONELESS +₹${c}`, hi: (c) => `बोनलेस +₹${c}` },
-
+ 
   cheeseBody: {
     en: (n, c) => `🍕 ${n}\n\nWant extra cheese?\nExtra cheese = +₹${c} per pizza`,
     hi: (n, c) => `🍕 ${n}\n\nएक्स्ट्रा चीज़ चाहिए?\nएक्स्ट्रा चीज़ = +₹${c} प्रति पिज़्ज़ा`,
@@ -158,7 +158,7 @@ const S = {
   },
   btnNoCheese: { en: "NO CHEESE", hi: "चीज़ नहीं" },
   btnCheese: { en: (c) => `EXTRA CHEESE +₹${c}`, hi: (c) => `चीज़ +₹${c}` },
-
+ 
   // ---------- quantity ----------
   qtyBody: {
     en: (n, o, p, q, t) =>
@@ -196,7 +196,7 @@ const S = {
     hi: "कृपया सिर्फ़ नंबर लिखें, जैसे 3 या 10।",
     hg: "Sirf number likho, jaise 3 ya 10."
   },
-
+ 
   // ---------- cart ----------
   cartTitle: { en: "🛒 YOUR CART", hi: "🛒 आपका कार्ट", hg: "🛒 AAPKA CART" },
   subtotalLbl: { en: "Subtotal", hi: "सबटोटल" },
@@ -223,7 +223,7 @@ const S = {
   },
   btnRemoveItem: { en: "REMOVE ITEM", hi: "आइटम हटाएँ", hg: "ITEM HATAO" },
   removeSection: { en: "YOUR CART", hi: "आपका कार्ट", hg: "AAPKA CART" },
-
+ 
   // ---------- checkout ----------
   minOrder: {
     en: (m, s) => `⚠️ Minimum food order is ₹${m}.\nYour subtotal is ₹${s}. Please add ₹${m - s} more.`,
@@ -293,7 +293,7 @@ const S = {
     hi: "😔 क्षमा करें, आपकी लोकेशन हमारे डिलीवरी क्षेत्र से बाहर है। आप टेकअवे या डाइन-इन चुन सकते हैं।",
     hg: "😔 Sorry, aapki location hamare delivery area se bahar hai. Takeaway ya dine-in choose kar sakte ho."
   },
-
+ 
   // ---------- bill ----------
   billSubtotal: { en: "Food Subtotal", hi: "फूड सबटोटल" },
   billPacking: { en: "Packing Charges", hi: "पैकिंग चार्ज" },
@@ -312,7 +312,7 @@ const S = {
   btnCod: { en: "💵 CASH ON DELIVERY", hi: "💵 कैश ऑन डिलीवरी", hg: "💵 COD" },
   btnCounter: { en: "💵 PAY AT COUNTER", hi: "💵 काउंटर पर पेमेंट", hg: "💵 COUNTER PE PAY" },
   btnEdit: { en: "✏️ EDIT CART", hi: "✏️ कार्ट बदलें", hg: "✏️ CART EDIT" },
-
+ 
   cashConfirmed: {
     en: (id, t, del) =>
       `✅ Order confirmed!\n\nOrder ID: *${id}*\nTotal: ₹${t}\nPayment: ${del ? "Cash on delivery" : "Pay at counter"}\n\nThank you for ordering from TREAT RESTAURANT 🙏`,
@@ -345,7 +345,7 @@ const S = {
     hi: (id) => `🧾 ऑर्डर ${id} का इनवॉइस`,
     hg: (id) => `🧾 Order ${id} ka invoice`
   },
-
+ 
   // ---------- typed orders ----------
   typedAdded: {
     en: (lines) => `✅ Added to your cart:\n${lines.join("\n")}`,
@@ -373,12 +373,12 @@ const S = {
     hg: (q) => `"${q}" ek se zyada category mein hai. Ek chuno:`
   }
 };
-
+ 
 function t(lang, key, ...args) {
   const entry = S[key];
   if (!entry) return key;
   const v = entry[lang] !== undefined ? entry[lang] : entry.en;
   return typeof v === "function" ? v(...args) : v;
 }
-
+ 
 module.exports = { t };
