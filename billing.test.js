@@ -1,6 +1,6 @@
 // Run: node test/billing.test.js   (no dependencies needed)
 const assert = require("assert");
-const { calculateOrderTotal } = require("../billing");
+const { calculateOrderTotal } = require("./billing");
 
 const N = "NORMAL_FOOD";
 const line = (name, price, quantity, chargeCat = N) => ({ name, price, quantity, chargeCat });
@@ -12,8 +12,8 @@ let b = calculateOrderTotal({
   items: [line("Chicken Hakka Noodles", 180, 2), line("Butter Chicken Full", 490, 1),
           line("Garlic Naan", 60, 2), line("Shake", 80, 1, "SHAKE")]
 });
-assert.strictEqual(b.foodSubtotal, 1060);
-assert.strictEqual(b.packingCharges, 48.5);
+assert.strictEqual(b.foodSubtotal, 1050);
+assert.strictEqual(b.packingCharges, 58.5);
 assert.strictEqual(b.deliveryCharges, 50);
 assert.strictEqual(b.total, 1158.5);
 
@@ -22,16 +22,17 @@ b = calculateOrderTotal({
   orderType: "DINE-IN",
   items: [line("Paneer Tikka", 220, 1), line("Butter Naan", 60, 2), line("Shake", 80, 1, "SHAKE")]
 });
+// Dine-In: NO packing, NO delivery
 assert.strictEqual(b.foodSubtotal, 420);
-assert.strictEqual(b.packingCharges, 17);
+assert.strictEqual(b.packingCharges, 0);
 assert.strictEqual(b.deliveryCharges, 0);
-assert.strictEqual(b.total, 437);
+assert.strictEqual(b.total, 420);
 
-// Shake x2: takeaway/delivery = 80*2 + 10*2 = 180, no packing; dine-in = 160
+// Shake x2: takeaway/delivery = 80*2 + 10*2 = 180; dine-in = 160 (no packing at all)
 const shake2 = [line("Shake", 80, 2, "SHAKE")];
 assert.strictEqual(calculateOrderTotal({ orderType: "TAKEAWAY", items: shake2 }).total, 180);
 assert.strictEqual(calculateOrderTotal({ orderType: "DINE-IN", items: shake2 }).total, 160);
-assert.strictEqual(calculateOrderTotal({ orderType: "TAKEAWAY", items: shake2 }).packingCharges, 0);
+assert.strictEqual(calculateOrderTotal({ orderType: "TAKEAWAY", items: shake2 }).packingCharges, 20); // flat Rs.10/unit
 
 // Mocktail same rule as shake
 assert.strictEqual(calculateOrderTotal({ orderType: "TAKEAWAY", items: [line("Mojito", 120, 1, "MOCKTAIL")] }).total, 130);

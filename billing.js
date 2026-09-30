@@ -63,9 +63,11 @@ function calculateOrderTotal({ items, orderType, distanceKm = null, discount = 0
 
   // Packing = 5% of normal food + flat per-unit packing (shake/mocktail/coffee Rs.10, ice cream Rs.5).
   // Only the combined amount is returned - the formula is never exposed.
-  const packingCharges = round2(
-    (normalFoodSubtotal * PACKING_PERCENT) / 100 + flatPacking
-  );
+  // Dine-In: food is served at the table -> NO packing charge of any kind.
+  const packingCharges =
+    orderType === "DINE-IN"
+      ? 0
+      : round2((normalFoodSubtotal * PACKING_PERCENT) / 100 + flatPacking);
 
   // Delivery charge: DELIVERY orders only
   let deliveryCharges = 0;

@@ -339,6 +339,11 @@ const S = {
     hi: "😔 ऑनलाइन पेमेंट अभी उपलब्ध नहीं है। क्या आप कैश से पेमेंट करना चाहेंगे?",
     hg: "😔 Online payment abhi available nahi hai. Cash se payment karna chahoge?"
   },
+  payPending: {
+    en: "⏳ You already have an unpaid online order. Please complete that payment first (the link stays valid for 30 minutes), or place a new order after it expires.",
+    hi: "⏳ आपका एक ऑनलाइन ऑर्डर का पेमेंट अभी बाकी है। पहले वही पेमेंट पूरा करें (लिंक 30 मिनट तक चालू रहता है) या लिंक एक्सपायर होने के बाद नया ऑर्डर करें।",
+    hg: "⏳ Aapka ek online order ka payment abhi pending hai. Pehle wahi payment kar lo (link 30 minute chalta hai) ya link expire hone ke baad naya order karo."
+  },
   btnPayCash: { en: "💵 PAY CASH", hi: "💵 कैश पेमेंट", hg: "💵 CASH PAY" },
   invoiceCaption: {
     en: (id) => `🧾 Invoice for order ${id}`,

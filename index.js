@@ -16,7 +16,7 @@ const {
 const { t } = require("./i18n");
 const { parseTypedOrder } = require("./matcher");
 const { buildInvoicePdf } = require("./invoice");
-const { notifyTelegram, orderSummaryText } = require("./telegram");
+const { notifyTelegram, notifyTelegramText, orderSummaryText } = require("./telegram");
 const { calculateOrderTotal, deliveryChargeFor } = require("./billing");
 const db = require("./db");
 
@@ -40,10 +40,7 @@ const VERIFY_TOKEN = process.env.WHATSAPP_VERIFY_TOKEN;
 const ACCESS_TOKEN = process.env.WHATSAPP_ACCESS_TOKEN;
 const PHONE_NUMBER_ID = process.env.WHATSAPP_PHONE_NUMBER_ID;
 
-// Owner number with country code, no "+" (e.g. 919876543210)
-// Free-form messages to the owner only work if the owner messaged the bot
-// in the last 24h. For reliable alerts use an approved template message.
-const OWNER_PHONE = process.env.OWNER_PHONE;
+// Owner alerts go to Telegram only (TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID). No WhatsApp copy.
 
 // Meta App Secret (Meta App Dashboard -> Settings -> Basic -> App secret).
 // REQUIRED: used to verify the X-Hub-Signature-256 header on every webhook POST.
@@ -307,7 +304,7 @@ app.get("/webhook", (req, res) => {
   const token = req.query["hub.verify_token"];
   const challenge = req.query["hub.challenge"];
 
-  if (mode === "subscribe" && token === VERIFY_TOKEN) {
+  if (mode === "subscribe" && VERIFY_TOKEN && token === VERIFY_TOKEN) {
     console.log("Webhook verified successfully");
     return res.status(200).send(challenge);
   }
@@ -1751,6 +1748,12 @@ async function placeOrder(to, method) {
     return;
   }
 
+  // One checkout = one payment: kill any older unpaid link first (or refuse if it can still be paid)
+  if (!(await supersedePendingOnline(to))) {
+    await sendText(to, T(to, "payPending"));
+    return;
+  }
+
   let bill;
   try {
     bill = calcBill(session);
@@ -1876,7 +1879,8 @@ async function createRazorpayPaymentLink(order) {
       reminder_enable: false,
       expire_by: Math.floor(Date.now() / 1000) + 30 * 60,
       notes: { order_id: order.id, phone: order.phone }
-    })
+    }),
+    signal: AbortSignal.timeout(15000)
   });
 
   const data = await response.json();
@@ -1885,11 +1889,72 @@ async function createRazorpayPaymentLink(order) {
     throw new Error(`Razorpay API error: ${JSON.stringify(data)}`);
   }
 
+  order.paymentLinkId = data.id || null; // needed to cancel this link if the customer starts a new checkout
   return data.short_url;
+}
+
+// ---- one checkout = one payment ----------------------------------------
+const LINK_TTL_MS = 30 * 60 * 1000; // must match expire_by above
+
+async function razorpayLinkCall(method, linkId, action) {
+  const auth = Buffer.from(`${RAZORPAY_KEY_ID}:${RAZORPAY_KEY_SECRET}`).toString("base64");
+  const response = await fetch(
+    `https://api.razorpay.com/v1/payment_links/${encodeURIComponent(linkId)}${action ? "/" + action : ""}`,
+    { method, headers: { Authorization: `Basic ${auth}` }, signal: AbortSignal.timeout(15000) }
+  );
+  const data = await response.json().catch(() => ({}));
+  return { ok: response.ok, data };
+}
+
+// Before a NEW order is placed: every older unpaid online link of this customer must be dead.
+// Returns false when an older link can still be paid (or its state is unknown) -> caller must NOT
+// create another order, otherwise the customer could pay twice.
+async function supersedePendingOnline(phone) {
+  const pending = new Map();
+  for (const o of Object.values(orders)) {
+    if (o.phone === phone && o.status === "AWAITING_PAYMENT") pending.set(o.id, o);
+  }
+  for (const o of await db.findPendingOrders(phone)) {
+    if (!pending.has(o.id)) pending.set(o.id, orders[o.id] || o);
+  }
+
+  for (const o of pending.values()) {
+    let newStatus = null;
+
+    if (Date.now() - new Date(o.createdAt).getTime() > LINK_TTL_MS + 2 * 60 * 1000) {
+      newStatus = "EXPIRED"; // link already expired on Razorpay's side
+    } else if (!o.paymentLinkId || !RAZORPAY_KEY_ID || !RAZORPAY_KEY_SECRET) {
+      console.error("Cannot verify/cancel pending payment link for", o.id);
+      return false;
+    } else {
+      try {
+        const c = await razorpayLinkCall("POST", o.paymentLinkId, "cancel");
+        if (c.ok) newStatus = "CANCELLED";
+        else {
+          const st = await razorpayLinkCall("GET", o.paymentLinkId);
+          const status = st.data?.status;
+          if (status === "cancelled" || status === "expired") newStatus = status.toUpperCase();
+          else {
+            console.error("Pending link not cancellable:", o.id, status);
+            return false; // paid / partially paid / unknown -> block a second checkout
+          }
+        }
+      } catch (err) {
+        console.error("Cancel payment link failed:", o.id, err.message);
+        return false;
+      }
+    }
+
+    o.status = newStatus;
+    orders[o.id] = o;
+    await db.saveOrder(o);
+  }
+  return true;
 }
 
 // Razorpay Dashboard -> Webhooks: https://<render-url>/razorpay-webhook
 // Event: payment_link.paid    Secret = RAZORPAY_WEBHOOK_SECRET
+const paymentInFlight = new Set();
 app.post("/razorpay-webhook", async (req, res) => {
   try {
     const signature = req.get("x-razorpay-signature");
@@ -1918,6 +1983,12 @@ app.post("/razorpay-webhook", async (req, res) => {
     const entity = req.body.payload?.payment_link?.entity;
     if (!entity) return;
 
+    // Razorpay retries / sends duplicates: process each order's payment exactly once at a time
+    const payKey = String(entity.reference_id);
+    if (paymentInFlight.has(payKey)) return;
+    paymentInFlight.add(payKey);
+    try {
+
     let order = orders[entity.reference_id];
     if (!order) {
       // process restarted: recover the real order from Supabase
@@ -1933,13 +2004,16 @@ app.post("/razorpay-webhook", async (req, res) => {
       const expectedPaise = Math.round(order.bill.total * 100);
       if (entity.status !== "paid" || entity.currency !== "INR" || paidPaise !== expectedPaise) {
         console.error("Razorpay mismatch:", order.id, entity.status, entity.currency, paidPaise, expectedPaise);
-        if (OWNER_PHONE) {
-          await sendText(
-            OWNER_PHONE,
-            `⚠️ Payment mismatch for order ${order.id}. Expected ₹${order.bill.total}, got ₹${paidPaise / 100}. Order NOT marked paid - please verify in Razorpay.`
-          );
-        }
+        await alertOwner(
+          `⚠️ Payment mismatch for order ${order.id}. Expected ₹${order.bill.total}, got ₹${paidPaise / 100}. Order NOT marked paid - please verify in Razorpay.`
+        );
         return;
+      }
+
+      if (order.status === "CANCELLED" || order.status === "EXPIRED") {
+        await alertOwner(
+          `⚠️ Payment received for order ${order.id} which was ${order.status}. Amount ₹${order.bill.total}. Order is being confirmed - please verify in Razorpay.`
+        );
       }
 
       order.status = "PAID";
@@ -1960,18 +2034,23 @@ app.post("/razorpay-webhook", async (req, res) => {
       const phone = entity.notes?.phone;
       const paid = (entity.amount_paid ?? entity.amount ?? 0) / 100;
       console.error("Paid link for unknown order:", entity.reference_id);
+      // Owner FIRST: if the customer message throws (token/24h window) the owner must still know
+      await alertOwner(
+        `⚠️ PAID ONLINE but order details were lost (server restarted).\nOrder: ${entity.reference_id}\nAmount: ₹${paid}\nCustomer: +${phone || "unknown"}\nPlease call the customer.`
+      );
       if (phone) {
-        await sendText(
-          phone,
-          `✅ Payment received for order ${entity.reference_id}. Restaurant will contact you shortly.`
-        );
+        try {
+          await sendText(
+            phone,
+            `✅ Payment received for order ${entity.reference_id}. Restaurant will contact you shortly.`
+          );
+        } catch (err) {
+          console.error("Customer payment confirmation failed:", entity.reference_id, err.message);
+        }
       }
-      if (OWNER_PHONE) {
-        await sendText(
-          OWNER_PHONE,
-          `⚠️ PAID ONLINE but order details were lost (server restarted).\nOrder: ${entity.reference_id}\nAmount: ₹${paid}\nCustomer: +${phone || "unknown"}\nPlease call the customer.`
-        );
-      }
+    }
+    } finally {
+      paymentInFlight.delete(payKey);
     }
   } catch (err) {
     console.error("Razorpay webhook error:", err);
@@ -1992,22 +2071,28 @@ async function notifyOwner(order) {
     console.error("Invoice build failed (Telegram):", err.message);
   }
 
-  // 1. Telegram admin alert + PDF
+  let delivered = false;
   try {
-    await notifyTelegram(order, pdf);
+    delivered = await notifyTelegram(order, pdf);
   } catch (err) {
     console.error("Telegram notification failed:", err.message);
   }
 
-  // 2. Optional WhatsApp copy to the owner (existing behaviour)
-  if (!OWNER_PHONE) return;
-
-  try {
-    await sendText(OWNER_PHONE, orderSummaryText(order));
-    await deliverInvoice(order, OWNER_PHONE, "en");
-  } catch (err) {
-    console.error("Owner notification failed:", err.message);
+  // Nobody was told about this order -> make it impossible to miss in the Render logs
+  if (!delivered) {
+    console.error("CRITICAL: NO OWNER ALERT DELIVERED for order", order.id, "- check TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID");
   }
+}
+
+// Text alert to the owner on Telegram (payment problems etc.)
+async function alertOwner(text) {
+  let delivered = false;
+  try {
+    delivered = await notifyTelegramText(text);
+  } catch (err) {
+    console.error("Telegram text alert failed:", err.message);
+  }
+  if (!delivered) console.error("CRITICAL: owner alert NOT delivered:", text);
 }
 
 // ======================================================
@@ -2051,7 +2136,8 @@ async function sendWhatsAppMessage(to, message) {
       Authorization: `Bearer ${ACCESS_TOKEN}`,
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(message)
+    body: JSON.stringify(message),
+    signal: AbortSignal.timeout(15000)
   });
 
   const data = await response.json();
@@ -2074,7 +2160,8 @@ async function uploadMedia(buffer, filename, mime) {
   const response = await fetch(`https://graph.facebook.com/v23.0/${PHONE_NUMBER_ID}/media`, {
     method: "POST",
     headers: { Authorization: `Bearer ${ACCESS_TOKEN}` }, // no Content-Type: fetch sets the boundary
-    body: form
+    body: form,
+    signal: AbortSignal.timeout(20000)
   });
 
   const data = await response.json();

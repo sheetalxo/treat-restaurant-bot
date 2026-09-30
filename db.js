@@ -1,17 +1,18 @@
 // ======================================================
 // SUPABASE PERSISTENCE (plain REST, no extra npm package)
-// Env: SUPABASE_URL, SUPABASE_SERVICE_KEY  (service_role key - SERVER ONLY)
+// Env: SUPABASE_URL, SUPABASE_SERVICE_KEY or SUPABASE_SECRET_KEY  (secret/service_role key - SERVER ONLY)
 //
 // If the env vars are missing, every function becomes a safe no-op and the bot
 // runs memory-only (old behaviour). If Supabase is down, the bot keeps working.
 // ======================================================
 
 const URL_BASE = (process.env.SUPABASE_URL || "").replace(/\/+$/, "");
-const KEY = process.env.SUPABASE_SERVICE_KEY || "";
+// Accepts either name so a Render env var called SUPABASE_SECRET_KEY also works.
+const KEY = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_SECRET_KEY || "";
 const enabled = !!(URL_BASE && KEY);
 
 if (!enabled) {
-  console.warn("Supabase NOT configured (SUPABASE_URL / SUPABASE_SERVICE_KEY) - memory-only mode");
+  console.warn("Supabase NOT configured (SUPABASE_URL / SUPABASE_SERVICE_KEY or SUPABASE_SECRET_KEY) - memory-only mode");
 }
 
 async function rest(method, path, { body, prefer } = {}) {
@@ -116,6 +117,18 @@ async function orderExists(id) {
   }
 }
 
+// Unpaid online orders of one customer (used to make sure a checkout can only be paid once)
+async function findPendingOrders(phone) {
+  if (!enabled) return [];
+  try {
+    const rows = await rest("GET", `orders?phone=eq.${enc(phone)}&status=eq.AWAITING_PAYMENT&select=data`);
+    return Array.isArray(rows) ? rows.map((r) => r.data).filter(Boolean) : [];
+  } catch (err) {
+    console.error("db.findPendingOrders:", err.message);
+    return [];
+  }
+}
+
 async function deleteOrder(id) {
   if (!enabled) return;
   try {
@@ -154,5 +167,5 @@ async function cleanup() {
 
 module.exports = {
   enabled, claimMessage, loadSession, saveSession,
-  saveOrder, loadOrder, orderExists, deleteOrder, countRecentOrders, cleanup
+  saveOrder, loadOrder, orderExists, findPendingOrders, deleteOrder, countRecentOrders, cleanup
 };

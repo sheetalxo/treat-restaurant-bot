@@ -131,4 +131,15 @@ async function notifyTelegram(order, pdfBuffer) {
   return true;
 }
 
-module.exports = { orderSummaryText, notifyTelegram, inr, fmtPhone, TYPE_LABEL };
+// Plain text alert (payment problems etc.). Returns true if delivered.
+async function notifyTelegramText(text) {
+  if (!BOT_TOKEN || !CHAT_ID) return false;
+  await tgCall(
+    "sendMessage",
+    JSON.stringify({ chat_id: CHAT_ID, text: String(text).slice(0, 4000) }),
+    { "Content-Type": "application/json" }
+  );
+  return true;
+}
+
+module.exports = { orderSummaryText, notifyTelegram, notifyTelegramText, inr, fmtPhone, TYPE_LABEL };

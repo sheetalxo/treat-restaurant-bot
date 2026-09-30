@@ -19,7 +19,6 @@ const RESTAURANT = {
     process.env.RESTAURANT_ADDRESS ||
     "Hira Chak, Swankha, Nandpur, Samba (J&K)",
   phone: process.env.RESTAURANT_PHONE || "9018777799",
-  gstin: process.env.GSTIN || "",
   fssai: process.env.FSSAI_NO || ""
 };
 
@@ -104,7 +103,6 @@ function buildLines(order, cols) {
   push(center(RESTAURANT.tagline));
   wrap(RESTAURANT.address, cols).forEach((l) => push(center(l)));
   push(center("Ph: " + RESTAURANT.phone));
-  if (RESTAURANT.gstin) push(center("GSTIN: " + RESTAURANT.gstin));
   if (RESTAURANT.fssai) push(center("FSSAI Lic: " + RESTAURANT.fssai));
   dash();
   push(center("INVOICE"), true);
