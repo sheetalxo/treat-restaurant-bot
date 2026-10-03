@@ -321,13 +321,19 @@ const S = {
     hg: (id, t, del) =>
       `✅ Order confirm ho gaya!\n\nOrder ID: *${id}*\nTotal: ₹${t}\nPayment: ${del ? "Cash on delivery" : "Counter pe payment"}\n\nTREAT RESTAURANT se order karne ke liye thank you 🙏`
   },
-  payLink: {
-    en: (id, t, link) =>
-      `💳 Order ID: *${id}*\nAmount: *₹${t}*\n\nOpen this link to pay:\n${link}\n\nYou'll get a confirmation here once the payment is done. The link expires in 30 minutes.`,
-    hi: (id, t, link) =>
-      `💳 ऑर्डर ID: *${id}*\nराशि: *₹${t}*\n\nपेमेंट के लिए यह लिंक खोलें:\n${link}\n\nपेमेंट होते ही यहीं कन्फ़र्मेशन मिल जाएगा। लिंक 30 मिनट में एक्सपायर हो जाएगा।`,
-    hg: (id, t, link) =>
-      `💳 Order ID: *${id}*\nAmount: *₹${t}*\n\nPay karne ke liye link kholo:\n${link}\n\nPayment hote hi yahin confirmation mil jayega. Link 30 minute mein expire hoga.`
+  // body text for the CTA-url payment button (no raw link shown)
+  payLinkBody: {
+    en: (id, t) =>
+      `💳 Order ID: *${id}*\nAmount: *₹${t}*\n\nTap the button below to pay securely.\n\nYou'll get a confirmation here once the payment is done. The link expires in 30 minutes.`,
+    hi: (id, t) =>
+      `💳 ऑर्डर ID: *${id}*\nराशि: *₹${t}*\n\nसुरक्षित पेमेंट के लिए नीचे बटन दबाएँ।\n\nपेमेंट होते ही यहीं कन्फ़र्मेशन मिल जाएगा। लिंक 30 मिनट में एक्सपायर हो जाएगा।`,
+    hg: (id, t) =>
+      `💳 Order ID: *${id}*\nAmount: *₹${t}*\n\nSecure payment ke liye neeche button dabao.\n\nPayment hote hi yahin confirmation mil jayega. Link 30 minute mein expire hoga.`
+  },
+  btnPayNow: {
+    en: (t) => `Pay ₹${t}`,
+    hi: (t) => `₹${t} पे करें`,
+    hg: (t) => `₹${t} Pay karo`
   },
   payReceived: {
     en: (id, t) => `✅ Payment received!\n\nOrder ID: *${id}*\nAmount: ₹${t}\n\nYour order is confirmed. Thank you 🙏`,

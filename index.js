@@ -1389,6 +1389,24 @@ async function sendButtons(to, text, buttons) {
   });
 }
 
+// Opens in WhatsApp's own in-app browser (stays inside the app, no link text shown)
+async function sendCtaUrlButton(to, text, buttonLabel, url) {
+  await sendWhatsAppMessage(to, {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to,
+    type: "interactive",
+    interactive: {
+      type: "cta_url",
+      body: { text: cut(text, 1000) },
+      action: {
+        name: "cta_url",
+        parameters: { display_text: cut(buttonLabel, 20), url }
+      }
+    }
+  });
+}
+
 async function sendVariantButtons(to) {
   const item = getSession(to).item;
 
@@ -1829,7 +1847,12 @@ async function placeOrder(to, method) {
   session.cart = [];
   resetOrderFlow(session);
 
-  await sendText(to, T(to, "payLink", order.id, rs(bill.total), link));
+  await sendCtaUrlButton(
+    to,
+    T(to, "payLinkBody", order.id, rs(bill.total)),
+    T(to, "btnPayNow", rs(bill.total)),
+    link
+  );
 }
 
 // ======================================================
