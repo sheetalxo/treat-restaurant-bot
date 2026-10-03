@@ -32,6 +32,11 @@ const S = {
     hi: "😴 क्षमा करें, TREAT RESTAURANT अभी बंद है।\n\n🕥 समय: सुबह 10:30 से रात 10:30 तक (रोज़)\n\nकृपया खुलने के समय में दोबारा मैसेज करें। 🙏",
     hg: "😴 Sorry, TREAT RESTAURANT abhi band hai.\n\n🕥 Timing: subah 10:30 se raat 10:30 tak (roz)\n\nPlease khulne ke time pe dobara message karo. 🙏"
   },
+  callBusy: {
+    en: "Sorry, we're on another call right now - please try again in a few minutes, or order here on WhatsApp chat.",
+    hi: "माफ़ कीजिए, अभी कोई और कॉल चल रही है - कृपया कुछ मिनट बाद कोशिश करें, या यहीं WhatsApp चैट पर ऑर्डर करें।",
+    hg: "Sorry, abhi ek aur call chal rahi hai - thodi der baad try karo, ya yahin WhatsApp chat pe order kar lo."
+  },
   welcome2: {
     en: "Or choose an option below 👇",
     hi: "या नीचे से कोई विकल्प चुनें 👇",

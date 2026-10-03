@@ -19,6 +19,7 @@ const { buildInvoicePdf } = require("./invoice");
 const { notifyTelegram, notifyTelegramText, orderSummaryText } = require("./telegram");
 const { calculateOrderTotal, deliveryChargeFor } = require("./billing");
 const db = require("./db");
+const { LiveKitAPI, DisconnectWhatsAppCallRequest_DisconnectReason } = require("livekit-server-sdk");
 
 const app = express();
 app.disable("x-powered-by");
@@ -50,6 +51,25 @@ const WHATSAPP_APP_SECRET = process.env.WHATSAPP_APP_SECRET;
 const RAZORPAY_KEY_ID = process.env.RAZORPAY_KEY_ID;
 const RAZORPAY_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
 const RAZORPAY_WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET;
+
+// ---------------- Voice calling (WhatsApp Calling API -> LiveKit -> Gemini Live) ----------------
+// All of this is optional: if LIVEKIT_* is not set, incoming calls are simply rejected.
+const LIVEKIT_URL = process.env.LIVEKIT_URL;
+const LIVEKIT_API_KEY = process.env.LIVEKIT_API_KEY;
+const LIVEKIT_API_SECRET = process.env.LIVEKIT_API_SECRET;
+const CALL_MAX_CONCURRENT = Number(process.env.CALL_MAX_CONCURRENT || 1);
+const VOICE_AGENT_NAME = process.env.VOICE_AGENT_NAME || "treat-voice-agent";
+// Shared secret the voice agent must send as `x-voice-secret` to use /voice/* routes
+const VOICE_INTERNAL_SECRET = process.env.VOICE_INTERNAL_SECRET;
+const WHATSAPP_CLOUD_API_VERSION = "23.0"; // keep in sync with the graph.facebook.com version used elsewhere in this file
+
+const lkApi =
+  LIVEKIT_URL && LIVEKIT_API_KEY && LIVEKIT_API_SECRET
+    ? new LiveKitAPI(LIVEKIT_URL, LIVEKIT_API_KEY, LIVEKIT_API_SECRET)
+    : null;
+
+// callId -> { from } for calls currently bridged through LiveKit
+const activeCalls = new Map();
 
 // ---------------- Business rules ----------------
 const MIN_FOOD_ORDER = 300;      // delivery only; excludes packing/delivery charge
@@ -359,6 +379,13 @@ app.post("/webhook", verifyMetaSignature, async (req, res) => {
             console.error("Message processing error:", error);
           }
         }
+        for (const call of value?.calls || []) {
+          try {
+            await handleCallWebhook(value, call);
+          } catch (error) {
+            console.error("Call webhook error:", error);
+          }
+        }
       }
     }
   } catch (error) {
@@ -372,6 +399,102 @@ async function processIncoming(value, message) {
     await processIncomingInner(value, message);
   } finally {
     if (/^\d{6,15}$/.test(from)) await persistSession(from);
+  }
+}
+
+// ======================================================
+// WHATSAPP CALLING  (customer calls -> LiveKit room -> voice agent)
+// ======================================================
+
+// Direct Meta Graph call to <phone_number_id>/calls (accept/reject/terminate).
+// Only used for REJECT here - accept is done by LiveKit's AcceptWhatsAppCall,
+// which calls Meta on our behalf using the whatsappApiKey we pass it.
+async function callsGraphApi(body) {
+  const url = `https://graph.facebook.com/v${WHATSAPP_CLOUD_API_VERSION}/${PHONE_NUMBER_ID}/calls`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${ACCESS_TOKEN}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ messaging_product: "whatsapp", ...body }),
+    signal: AbortSignal.timeout(15000)
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) console.error("Calls API error:", JSON.stringify(data));
+  return data;
+}
+
+async function handleCallWebhook(value, call) {
+  const metaPhoneId = value?.metadata?.phone_number_id;
+  if (metaPhoneId && PHONE_NUMBER_ID && String(metaPhoneId) !== String(PHONE_NUMBER_ID)) return;
+
+  if (call.event === "connect" && call.session?.sdp_type === "offer") {
+    await handleInboundCallOffer(call);
+  } else if (call.event === "terminate") {
+    activeCalls.delete(call.id);
+    if (lkApi) {
+      try {
+        await lkApi.connector.disconnectWhatsAppCall(
+          call.id,
+          "",
+          DisconnectWhatsAppCallRequest_DisconnectReason.USER_INITIATED
+        );
+      } catch (err) {
+        // Normal if WE already disconnected it (e.g. rejected for being over capacity) - Meta
+        // sends a terminate webhook either way, and LiveKit auto-cleans up after 30s regardless.
+        console.log("WhatsApp call cleanup (probably already closed):", call.id, err.message);
+      }
+    }
+  }
+}
+
+async function handleInboundCallOffer(call) {
+  const from = String(call.from || "");
+
+  if (!lkApi || !PHONE_NUMBER_ID || !ACCESS_TOKEN) {
+    console.error("Voice calling not configured (LIVEKIT_* env vars missing) - rejecting call", call.id);
+    await callsGraphApi({ call_id: call.id, action: "reject" });
+    return;
+  }
+
+  if (activeCalls.size >= CALL_MAX_CONCURRENT) {
+    console.log("Call capacity reached, rejecting:", call.id, "from", from);
+    await callsGraphApi({ call_id: call.id, action: "reject" });
+    // Best-effort: let the customer know on WhatsApp chat, since they just hung up on a busy tone
+    if (/^\d{6,15}$/.test(from)) {
+      try {
+        await hydrateSession(from);
+        await sendText(from, t(getSession(from).lang || "hg", "callBusy"));
+      } catch (err) {
+        console.error("Call-busy text failed:", err.message);
+      }
+    }
+    return;
+  }
+
+  activeCalls.set(call.id, { from });
+
+  try {
+    await lkApi.connector.acceptWhatsAppCall({
+      whatsappPhoneNumberId: PHONE_NUMBER_ID,
+      whatsappApiKey: ACCESS_TOKEN,
+      whatsappCloudApiVersion: WHATSAPP_CLOUD_API_VERSION,
+      whatsappCallId: call.id,
+      sdp: call.session.sdp,
+      roomName: `call-${call.id}`,
+      participantIdentity: from,
+      agents: [{ agentName: VOICE_AGENT_NAME, metadata: JSON.stringify({ phone: from }) }]
+    });
+  } catch (err) {
+    activeCalls.delete(call.id);
+    console.error("AcceptWhatsAppCall failed:", call.id, err.message);
+    try {
+      await lkApi.connector.disconnectWhatsAppCall(
+        call.id,
+        ACCESS_TOKEN,
+        DisconnectWhatsAppCallRequest_DisconnectReason.BUSINESS_INITIATED
+      );
+    } catch (err2) {
+      console.error("Cleanup after failed accept also failed:", err2.message);
+    }
   }
 }
 
@@ -2205,6 +2328,193 @@ async function sendDocument(to, mediaId, filename, caption) {
     document: { id: mediaId, filename, caption }
   });
 }
+
+// ======================================================
+// VOICE AGENT INTERNAL API
+// Called by the separate LiveKit voice agent process - never by a browser or Meta.
+// Same session object + same order functions as the text bot, so a call and a
+// chat message land in the exact same place (Telegram, invoice, payment button).
+// ======================================================
+
+function requireVoiceSecret(req, res, next) {
+  if (!VOICE_INTERNAL_SECRET || req.get("x-voice-secret") !== VOICE_INTERNAL_SECRET) {
+    return res.sendStatus(403);
+  }
+  next();
+}
+
+function voicePhone(req, res) {
+  const phone = String(req.body?.phone || "");
+  if (!/^\d{6,15}$/.test(phone)) {
+    res.status(400).json({ error: "invalid phone" });
+    return null;
+  }
+  return phone;
+}
+
+// Full menu as plain text, for the agent to read out on the call.
+// type: VEG | NON-VEG | BOTH (defaults to BOTH)
+app.get("/voice/menu-text", requireVoiceSecret, (req, res) => {
+  const type = ["VEG", "NON-VEG", "BOTH"].includes(req.query.type) ? req.query.type : "BOTH";
+  const lines = [];
+  for (const category of getCategories(type)) {
+    lines.push(category);
+    for (const item of getItems(type, category)) {
+      const price = isHalfFull(item) ? `Half ₹${item.price.half} / Full ₹${item.price.full}` : `₹${item.price}`;
+      lines.push(`- ${item.name}${marker(item, type)}: ${price}`);
+    }
+  }
+  res.json({ type: typeLabel(type), menuText: lines.join("\n") });
+});
+
+// Load (or create) the caller's session, same object the text bot uses
+app.post("/voice/session", requireVoiceSecret, async (req, res) => {
+  const phone = voicePhone(req, res);
+  if (!phone) return;
+  const lang = ["en", "hi", "hg"].includes(req.body?.lang) ? req.body.lang : "hg";
+
+  await hydrateSession(phone);
+  const session = getSession(phone);
+  session.lang = lang;
+  session.type = "BOTH";
+  await persistSession(phone);
+
+  res.json({ cart: previewBill(session).items, orderType: session.orderType || null });
+});
+
+// One spoken line -> same fuzzy matcher the typed-order flow uses.
+// Returns what happened so the agent can read it back / ask to repeat.
+app.post("/voice/add-item", requireVoiceSecret, async (req, res) => {
+  const phone = voicePhone(req, res);
+  if (!phone) return;
+  const text = String(req.body?.text || "").slice(0, 200);
+
+  await hydrateSession(phone);
+  const session = getSession(phone);
+  const entries = parseTypedOrder(text);
+  const entry = entries.find((e) => e.kind !== "unknown") || entries[0];
+
+  if (!entry || entry.kind === "unknown") {
+    return res.json({ ok: false, reason: "not_understood" });
+  }
+  if (entry.kind === "item") {
+    startTypedItem(session, entry.item, entry);
+    const summary = addCurrentItemToCart(session);
+    await persistSession(phone);
+    return res.json({ ok: true, added: summary, cartSubtotal: cartSubtotal(session) });
+  }
+  // "pick" (several matches) / "category" / "catpick": too ambiguous for a one-shot voice
+  // add - tell the agent so it can ask the customer a clarifying question in its own words.
+  const options =
+    entry.kind === "pick"
+      ? entry.candidates.slice(0, 5).map((i) => i.name)
+      : entry.kind === "category"
+      ? [entry.category]
+      : (entry.categories || []).slice(0, 5);
+  res.json({ ok: false, reason: "ambiguous", options });
+});
+
+// orderType: TAKEAWAY | DINE-IN only - DELIVERY is handled on WhatsApp chat (needs a location pin)
+app.post("/voice/set-order-type", requireVoiceSecret, async (req, res) => {
+  const phone = voicePhone(req, res);
+  if (!phone) return;
+  const orderType = req.body?.orderType;
+  if (!["TAKEAWAY", "DINE-IN"].includes(orderType)) {
+    return res.status(400).json({ error: "orderType must be TAKEAWAY or DINE-IN" });
+  }
+
+  await hydrateSession(phone);
+  const session = getSession(phone);
+  session.orderType = orderType;
+  session.address = null;
+  session.distanceKm = null;
+  session.lat = null;
+  session.lng = null;
+  await persistSession(phone);
+  res.json({ ok: true });
+});
+
+app.post("/voice/set-visit-time", requireVoiceSecret, async (req, res) => {
+  const phone = voicePhone(req, res);
+  if (!phone) return;
+  await hydrateSession(phone);
+  const session = getSession(phone);
+  session.visitTime = cut(String(req.body?.visitTime || ""), 30) || null;
+  await persistSession(phone);
+  res.json({ ok: true });
+});
+
+// Read back the current cart + total before asking for payment method
+app.post("/voice/cart-summary", requireVoiceSecret, async (req, res) => {
+  const phone = voicePhone(req, res);
+  if (!phone) return;
+  await hydrateSession(phone);
+  const session = getSession(phone);
+
+  if (!session.cart.length) return res.json({ empty: true });
+
+  let bill;
+  try {
+    bill = calcBill(session);
+  } catch (err) {
+    return res.json({ empty: false, error: err.message });
+  }
+  res.json({
+    empty: false,
+    items: bill.items.map((l) => ({ name: l.name + optionsText(l), quantity: l.quantity, lineTotal: l.lineTotal })),
+    subtotal: bill.foodSubtotal,
+    packing: bill.packing,
+    total: bill.total,
+    minOrderMet: true // MIN_FOOD_ORDER only applies to delivery, which voice doesn't do
+  });
+});
+
+// method: CASH | ONLINE - reuses the exact same placeOrder() the text bot uses, so
+// Telegram, the invoice PDF, and (for ONLINE) the WhatsApp payment button all fire identically.
+app.post("/voice/place-order", requireVoiceSecret, async (req, res) => {
+  const phone = voicePhone(req, res);
+  if (!phone) return;
+  const method = req.body?.method === "ONLINE" ? "ONLINE" : "CASH";
+
+  await hydrateSession(phone);
+  const session = getSession(phone);
+  if (!session.cart.length) return res.json({ ok: false, reason: "empty_cart" });
+  if (!session.orderType) return res.json({ ok: false, reason: "no_order_type" });
+
+  let bill;
+  try {
+    bill = calcBill(session);
+  } catch (err) {
+    return res.json({ ok: false, reason: "billing_error", message: err.message });
+  }
+
+  await placeOrder(phone, method);
+  await persistSession(phone);
+
+  // placeOrder() already sent the WhatsApp confirmation / payment button itself.
+  res.json({
+    ok: true,
+    method,
+    total: bill.total,
+    note:
+      method === "ONLINE"
+        ? "Payment button sent on WhatsApp chat."
+        : "Cash order confirmed, invoice sent on WhatsApp chat."
+  });
+});
+
+// Sends the menu PDF to the caller's WhatsApp chat, exactly like the text bot's menu_pdf button
+app.post("/voice/send-menu-pdf", requireVoiceSecret, async (req, res) => {
+  const phone = voicePhone(req, res);
+  if (!phone) return;
+  try {
+    await sendMenuPdf(phone);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("Voice send-menu-pdf failed:", err.message);
+    res.status(500).json({ ok: false });
+  }
+});
 
 // ======================================================
 // START SERVER
