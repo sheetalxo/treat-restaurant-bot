@@ -1,0 +1,5431 @@
+{
+  "version": "7.0",
+  "screens": [
+    {
+      "id": "CATS",
+      "title": "TREAT Menu",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextBody",
+            "text": "Category chuno, dish select karo. Sab chunne ke baad 'Order bhejo' dabao."
+          },
+          {
+            "type": "NavigationList",
+            "name": "cats",
+            "list-items": [
+              {
+                "id": "p0",
+                "main-content": {
+                  "title": "MOMOS"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_0"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p1",
+                "main-content": {
+                  "title": "NOODLES"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_1"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p2",
+                "main-content": {
+                  "title": "CHINESE SNACKS"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_2"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p3",
+                "main-content": {
+                  "title": "TANDOORI SNACKS"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_3"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p4",
+                "main-content": {
+                  "title": "MAIN COURSE 1"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_4"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p5",
+                "main-content": {
+                  "title": "MAIN COURSE 2"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_5"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p6",
+                "main-content": {
+                  "title": "RICE"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_6"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p7",
+                "main-content": {
+                  "title": "BURGERS"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_7"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p8",
+                "main-content": {
+                  "title": "PIZZA"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_8"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p9",
+                "main-content": {
+                  "title": "PASTA"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_9"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p10",
+                "main-content": {
+                  "title": "ROLLS"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_10"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p11",
+                "main-content": {
+                  "title": "SOUPS"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_11"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p12",
+                "main-content": {
+                  "title": "MOCKTAILS"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_12"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p13",
+                "main-content": {
+                  "title": "SHAKES"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_13"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p14",
+                "main-content": {
+                  "title": "COFFEE & DESSERTS"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_14"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p15",
+                "main-content": {
+                  "title": "EXTRAS"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_15"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p16",
+                "main-content": {
+                  "title": "CHICKEN SNACKS"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_16"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p17",
+                "main-content": {
+                  "title": "BREADS"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_17"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "p18",
+                "main-content": {
+                  "title": "TANDOORI"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "PAGE_18"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "done",
+                "main-content": {
+                  "title": "✅ Order bhejo",
+                  "description": "Review"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CONFIRM"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_0",
+      "title": "MOMOS",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "MOMOS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Veg Steam Momos",
+                    "title": "Veg Steam Momos",
+                    "description": "🟢 ₹70"
+                  },
+                  {
+                    "id": "Veg Fried Momos",
+                    "title": "Veg Fried Momos",
+                    "description": "🟢 ₹80"
+                  },
+                  {
+                    "id": "Kurkure Veg Momos",
+                    "title": "Kurkure Veg Momos",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Chilli Veg Momos",
+                    "title": "Chilli Veg Momos",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Malai Veg Momos",
+                    "title": "Malai Veg Momos",
+                    "description": "🟢 ₹140"
+                  },
+                  {
+                    "id": "Steam Paneer Momos",
+                    "title": "Steam Paneer Momos",
+                    "description": "🟢 ₹100"
+                  },
+                  {
+                    "id": "Paneer Fried Momos",
+                    "title": "Paneer Fried Momos",
+                    "description": "🟢 ₹110"
+                  },
+                  {
+                    "id": "Kurkure Paneer Momos",
+                    "title": "Kurkure Paneer Momos",
+                    "description": "🟢 ₹130"
+                  },
+                  {
+                    "id": "Chilli Paneer Momos",
+                    "title": "Chilli Paneer Momos",
+                    "description": "🟢 ₹140"
+                  },
+                  {
+                    "id": "Malai Paneer Momos",
+                    "title": "Malai Paneer Momos",
+                    "description": "🟢 ₹160"
+                  },
+                  {
+                    "id": "Chicken Steam Momos",
+                    "title": "Chicken Steam Momos",
+                    "description": "🔴 ₹120"
+                  },
+                  {
+                    "id": "Chicken Fried Momos",
+                    "title": "Chicken Fried Momos",
+                    "description": "🔴 ₹140"
+                  },
+                  {
+                    "id": "Chicken Chilli Momos",
+                    "title": "Chicken Chilli Momos",
+                    "description": "🔴 ₹160"
+                  },
+                  {
+                    "id": "Chicken Malai Momos",
+                    "title": "Chicken Malai Momos",
+                    "description": "🔴 ₹180"
+                  }
+                ],
+                "init-value": "${data.c0}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${form.sel}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_1",
+      "title": "NOODLES",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "NOODLES",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Veg Noodles",
+                    "title": "Veg Noodles",
+                    "description": "🟢 ₹100"
+                  },
+                  {
+                    "id": "Veg Hakka Noodles",
+                    "title": "Veg Hakka Noodles",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Paneer Noodle",
+                    "title": "Paneer Noodle",
+                    "description": "🟢 ₹130"
+                  },
+                  {
+                    "id": "Chilli Garlic Noodles",
+                    "title": "Chilli Garlic Noodles",
+                    "description": "🟢 ₹140"
+                  },
+                  {
+                    "id": "Egg Noodles",
+                    "title": "Egg Noodles",
+                    "description": "🔴 ₹130"
+                  },
+                  {
+                    "id": "Chicken Noodles",
+                    "title": "Chicken Noodles",
+                    "description": "🔴 ₹150"
+                  },
+                  {
+                    "id": "Schezwan Noodles",
+                    "title": "Schezwan Noodles",
+                    "description": "🔴 ₹170"
+                  },
+                  {
+                    "id": "Chicken Hakka Noodles",
+                    "title": "Chicken Hakka Noodles",
+                    "description": "🔴 ₹180"
+                  },
+                  {
+                    "id": "Chicken Garlic Noodles",
+                    "title": "Chicken Garlic Noodles",
+                    "description": "🔴 ₹180"
+                  }
+                ],
+                "init-value": "${data.c1}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${form.sel}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_2",
+      "title": "CHINESE SNACKS",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "CHINESE SNACKS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "French Fries",
+                    "title": "French Fries",
+                    "description": "🟢 ₹80"
+                  },
+                  {
+                    "id": "Peri Peri Fries",
+                    "title": "Peri Peri Fries",
+                    "description": "🟢 ₹100"
+                  },
+                  {
+                    "id": "Honey Chilli Potato",
+                    "title": "Honey Chilli Potato",
+                    "description": "🟢 ₹150"
+                  },
+                  {
+                    "id": "Veg Manchurian Dry",
+                    "title": "Veg Manchurian Dry",
+                    "description": "🟢 ₹150"
+                  },
+                  {
+                    "id": "Veg Manchurian Gravy",
+                    "title": "Veg Manchurian Gravy",
+                    "description": "🟢 ₹170"
+                  },
+                  {
+                    "id": "Chilly Chaap",
+                    "title": "Chilly Chaap",
+                    "description": "🟢 ₹180"
+                  },
+                  {
+                    "id": "Chilly Mushroom",
+                    "title": "Chilly Mushroom",
+                    "description": "🟢 ₹200"
+                  },
+                  {
+                    "id": "Chilly Paneer",
+                    "title": "Chilly Paneer",
+                    "description": "🟢 ₹210"
+                  },
+                  {
+                    "id": "Crispy Corn",
+                    "title": "Crispy Corn",
+                    "description": "🟢 ₹190"
+                  },
+                  {
+                    "id": "Butterfly Paneer",
+                    "title": "Butterfly Paneer",
+                    "description": "🟢 ₹220"
+                  },
+                  {
+                    "id": "Garlic Mushroom",
+                    "title": "Garlic Mushroom",
+                    "description": "🟢 ₹220"
+                  },
+                  {
+                    "id": "Paneer 65",
+                    "title": "Paneer 65",
+                    "description": "🟢 ₹250"
+                  },
+                  {
+                    "id": "Mushroom Duplex",
+                    "title": "Mushroom Duplex",
+                    "description": "🟢 ₹250"
+                  }
+                ],
+                "init-value": "${data.c2}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${form.sel}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_3",
+      "title": "TANDOORI SNACKS",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "TANDOORI SNACKS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Tandoori Chaap",
+                    "title": "Tandoori Chaap",
+                    "description": "🟢 ₹150"
+                  },
+                  {
+                    "id": "Tandoori Lemon Chaap",
+                    "title": "Tandoori Lemon Chaap",
+                    "description": "🟢 ₹160"
+                  },
+                  {
+                    "id": "Malai Chaap",
+                    "title": "Malai Chaap",
+                    "description": "🟢 ₹180"
+                  },
+                  {
+                    "id": "Paneer Tikka",
+                    "title": "Paneer Tikka",
+                    "description": "🟢 ₹200"
+                  },
+                  {
+                    "id": "Paneer Malai Tikka",
+                    "title": "Paneer Malai Tikka",
+                    "description": "🟢 ₹220"
+                  }
+                ],
+                "init-value": "${data.c3}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${form.sel}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_4",
+      "title": "MAIN COURSE",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "MAIN COURSE",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Dal Fry",
+                    "title": "Dal Fry",
+                    "description": "🟢 ₹200"
+                  },
+                  {
+                    "id": "Dal Makhani",
+                    "title": "Dal Makhani",
+                    "description": "🟢 ₹220"
+                  },
+                  {
+                    "id": "Paneer Butter Masala",
+                    "title": "Paneer Butter Masala",
+                    "description": "🟢 ₹250"
+                  },
+                  {
+                    "id": "Masala Paneer",
+                    "title": "Masala Paneer",
+                    "description": "🟢 ₹230"
+                  },
+                  {
+                    "id": "Kadai Paneer",
+                    "title": "Kadai Paneer",
+                    "description": "🟢 ₹230"
+                  },
+                  {
+                    "id": "Paneer Lababdar",
+                    "title": "Paneer Lababdar",
+                    "description": "🟢 ₹230"
+                  },
+                  {
+                    "id": "Mushroom Do Pyaza",
+                    "title": "Mushroom Do Pyaza",
+                    "description": "🟢 ₹240"
+                  },
+                  {
+                    "id": "Masala Mushroom",
+                    "title": "Masala Mushroom",
+                    "description": "🟢 ₹220"
+                  },
+                  {
+                    "id": "Paneer Bhurji",
+                    "title": "Paneer Bhurji",
+                    "description": "🟢 ₹220"
+                  },
+                  {
+                    "id": "Paneer Do Pyaza",
+                    "title": "Paneer Do Pyaza",
+                    "description": "🟢 ₹240"
+                  },
+                  {
+                    "id": "Kadai Chaap",
+                    "title": "Kadai Chaap",
+                    "description": "🟢 ₹240"
+                  },
+                  {
+                    "id": "Tawa Chaap",
+                    "title": "Tawa Chaap",
+                    "description": "🟢 ₹240"
+                  },
+                  {
+                    "id": "Masala Chaap",
+                    "title": "Masala Chaap",
+                    "description": "🟢 ₹230"
+                  },
+                  {
+                    "id": "Rara Paneer",
+                    "title": "Rara Paneer",
+                    "description": "🟢 ₹300"
+                  },
+                  {
+                    "id": "Masala Chicken|H",
+                    "title": "Masala Chicken (Half)",
+                    "description": "🔴 ₹260"
+                  },
+                  {
+                    "id": "Masala Chicken|F",
+                    "title": "Masala Chicken (Full)",
+                    "description": "🔴 ₹480"
+                  },
+                  {
+                    "id": "Kadai Chicken|H",
+                    "title": "Kadai Chicken (Half)",
+                    "description": "🔴 ₹260"
+                  },
+                  {
+                    "id": "Kadai Chicken|F",
+                    "title": "Kadai Chicken (Full)",
+                    "description": "🔴 ₹480"
+                  },
+                  {
+                    "id": "Rara Chicken|H",
+                    "title": "Rara Chicken (Half)",
+                    "description": "🔴 ₹300"
+                  },
+                  {
+                    "id": "Rara Chicken|F",
+                    "title": "Rara Chicken (Full)",
+                    "description": "🔴 ₹500"
+                  }
+                ],
+                "init-value": "${data.c4}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${form.sel}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_5",
+      "title": "MAIN COURSE",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "MAIN COURSE",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Butter Chicken|H",
+                    "title": "Butter Chicken (Half)",
+                    "description": "🔴 ₹280"
+                  },
+                  {
+                    "id": "Butter Chicken|F",
+                    "title": "Butter Chicken (Full)",
+                    "description": "🔴 ₹490"
+                  },
+                  {
+                    "id": "Chicken Do Pyaza|H",
+                    "title": "Chicken Do Pyaza (Half)",
+                    "description": "🔴 ₹270"
+                  },
+                  {
+                    "id": "Chicken Do Pyaza|F",
+                    "title": "Chicken Do Pyaza (Full)",
+                    "description": "🔴 ₹480"
+                  },
+                  {
+                    "id": "Chicken Lababdar|H",
+                    "title": "Chicken Lababdar (Half)",
+                    "description": "🔴 ₹270"
+                  },
+                  {
+                    "id": "Chicken Lababdar|F",
+                    "title": "Chicken Lababdar (Full)",
+                    "description": "🔴 ₹480"
+                  }
+                ],
+                "init-value": "${data.c5}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${form.sel}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_6",
+      "title": "RICE",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "RICE",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Plain Rice",
+                    "title": "Plain Rice",
+                    "description": "🟡 ₹80"
+                  },
+                  {
+                    "id": "Jeera Rice",
+                    "title": "Jeera Rice",
+                    "description": "🟡 ₹100"
+                  },
+                  {
+                    "id": "Veg Fried Rice",
+                    "title": "Veg Fried Rice",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Paneer Fried Rice",
+                    "title": "Paneer Fried Rice",
+                    "description": "🟢 ₹150"
+                  },
+                  {
+                    "id": "Chilli Garlic Fried Rice",
+                    "title": "Chilli Garlic Fried Rice",
+                    "description": "🟢 ₹140"
+                  },
+                  {
+                    "id": "Veg Biryani",
+                    "title": "Veg Biryani",
+                    "description": "🟢 ₹240"
+                  },
+                  {
+                    "id": "Egg Fried Rice",
+                    "title": "Egg Fried Rice",
+                    "description": "🔴 ₹130"
+                  },
+                  {
+                    "id": "Chicken Fried Rice",
+                    "title": "Chicken Fried Rice",
+                    "description": "🔴 ₹150"
+                  },
+                  {
+                    "id": "Garlic Chicken Fried Rice",
+                    "title": "Garlic Chicken Fried Rice",
+                    "description": "🔴 ₹170"
+                  },
+                  {
+                    "id": "Egg + Chicken Fried Rice",
+                    "title": "Egg + Chicken Fried Rice",
+                    "description": "🔴 ₹200"
+                  },
+                  {
+                    "id": "Matka Chicken Biryani",
+                    "title": "Matka Chicken Biryani",
+                    "description": "🔴 ₹420"
+                  }
+                ],
+                "init-value": "${data.c6}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${form.sel}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_7",
+      "title": "BURGERS",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "BURGERS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Aloo Tikki Burger",
+                    "title": "Aloo Tikki Burger",
+                    "description": "🟢 ₹70"
+                  },
+                  {
+                    "id": "Veg Cheese Burger",
+                    "title": "Veg Cheese Burger",
+                    "description": "🟢 ₹90"
+                  },
+                  {
+                    "id": "Paneer Cheese Burger",
+                    "title": "Paneer Cheese Burger",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Double Decker Burger",
+                    "title": "Double Decker Burger",
+                    "description": "🟢 ₹150"
+                  }
+                ],
+                "init-value": "${data.c7}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${form.sel}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_8",
+      "title": "PIZZA",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "PIZZA",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Margherita Pizza",
+                    "title": "Margherita Pizza",
+                    "description": "🟢 ₹160 · Oregano, chilly flakes, Mozzarella Cheese"
+                  },
+                  {
+                    "id": "Veg Deluxe Pizza",
+                    "title": "Veg Deluxe Pizza",
+                    "description": "🟢 ₹200 · Capsicum, Onion, Corn"
+                  },
+                  {
+                    "id": "Cheese Chilli Pizza",
+                    "title": "Cheese Chilli Pizza",
+                    "description": "🟢 ₹220 · Paneer, Capsicum, Chilly Sauce, Onion"
+                  },
+                  {
+                    "id": "Farm House Pizza",
+                    "title": "Farm House Pizza",
+                    "description": "🟢 ₹250 · Capsicum, Onion, Paneer, Red Paprika, Black Olives"
+                  },
+                  {
+                    "id": "Italian Pizza",
+                    "title": "Italian Pizza",
+                    "description": "🟢 ₹270 · Capsicum, Onion, Black Olives, Jalapeno, Paneer"
+                  },
+                  {
+                    "id": "Treat Signature Pizza",
+                    "title": "Treat Signature Pizza",
+                    "description": "🟢 ₹300 · Capsicum, Corn, Black Olives, Paneer, Red Paprika, Jalapenos"
+                  }
+                ],
+                "init-value": "${data.c8}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${form.sel}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_9",
+      "title": "PASTA",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "PASTA",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Red Sauce Pasta",
+                    "title": "Red Sauce Pasta",
+                    "description": "🟢 ₹150"
+                  },
+                  {
+                    "id": "White Sauce Pasta",
+                    "title": "White Sauce Pasta",
+                    "description": "🟢 ₹170"
+                  },
+                  {
+                    "id": "Veggie Masala Pasta",
+                    "title": "Veggie Masala Pasta",
+                    "description": "🟢 ₹160"
+                  },
+                  {
+                    "id": "Mexican Pasta",
+                    "title": "Mexican Pasta",
+                    "description": "🟢 ₹180"
+                  }
+                ],
+                "init-value": "${data.c9}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${form.sel}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_10",
+      "title": "ROLLS",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "ROLLS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Spring Roll",
+                    "title": "Spring Roll",
+                    "description": "🟢 ₹90"
+                  },
+                  {
+                    "id": "Veggie Roll",
+                    "title": "Veggie Roll",
+                    "description": "🟢 ₹110"
+                  },
+                  {
+                    "id": "Cheese Corn Roll",
+                    "title": "Cheese Corn Roll",
+                    "description": "🟢 ₹130"
+                  },
+                  {
+                    "id": "Chaap Roll",
+                    "title": "Chaap Roll",
+                    "description": "🟢 ₹140"
+                  },
+                  {
+                    "id": "Paneer Roll",
+                    "title": "Paneer Roll",
+                    "description": "🟢 ₹150"
+                  },
+                  {
+                    "id": "Egg Roll",
+                    "title": "Egg Roll",
+                    "description": "🔴 ₹120"
+                  },
+                  {
+                    "id": "Chicken Roll",
+                    "title": "Chicken Roll",
+                    "description": "🔴 ₹140"
+                  },
+                  {
+                    "id": "Chicken Chilli Roll",
+                    "title": "Chicken Chilli Roll",
+                    "description": "🔴 ₹160"
+                  }
+                ],
+                "init-value": "${data.c10}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${form.sel}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_11",
+      "title": "SOUPS",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "SOUPS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Veg Clear Soup",
+                    "title": "Veg Clear Soup",
+                    "description": "🟢 ₹90"
+                  },
+                  {
+                    "id": "Sweet Corn Soup",
+                    "title": "Sweet Corn Soup",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Manchow Soup",
+                    "title": "Manchow Soup",
+                    "description": "🟢 ₹130"
+                  },
+                  {
+                    "id": "Hot & Sour Soup",
+                    "title": "Hot & Sour Soup",
+                    "description": "🟢 ₹140"
+                  },
+                  {
+                    "id": "Lemon Coriander Soup",
+                    "title": "Lemon Coriander Soup",
+                    "description": "🟢 ₹170"
+                  },
+                  {
+                    "id": "Egg Soup",
+                    "title": "Egg Soup",
+                    "description": "🔴 ₹90"
+                  },
+                  {
+                    "id": "Chicken Manchow Soup",
+                    "title": "Chicken Manchow Soup",
+                    "description": "🔴 ₹130"
+                  },
+                  {
+                    "id": "Chicken Hot & Sour Soup",
+                    "title": "Chicken Hot & Sour Soup",
+                    "description": "🔴 ₹120"
+                  },
+                  {
+                    "id": "Chicken Clear Soup",
+                    "title": "Chicken Clear Soup",
+                    "description": "🔴 ₹140"
+                  }
+                ],
+                "init-value": "${data.c11}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${form.sel}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_12",
+      "title": "MOCKTAILS",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "MOCKTAILS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Lime Soda",
+                    "title": "Lime Soda",
+                    "description": "🟢 ₹80"
+                  },
+                  {
+                    "id": "Virgin Mojito",
+                    "title": "Virgin Mojito",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Blue Heaven",
+                    "title": "Blue Heaven",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Green Apple",
+                    "title": "Green Apple",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Black Currant",
+                    "title": "Black Currant",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Blue Berry",
+                    "title": "Blue Berry",
+                    "description": "🟢 ₹120"
+                  }
+                ],
+                "init-value": "${data.c12}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${form.sel}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_13",
+      "title": "SHAKES",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "SHAKES",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Strawberry Shake",
+                    "title": "Strawberry Shake",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Blue Berry Shake",
+                    "title": "Blue Berry Shake",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "KitKat Shake",
+                    "title": "KitKat Shake",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Oreo Chocolate Shake",
+                    "title": "Oreo Chocolate Shake",
+                    "description": "🟢 ₹140"
+                  },
+                  {
+                    "id": "Black Current Shake",
+                    "title": "Black Current Shake",
+                    "description": "🟢 ₹120"
+                  }
+                ],
+                "init-value": "${data.c13}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${form.sel}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_14",
+      "title": "COFFEE & DESSERTS",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "COFFEE & DESSERTS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Hot Coffee",
+                    "title": "Hot Coffee",
+                    "description": "🟢 ₹50"
+                  },
+                  {
+                    "id": "Cold Coffee",
+                    "title": "Cold Coffee",
+                    "description": "🟢 ₹120"
+                  },
+                  {
+                    "id": "Oreo Cold Coffee",
+                    "title": "Oreo Cold Coffee",
+                    "description": "🟢 ₹140"
+                  },
+                  {
+                    "id": "Vanilla Ice Cream",
+                    "title": "Vanilla Ice Cream",
+                    "description": "🟢 ₹40"
+                  },
+                  {
+                    "id": "Butterscotch Ice Cream",
+                    "title": "Butterscotch Ice Cream",
+                    "description": "🟢 ₹60"
+                  },
+                  {
+                    "id": "Gulab Jamun (2 Pcs)",
+                    "title": "Gulab Jamun (2 Pcs)",
+                    "description": "🟢 ₹60"
+                  },
+                  {
+                    "id": "Vanilla & Butterscotch Mix",
+                    "title": "Vanilla & Butterscotch Mix",
+                    "description": "🟢 ₹70"
+                  }
+                ],
+                "init-value": "${data.c14}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${form.sel}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_15",
+      "title": "EXTRAS",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "EXTRAS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Salad",
+                    "title": "Salad",
+                    "description": "🟡 ₹50"
+                  },
+                  {
+                    "id": "Water",
+                    "title": "Water",
+                    "description": "🟡 ₹10"
+                  },
+                  {
+                    "id": "Water Bottle",
+                    "title": "Water Bottle",
+                    "description": "🟡 ₹20"
+                  },
+                  {
+                    "id": "Disposable Glass",
+                    "title": "Disposable Glass",
+                    "description": "🟡 ₹5"
+                  },
+                  {
+                    "id": "Colddrink",
+                    "title": "Colddrink",
+                    "description": "🟡 ₹20"
+                  },
+                  {
+                    "id": "Coke Can",
+                    "title": "Coke Can",
+                    "description": "🟡 ₹30"
+                  },
+                  {
+                    "id": "Can",
+                    "title": "Can",
+                    "description": "🟡 ₹50"
+                  }
+                ],
+                "init-value": "${data.c15}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${form.sel}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_16",
+      "title": "CHICKEN SNACKS",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "CHICKEN SNACKS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Crispy Chicken|H",
+                    "title": "Crispy Chicken (Half)",
+                    "description": "🔴 ₹260"
+                  },
+                  {
+                    "id": "Crispy Chicken|F",
+                    "title": "Crispy Chicken (Full)",
+                    "description": "🔴 ₹480"
+                  },
+                  {
+                    "id": "Chilli Chicken|H",
+                    "title": "Chilli Chicken (Half)",
+                    "description": "🔴 ₹250"
+                  },
+                  {
+                    "id": "Chilli Chicken|F",
+                    "title": "Chilli Chicken (Full)",
+                    "description": "🔴 ₹480"
+                  },
+                  {
+                    "id": "Garlic Chicken|H",
+                    "title": "Garlic Chicken (Half)",
+                    "description": "🔴 ₹250"
+                  },
+                  {
+                    "id": "Garlic Chicken|F",
+                    "title": "Garlic Chicken (Full)",
+                    "description": "🔴 ₹480"
+                  },
+                  {
+                    "id": "Lemon Chicken (Dry/Gravy)",
+                    "title": "Lemon Chicken (Dry/Gravy)",
+                    "description": "🔴 ₹380"
+                  },
+                  {
+                    "id": "Chicken 65 (Boneless)",
+                    "title": "Chicken 65 (Boneless)",
+                    "description": "🔴 ₹380"
+                  },
+                  {
+                    "id": "Dragon Chicken (Boneless)",
+                    "title": "Dragon Chicken (Boneless)",
+                    "description": "🔴 ₹380"
+                  },
+                  {
+                    "id": "Chicken Lollipop (6 Pcs)",
+                    "title": "Chicken Lollipop (6 Pcs)",
+                    "description": "🔴 ₹380"
+                  }
+                ],
+                "init-value": "${data.c16}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${form.sel}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_17",
+      "title": "BREADS",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "BREADS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Plain Roti",
+                    "title": "Plain Roti",
+                    "description": "🔴 ₹15"
+                  },
+                  {
+                    "id": "Butter Roti",
+                    "title": "Butter Roti",
+                    "description": "🔴 ₹20"
+                  },
+                  {
+                    "id": "Garlic Naan",
+                    "title": "Garlic Naan",
+                    "description": "🔴 ₹60"
+                  },
+                  {
+                    "id": "Lacchha Paratha",
+                    "title": "Lacchha Paratha",
+                    "description": "🔴 ₹70"
+                  },
+                  {
+                    "id": "Butter Naan",
+                    "title": "Butter Naan",
+                    "description": "🔴 ₹40"
+                  }
+                ],
+                "init-value": "${data.c17}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${form.sel}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "PAGE_18",
+      "title": "TANDOORI",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel",
+                "label": "TANDOORI",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Tandoori Chicken|H",
+                    "title": "Tandoori Chicken (Half)",
+                    "description": "🔴 ₹240"
+                  },
+                  {
+                    "id": "Tandoori Chicken|F",
+                    "title": "Tandoori Chicken (Full)",
+                    "description": "🔴 ₹450"
+                  },
+                  {
+                    "id": "Tandoori Lemon Chicken|H",
+                    "title": "Tandoori Lemon Chicken (Half)",
+                    "description": "🔴 ₹250"
+                  },
+                  {
+                    "id": "Tandoori Lemon Chicken|F",
+                    "title": "Tandoori Lemon Chicken (Full)",
+                    "description": "🔴 ₹470"
+                  },
+                  {
+                    "id": "Afghani Chicken|H",
+                    "title": "Afghani Chicken (Half)",
+                    "description": "🔴 ₹270"
+                  },
+                  {
+                    "id": "Afghani Chicken|F",
+                    "title": "Afghani Chicken (Full)",
+                    "description": "🔴 ₹480"
+                  },
+                  {
+                    "id": "Chicken Tikka (8 pcs)",
+                    "title": "Chicken Tikka (8 pcs)",
+                    "description": "🔴 ₹280"
+                  },
+                  {
+                    "id": "Chicken Seekh Kebab",
+                    "title": "Chicken Seekh Kebab",
+                    "description": "🔴 ₹220"
+                  }
+                ],
+                "init-value": "${data.c18}"
+              },
+              {
+                "type": "Footer",
+                "label": "Add karo",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CATS"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${form.sel}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CONFIRM",
+      "title": "Order bhejo",
+      "terminal": true,
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextBody",
+            "text": "Aapke chune hue items WhatsApp chat me cart me aa jayenge. Wahan quantity, size aur checkout kar sakte ho."
+          },
+          {
+            "type": "Footer",
+            "label": "WhatsApp pe bhejo",
+            "on-click-action": {
+              "name": "complete",
+              "payload": {
+                "c0": "${data.c0}",
+                "c1": "${data.c1}",
+                "c2": "${data.c2}",
+                "c3": "${data.c3}",
+                "c4": "${data.c4}",
+                "c5": "${data.c5}",
+                "c6": "${data.c6}",
+                "c7": "${data.c7}",
+                "c8": "${data.c8}",
+                "c9": "${data.c9}",
+                "c10": "${data.c10}",
+                "c11": "${data.c11}",
+                "c12": "${data.c12}",
+                "c13": "${data.c13}",
+                "c14": "${data.c14}",
+                "c15": "${data.c15}",
+                "c16": "${data.c16}",
+                "c17": "${data.c17}",
+                "c18": "${data.c18}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

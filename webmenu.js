@@ -122,9 +122,10 @@ module.exports = function createWebMenu(deps) {
   const b64 = (s) => Buffer.from(s).toString("base64url");
   const sign = (payload) => crypto.createHmac("sha256", SECRET).update(payload).digest("base64url");
 
+  // compact token (~28 chars) so the link shown in WhatsApp's in-app browser stays short
   function makeToken(phone) {
-    const payload = b64(`${phone}.${Date.now() + TOKEN_TTL_MS}`);
-    return `${payload}.${sign(payload)}`;
+    const payload = `${Number(phone).toString(36)}-${Math.floor((Date.now() + TOKEN_TTL_MS) / 60000).toString(36)}`;
+    return `${payload}.${sign(payload).slice(0, 16)}`;
   }
 
   // returns the phone number, or null when invalid / expired
@@ -132,11 +133,13 @@ module.exports = function createWebMenu(deps) {
     if (!enabled) return null;
     const [payload, sig, extra] = String(token || "").split(".");
     if (!payload || !sig || extra !== undefined) return null;
-    const want = Buffer.from(sign(payload));
+    const want = Buffer.from(sign(payload).slice(0, 16));
     const got = Buffer.from(sig);
     if (want.length !== got.length || !crypto.timingSafeEqual(want, got)) return null;
-    const [phone, exp] = Buffer.from(payload, "base64url").toString("utf8").split(".");
-    if (!/^\d{6,15}$/.test(phone || "") || !(Number(exp) > Date.now())) return null;
+    const [p36, e36] = payload.split("-");
+    const phone = String(parseInt(p36, 36));
+    const exp = parseInt(e36, 36) * 60000;
+    if (!/^\d{6,15}$/.test(phone) || !(exp > Date.now())) return null;
     return phone;
   }
 

@@ -20,6 +20,7 @@ const { notifyTelegram, notifyTelegramText, orderSummaryText } = require("./tele
 const { calculateOrderTotal, deliveryChargeFor } = require("./billing");
 const db = require("./db");
 const createWebMenu = require("./webmenu");
+const createFlowMenu = require("./flowmenu");
 const { LiveKitAPI, DisconnectWhatsAppCallRequest_DisconnectReason } = require("livekit-server-sdk");
 
 const app = express();
@@ -561,6 +562,12 @@ async function processIncomingInner(value, message) {
     }
 
     if (message.type === "interactive") {
+      // customer finished the in-chat menu (WhatsApp Flow)
+      if (message.interactive?.type === "nfm_reply") {
+        const ok = await flowMenu.handleReply(from, message.interactive.nfm_reply?.response_json);
+        if (!ok) await sendText(from, "Koi item select nahi hua. Dobara menu khol ke dish chuno.");
+        return;
+      }
       const id =
         message.interactive?.button_reply?.id ||
         message.interactive?.list_reply?.id;
@@ -1072,6 +1079,12 @@ async function handleAction(to, id) {
     return;
   }
 
+  if (id === "add_more" && flowMenu.enabled) {
+    resetSelection(session);
+    await sendFlowMenu(to);
+    return;
+  }
+
   if (id === "add_more" && webMenu.enabled) {
     resetSelection(session);
     await webMenu.sendLink(to);
@@ -1308,8 +1321,9 @@ async function sendWelcomeMessage(to) {
 // Step 2: VEG / NON-VEG / BOTH
 async function sendMenuStart(to) {
   // Web menu (opens inside WhatsApp). Falls back to the old chat menu if it is not configured.
-  if (webMenu.enabled) {
-    await webMenu.sendLink(to);
+  if (flowMenu.enabled || webMenu.enabled) {
+    if (flowMenu.enabled) await sendFlowMenu(to);
+    else await webMenu.sendLink(to);
     await sendButtons(to, webMenu.hintText(to), [
       ["menu_pdf", T(to, "btnMenuPdf")],
       ["write_order", T(to, "btnWrite")],
@@ -2544,6 +2558,15 @@ const webMenu = createWebMenu({
   MAX_QTY, MAX_CART_LINES, MIN_FOOD_ORDER, BONELESS_CHARGE, EXTRA_CHEESE_CHARGE
 });
 webMenu.register();
+
+// IN-CHAT MENU (WhatsApp Flow) - active only when WHATSAPP_FLOW_ID is set
+const flowMenu = createFlowMenu({ getSession, sendWhatsAppMessage, startTypedItem, processQueue });
+async function sendFlowMenu(to) {
+  const lang = getSession(to).lang || "hg";
+  const body = { en: "Open the menu and pick your dishes 👇", hi: "मेनू खोलकर अपनी डिश चुनें 👇", hg: "Menu kholo aur apni dish chuno 👇" }[lang] || "Menu kholo aur apni dish chuno 👇";
+  const btn = { en: "🍽️ OPEN MENU", hi: "🍽️ मेनू खोलें", hg: "🍽️ MENU KHOLO" }[lang] || "🍽️ MENU KHOLO";
+  await flowMenu.sendFlow(to, body, btn);
+}
 
 // ======================================================
 // START SERVER
