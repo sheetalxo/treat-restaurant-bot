@@ -1081,7 +1081,7 @@ async function handleAction(to, id) {
 
   if (id === "add_more" && flowMenu.enabled) {
     resetSelection(session);
-    await sendFlowMenu(to);
+    await sendMenuEntry(to);
     return;
   }
 
@@ -1322,8 +1322,7 @@ async function sendWelcomeMessage(to) {
 async function sendMenuStart(to) {
   // Web menu (opens inside WhatsApp). Falls back to the old chat menu if it is not configured.
   if (flowMenu.enabled || webMenu.enabled) {
-    if (flowMenu.enabled) await sendFlowMenu(to);
-    else await webMenu.sendLink(to);
+    await sendMenuEntry(to);
     await sendButtons(to, webMenu.hintText(to), [
       ["menu_pdf", T(to, "btnMenuPdf")],
       ["write_order", T(to, "btnWrite")],
@@ -2561,6 +2560,19 @@ webMenu.register();
 
 // IN-CHAT MENU (WhatsApp Flow) - active only when WHATSAPP_FLOW_ID is set
 const flowMenu = createFlowMenu({ getSession, sendWhatsAppMessage, startTypedItem, processQueue });
+// Flow first; if Meta rejects it (wrong / unpublished Flow ID) fall back to the web menu so the customer is never stuck
+async function sendMenuEntry(to) {
+  if (flowMenu.enabled) {
+    try {
+      await sendFlowMenu(to);
+      return;
+    } catch (err) {
+      console.error("FLOW SEND FAILED (check WHATSAPP_FLOW_ID is the FLOW id and the flow is Published):", err.message);
+    }
+  }
+  if (webMenu.enabled) await webMenu.sendLink(to);
+}
+
 async function sendFlowMenu(to) {
   const lang = getSession(to).lang || "hg";
   const body = { en: "Open the menu and pick your dishes 👇", hi: "मेनू खोलकर अपनी डिश चुनें 👇", hg: "Menu kholo aur apni dish chuno 👇" }[lang] || "Menu kholo aur apni dish chuno 👇";
