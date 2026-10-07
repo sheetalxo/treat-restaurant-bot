@@ -19,6 +19,7 @@ const { buildInvoicePdf } = require("./invoice");
 const { notifyTelegram, notifyTelegramText, orderSummaryText } = require("./telegram");
 const { calculateOrderTotal, deliveryChargeFor } = require("./billing");
 const db = require("./db");
+const createWebMenu = require("./webmenu");
 const { LiveKitAPI, DisconnectWhatsAppCallRequest_DisconnectReason } = require("livekit-server-sdk");
 
 const app = express();
@@ -1071,6 +1072,12 @@ async function handleAction(to, id) {
     return;
   }
 
+  if (id === "add_more" && webMenu.enabled) {
+    resetSelection(session);
+    await webMenu.sendLink(to);
+    return;
+  }
+
   if (id === "nav:back_categories" || id === "back_categories" || id === "add_more") {
     resetSelection(session);
     if (!session.type) return sendWelcomeMessage(to);
@@ -1300,6 +1307,17 @@ async function sendWelcomeMessage(to) {
 
 // Step 2: VEG / NON-VEG / BOTH
 async function sendMenuStart(to) {
+  // Web menu (opens inside WhatsApp). Falls back to the old chat menu if it is not configured.
+  if (webMenu.enabled) {
+    await webMenu.sendLink(to);
+    await sendButtons(to, webMenu.hintText(to), [
+      ["menu_pdf", T(to, "btnMenuPdf")],
+      ["write_order", T(to, "btnWrite")],
+      ["change_lang", T(to, "btnLang")]
+    ]);
+    return;
+  }
+
   await sendButtons(to, T(to, "menuStart"), [
     ["veg", "VEG"],
     ["non_veg", "NON-VEG"],
@@ -2515,6 +2533,17 @@ app.post("/voice/send-menu-pdf", requireVoiceSecret, async (req, res) => {
     res.status(500).json({ ok: false });
   }
 });
+
+// ======================================================
+// WEB MENU (needs PUBLIC_BASE_URL or Render's RENDER_EXTERNAL_URL, https)
+// ======================================================
+const webMenu = createWebMenu({
+  app, getSession, hydrateSession, persistSession, withPhoneLock,
+  startTypedItem, addCurrentItemToCart, resetSelection, clearTyped,
+  sendCart, sendText, sendCtaUrlButton, isOpenNow,
+  MAX_QTY, MAX_CART_LINES, MIN_FOOD_ORDER, BONELESS_CHARGE, EXTRA_CHEESE_CHARGE
+});
+webMenu.register();
 
 // ======================================================
 // START SERVER
