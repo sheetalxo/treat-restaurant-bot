@@ -2688,4 +2688,8 @@ async function sendFlowMenu(to) {
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`TREAT RESTAURANT bot running on port ${PORT}`);
+  console.log(
+    "MENU MODE:",
+    catalogMenu.enabled ? "CATALOG (native + / - cart)" : flowMenu.enabled ? "OLD FLOW (WHATSAPP_CATALOG_ID is not set)" : webMenu.enabled ? "WEB MENU" : "CHAT LISTS"
+  );
 });
