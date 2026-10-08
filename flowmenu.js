@@ -306,7 +306,7 @@ module.exports = function createFlowMenu(deps) {
   // Only the 5-section layout (flow_grouped.json) needs the empty selections:  FLOW_LAYOUT=grouped on Render.
   const GROUPED = String(process.env.FLOW_LAYOUT || "").toLowerCase() === "grouped";
 
-  async function sendFlow(to, bodyText, ctaLabel) {
+  async function sendFlow(to, bodyText, ctaLabel, opts = {}) {
     const payload = { screen: "CATS" };
     if (GROUPED) payload.data = Object.fromEntries(pages.map((_, i) => [`c${i}`, []]));
     await sendWhatsAppMessage(to, {
@@ -316,7 +316,12 @@ module.exports = function createFlowMenu(deps) {
       type: "interactive",
       interactive: {
         type: "flow",
+        // optional banner image on top of the card (public https link) + small footer line
+        ...(opts.headerImage && /^https:\/\//.test(opts.headerImage)
+          ? { header: { type: "image", image: { link: opts.headerImage } } }
+          : {}),
         body: { text: cut(bodyText, 1000) },
+        ...(opts.footer ? { footer: { text: cut(opts.footer, 60) } } : {}),
         action: {
           name: "flow",
           parameters: {

@@ -669,7 +669,7 @@ async function handleText(from, raw) {
     session.address = cleanText(text, MAX_ADDRESS_LEN);
     session.awaiting = null;
     await sendText(from, T(from, "addressSaved"));
-    await sendMenuStart(from);
+    await afterOrderTypeDone(from);
     return;
   }
 
@@ -677,7 +677,7 @@ async function handleText(from, raw) {
     session.visitTime = cut(text, 30);
     session.awaiting = null;
     await sendText(from, T(from, "visitSaved", session.visitTime));
-    await sendMenuStart(from);
+    await afterOrderTypeDone(from);
     return;
   }
 
@@ -734,8 +734,8 @@ async function handleText(from, raw) {
     return;
   }
 
-  // 6. typed order (order type must be chosen first)
-  if (!session.orderType) {
+  // 6. typed order (order type must be chosen first - not in menu-first mode, it is asked at checkout)
+  if (!session.orderType && !menuFirst()) {
     await sendText(from, T(from, "chooseTypeFirst"));
     await sendOrderTypeButtons(from);
     return;
@@ -1002,7 +1002,7 @@ async function handleLocation(from, loc) {
   } else {
     session.awaiting = null;
     await sendText(from, T(from, "deliveryInfo"));
-    await sendMenuStart(from);
+    await afterOrderTypeDone(from);
   }
 }
 
@@ -1038,7 +1038,9 @@ async function handleAction(to, id) {
     // order type cleared) tapping an old PAY / CART button must NOT restart the whole welcome flow.
     const STALE_IDS = ["pay_online", "pay_cash", "checkout", "view_cart", "empty_cart", "remove_mode",
       "add_cart", "qty_plus", "qty_minus", "qty_type"];
-    const isStale = STALE_IDS.includes(id) || id.startsWith("remove:") || id.startsWith("rempage:");
+    // menu-first: item steps (add_cart / qty_*) must keep working before an order type exists
+    const STALE_NOW = menuFirst() ? STALE_IDS.filter((x) => !x.startsWith("qty_") && x !== "add_cart") : STALE_IDS;
+    const isStale = STALE_NOW.includes(id) || id.startsWith("remove:") || id.startsWith("rempage:");
     if (isStale && session.cart.length === 0) {
       const staleText = {
         en: "⏳ This button is from an old order. Type *Hi* to start a new order.",
@@ -1048,8 +1050,16 @@ async function handleAction(to, id) {
       await sendText(to, staleText[session.lang] || staleText.hg);
       return;
     }
-    await sendWelcomeMessage(to);
-    return;
+    if (menuFirst()) {
+      // only paying needs the order type; everything else just continues
+      if (id === "pay_online" || id === "pay_cash") {
+        await sendOrderTypeButtons(to);
+        return;
+      }
+    } else {
+      await sendWelcomeMessage(to);
+      return;
+    }
   }
 
   // ---------- MENU PDF / WRITE ORDER ----------
@@ -1274,7 +1284,7 @@ async function handleAction(to, id) {
     session.lat = null;
     session.lng = null;
     session.awaiting = null;
-    await sendMenuStart(to);
+    await afterOrderTypeDone(to);
     return;
   }
 
@@ -1327,6 +1337,10 @@ async function sendLanguagePrompt(to) {
 
 // Step 1: choose how to receive the order. Once chosen -> menu start.
 async function sendWelcomeMessage(to) {
+  if (menuFirst()) {
+    await sendMenuStart(to); // menu opens directly; delivery / pickup is asked after the cart
+    return;
+  }
   if (!getSession(to).orderType) {
     await sendOrderTypeButtons(to, "welcome");
     return;
@@ -1339,6 +1353,8 @@ async function sendMenuStart(to) {
   // Web menu (opens inside WhatsApp). Falls back to the old chat menu if it is not configured.
   if (flowMenu.enabled || webMenu.enabled) {
     await sendMenuEntry(to);
+    // clean welcome: ONE card only. Set SHOW_EXTRA_BUTTONS=1 to also send the PDF / write-order / language buttons.
+    if (menuFirst() && process.env.SHOW_EXTRA_BUTTONS !== "1") return;
     await sendButtons(to, webMenu.hintText(to), [
       ["menu_pdf", T(to, "btnMenuPdf")],
       ["write_order", T(to, "btnWrite")],
@@ -1786,7 +1802,7 @@ async function startCheckout(to) {
   }
 
   if (!session.orderType) {
-    await sendWelcomeMessage(to);
+    await sendOrderTypeButtons(to);
     return;
   }
 
@@ -2589,11 +2605,30 @@ async function sendMenuEntry(to) {
   if (webMenu.enabled) await webMenu.sendLink(to);
 }
 
+// Menu-first mode: Hi -> welcome card -> menu opens directly. Turn off with MENU_FIRST=0
+function menuFirst() {
+  return flowMenu.enabled && process.env.MENU_FIRST !== "0";
+}
+
+// order type + its details are done: go on to billing if the cart already has items, else show the menu
+async function afterOrderTypeDone(to) {
+  if (getSession(to).cart.length > 0) await startCheckout(to);
+  else await sendMenuStart(to);
+}
+
 async function sendFlowMenu(to) {
   const lang = getSession(to).lang || "hg";
   const body = { en: "Open the menu and pick your dishes 👇", hi: "मेनू खोलकर अपनी डिश चुनें 👇", hg: "Menu kholo aur apni dish chuno 👇" }[lang] || "Menu kholo aur apni dish chuno 👇";
   const btn = { en: "🍽️ OPEN MENU", hi: "🍽️ मेनू खोलें", hg: "🍽️ MENU KHOLO" }[lang] || "🍽️ MENU KHOLO";
-  await flowMenu.sendFlow(to, body, btn);
+  const welcome = {
+    en: "🍽️ *TREAT Restaurant*\n\nWelcome! 🙏\nWe're delighted to serve you delicious food. Tap below to open our menu 👇",
+    hi: "🍽️ *TREAT Restaurant*\n\nस्वागत है! 🙏\nस्वादिष्ट खाने के लिए नीचे मेनू खोलें 👇",
+    hg: "🍽️ *TREAT Restaurant*\n\nWelcome! 🙏\nSwadisht khane ke liye neeche menu kholo 👇"
+  }[lang] || body;
+  await flowMenu.sendFlow(to, menuFirst() ? welcome : body, btn, {
+    headerImage: process.env.WELCOME_IMAGE_URL || "",
+    footer: process.env.WELCOME_FOOTER || "Powered by TREAT"
+  });
 }
 
 // ======================================================
