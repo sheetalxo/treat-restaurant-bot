@@ -1,0 +1,146 @@
+id,title,description,availability,condition,price,link,image_link,brand,product_type
+momos-veg-steam-momos,Veg Steam Momos,Veg.,in stock,new,70.00 INR,https://example.com/menu,https://example.com/images/momos-veg-steam-momos.jpg,TREAT,MOMOS
+momos-veg-fried-momos,Veg Fried Momos,Veg.,in stock,new,80.00 INR,https://example.com/menu,https://example.com/images/momos-veg-fried-momos.jpg,TREAT,MOMOS
+momos-kurkure-veg-momos,Kurkure Veg Momos,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/momos-kurkure-veg-momos.jpg,TREAT,MOMOS
+momos-chilli-veg-momos,Chilli Veg Momos,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/momos-chilli-veg-momos.jpg,TREAT,MOMOS
+momos-malai-veg-momos,Malai Veg Momos,Veg.,in stock,new,140.00 INR,https://example.com/menu,https://example.com/images/momos-malai-veg-momos.jpg,TREAT,MOMOS
+momos-steam-paneer-momos,Steam Paneer Momos,Veg.,in stock,new,100.00 INR,https://example.com/menu,https://example.com/images/momos-steam-paneer-momos.jpg,TREAT,MOMOS
+momos-paneer-fried-momos,Paneer Fried Momos,Veg.,in stock,new,110.00 INR,https://example.com/menu,https://example.com/images/momos-paneer-fried-momos.jpg,TREAT,MOMOS
+momos-kurkure-paneer-momos,Kurkure Paneer Momos,Veg.,in stock,new,130.00 INR,https://example.com/menu,https://example.com/images/momos-kurkure-paneer-momos.jpg,TREAT,MOMOS
+momos-chilli-paneer-momos,Chilli Paneer Momos,Veg.,in stock,new,140.00 INR,https://example.com/menu,https://example.com/images/momos-chilli-paneer-momos.jpg,TREAT,MOMOS
+momos-malai-paneer-momos,Malai Paneer Momos,Veg.,in stock,new,160.00 INR,https://example.com/menu,https://example.com/images/momos-malai-paneer-momos.jpg,TREAT,MOMOS
+momos-chicken-steam-momos,Chicken Steam Momos,Non-Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/momos-chicken-steam-momos.jpg,TREAT,MOMOS
+momos-chicken-fried-momos,Chicken Fried Momos,Non-Veg.,in stock,new,140.00 INR,https://example.com/menu,https://example.com/images/momos-chicken-fried-momos.jpg,TREAT,MOMOS
+momos-chicken-chilli-momos,Chicken Chilli Momos,Non-Veg.,in stock,new,160.00 INR,https://example.com/menu,https://example.com/images/momos-chicken-chilli-momos.jpg,TREAT,MOMOS
+momos-chicken-malai-momos,Chicken Malai Momos,Non-Veg.,in stock,new,180.00 INR,https://example.com/menu,https://example.com/images/momos-chicken-malai-momos.jpg,TREAT,MOMOS
+noodles-veg-noodles,Veg Noodles,Veg.,in stock,new,100.00 INR,https://example.com/menu,https://example.com/images/noodles-veg-noodles.jpg,TREAT,NOODLES
+noodles-veg-hakka-noodles,Veg Hakka Noodles,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/noodles-veg-hakka-noodles.jpg,TREAT,NOODLES
+noodles-paneer-noodle,Paneer Noodle,Veg.,in stock,new,130.00 INR,https://example.com/menu,https://example.com/images/noodles-paneer-noodle.jpg,TREAT,NOODLES
+noodles-chilli-garlic-noodles,Chilli Garlic Noodles,Veg.,in stock,new,140.00 INR,https://example.com/menu,https://example.com/images/noodles-chilli-garlic-noodles.jpg,TREAT,NOODLES
+noodles-egg-noodles,Egg Noodles,Non-Veg.,in stock,new,130.00 INR,https://example.com/menu,https://example.com/images/noodles-egg-noodles.jpg,TREAT,NOODLES
+noodles-chicken-noodles,Chicken Noodles,Non-Veg.,in stock,new,150.00 INR,https://example.com/menu,https://example.com/images/noodles-chicken-noodles.jpg,TREAT,NOODLES
+noodles-schezwan-noodles,Schezwan Noodles,Non-Veg.,in stock,new,170.00 INR,https://example.com/menu,https://example.com/images/noodles-schezwan-noodles.jpg,TREAT,NOODLES
+noodles-chicken-hakka-noodles,Chicken Hakka Noodles,Non-Veg.,in stock,new,180.00 INR,https://example.com/menu,https://example.com/images/noodles-chicken-hakka-noodles.jpg,TREAT,NOODLES
+noodles-chicken-garlic-noodles,Chicken Garlic Noodles,Non-Veg.,in stock,new,180.00 INR,https://example.com/menu,https://example.com/images/noodles-chicken-garlic-noodles.jpg,TREAT,NOODLES
+chinese-snacks-french-fries,French Fries,Veg.,in stock,new,80.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-french-fries.jpg,TREAT,CHINESE SNACKS
+chinese-snacks-peri-peri-fries,Peri Peri Fries,Veg.,in stock,new,100.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-peri-peri-fries.jpg,TREAT,CHINESE SNACKS
+chinese-snacks-honey-chilli-potato,Honey Chilli Potato,Veg.,in stock,new,150.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-honey-chilli-potato.jpg,TREAT,CHINESE SNACKS
+chinese-snacks-veg-manchurian-dry,Veg Manchurian Dry,Veg.,in stock,new,150.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-veg-manchurian-dry.jpg,TREAT,CHINESE SNACKS
+chinese-snacks-veg-manchurian-gravy,Veg Manchurian Gravy,Veg.,in stock,new,170.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-veg-manchurian-gravy.jpg,TREAT,CHINESE SNACKS
+chinese-snacks-chilly-chaap,Chilly Chaap,Veg.,in stock,new,180.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-chilly-chaap.jpg,TREAT,CHINESE SNACKS
+chinese-snacks-chilly-mushroom,Chilly Mushroom,Veg.,in stock,new,200.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-chilly-mushroom.jpg,TREAT,CHINESE SNACKS
+chinese-snacks-chilly-paneer,Chilly Paneer,Veg.,in stock,new,210.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-chilly-paneer.jpg,TREAT,CHINESE SNACKS
+chinese-snacks-crispy-corn,Crispy Corn,Veg.,in stock,new,190.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-crispy-corn.jpg,TREAT,CHINESE SNACKS
+chinese-snacks-butterfly-paneer,Butterfly Paneer,Veg.,in stock,new,220.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-butterfly-paneer.jpg,TREAT,CHINESE SNACKS
+chinese-snacks-garlic-mushroom,Garlic Mushroom,Veg.,in stock,new,220.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-garlic-mushroom.jpg,TREAT,CHINESE SNACKS
+chinese-snacks-paneer-65,Paneer 65,Veg.,in stock,new,250.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-paneer-65.jpg,TREAT,CHINESE SNACKS
+chinese-snacks-mushroom-duplex,Mushroom Duplex,Veg.,in stock,new,250.00 INR,https://example.com/menu,https://example.com/images/chinese-snacks-mushroom-duplex.jpg,TREAT,CHINESE SNACKS
+tandoori-snacks-tandoori-chaap,Tandoori Chaap,Veg.,in stock,new,150.00 INR,https://example.com/menu,https://example.com/images/tandoori-snacks-tandoori-chaap.jpg,TREAT,TANDOORI SNACKS
+tandoori-snacks-tandoori-lemon-chaap,Tandoori Lemon Chaap,Veg.,in stock,new,160.00 INR,https://example.com/menu,https://example.com/images/tandoori-snacks-tandoori-lemon-chaap.jpg,TREAT,TANDOORI SNACKS
+tandoori-snacks-malai-chaap,Malai Chaap,Veg.,in stock,new,180.00 INR,https://example.com/menu,https://example.com/images/tandoori-snacks-malai-chaap.jpg,TREAT,TANDOORI SNACKS
+tandoori-snacks-paneer-tikka,Paneer Tikka,Veg.,in stock,new,200.00 INR,https://example.com/menu,https://example.com/images/tandoori-snacks-paneer-tikka.jpg,TREAT,TANDOORI SNACKS
+tandoori-snacks-paneer-malai-tikka,Paneer Malai Tikka,Veg.,in stock,new,220.00 INR,https://example.com/menu,https://example.com/images/tandoori-snacks-paneer-malai-tikka.jpg,TREAT,TANDOORI SNACKS
+main-course-dal-fry,Dal Fry,Veg.,in stock,new,200.00 INR,https://example.com/menu,https://example.com/images/main-course-dal-fry.jpg,TREAT,MAIN COURSE
+main-course-dal-makhani,Dal Makhani,Veg.,in stock,new,220.00 INR,https://example.com/menu,https://example.com/images/main-course-dal-makhani.jpg,TREAT,MAIN COURSE
+main-course-paneer-butter-masala,Paneer Butter Masala,Veg.,in stock,new,250.00 INR,https://example.com/menu,https://example.com/images/main-course-paneer-butter-masala.jpg,TREAT,MAIN COURSE
+main-course-masala-paneer,Masala Paneer,Veg.,in stock,new,230.00 INR,https://example.com/menu,https://example.com/images/main-course-masala-paneer.jpg,TREAT,MAIN COURSE
+main-course-kadai-paneer,Kadai Paneer,Veg.,in stock,new,230.00 INR,https://example.com/menu,https://example.com/images/main-course-kadai-paneer.jpg,TREAT,MAIN COURSE
+main-course-paneer-lababdar,Paneer Lababdar,Veg.,in stock,new,230.00 INR,https://example.com/menu,https://example.com/images/main-course-paneer-lababdar.jpg,TREAT,MAIN COURSE
+main-course-mushroom-do-pyaza,Mushroom Do Pyaza,Veg.,in stock,new,240.00 INR,https://example.com/menu,https://example.com/images/main-course-mushroom-do-pyaza.jpg,TREAT,MAIN COURSE
+main-course-masala-mushroom,Masala Mushroom,Veg.,in stock,new,220.00 INR,https://example.com/menu,https://example.com/images/main-course-masala-mushroom.jpg,TREAT,MAIN COURSE
+main-course-paneer-bhurji,Paneer Bhurji,Veg.,in stock,new,220.00 INR,https://example.com/menu,https://example.com/images/main-course-paneer-bhurji.jpg,TREAT,MAIN COURSE
+main-course-paneer-do-pyaza,Paneer Do Pyaza,Veg.,in stock,new,240.00 INR,https://example.com/menu,https://example.com/images/main-course-paneer-do-pyaza.jpg,TREAT,MAIN COURSE
+main-course-kadai-chaap,Kadai Chaap,Veg.,in stock,new,240.00 INR,https://example.com/menu,https://example.com/images/main-course-kadai-chaap.jpg,TREAT,MAIN COURSE
+main-course-tawa-chaap,Tawa Chaap,Veg.,in stock,new,240.00 INR,https://example.com/menu,https://example.com/images/main-course-tawa-chaap.jpg,TREAT,MAIN COURSE
+main-course-masala-chaap,Masala Chaap,Veg.,in stock,new,230.00 INR,https://example.com/menu,https://example.com/images/main-course-masala-chaap.jpg,TREAT,MAIN COURSE
+main-course-rara-paneer,Rara Paneer,Veg.,in stock,new,300.00 INR,https://example.com/menu,https://example.com/images/main-course-rara-paneer.jpg,TREAT,MAIN COURSE
+main-course-masala-chicken,Masala Chicken (Half/Full),Non-Veg. Half ₹260 / Full ₹480 - choose Half or Full after the cart. Boneless +₹50 option after the cart.,in stock,new,260.00 INR,https://example.com/menu,https://example.com/images/main-course-masala-chicken.jpg,TREAT,MAIN COURSE
+main-course-kadai-chicken,Kadai Chicken (Half/Full),Non-Veg. Half ₹260 / Full ₹480 - choose Half or Full after the cart. Boneless +₹50 option after the cart.,in stock,new,260.00 INR,https://example.com/menu,https://example.com/images/main-course-kadai-chicken.jpg,TREAT,MAIN COURSE
+main-course-rara-chicken,Rara Chicken (Half/Full),Non-Veg. Half ₹300 / Full ₹500 - choose Half or Full after the cart. Boneless +₹50 option after the cart.,in stock,new,300.00 INR,https://example.com/menu,https://example.com/images/main-course-rara-chicken.jpg,TREAT,MAIN COURSE
+main-course-butter-chicken,Butter Chicken (Half/Full),Non-Veg. Half ₹280 / Full ₹490 - choose Half or Full after the cart. Boneless +₹50 option after the cart.,in stock,new,280.00 INR,https://example.com/menu,https://example.com/images/main-course-butter-chicken.jpg,TREAT,MAIN COURSE
+main-course-chicken-do-pyaza,Chicken Do Pyaza (Half/Full),Non-Veg. Half ₹270 / Full ₹480 - choose Half or Full after the cart. Boneless +₹50 option after the cart.,in stock,new,270.00 INR,https://example.com/menu,https://example.com/images/main-course-chicken-do-pyaza.jpg,TREAT,MAIN COURSE
+main-course-chicken-lababdar,Chicken Lababdar (Half/Full),Non-Veg. Half ₹270 / Full ₹480 - choose Half or Full after the cart. Boneless +₹50 option after the cart.,in stock,new,270.00 INR,https://example.com/menu,https://example.com/images/main-course-chicken-lababdar.jpg,TREAT,MAIN COURSE
+rice-plain-rice,Plain Rice,Veg / Non-Veg.,in stock,new,80.00 INR,https://example.com/menu,https://example.com/images/rice-plain-rice.jpg,TREAT,RICE
+rice-jeera-rice,Jeera Rice,Veg / Non-Veg.,in stock,new,100.00 INR,https://example.com/menu,https://example.com/images/rice-jeera-rice.jpg,TREAT,RICE
+rice-veg-fried-rice,Veg Fried Rice,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/rice-veg-fried-rice.jpg,TREAT,RICE
+rice-paneer-fried-rice,Paneer Fried Rice,Veg.,in stock,new,150.00 INR,https://example.com/menu,https://example.com/images/rice-paneer-fried-rice.jpg,TREAT,RICE
+rice-chilli-garlic-fried-rice,Chilli Garlic Fried Rice,Veg.,in stock,new,140.00 INR,https://example.com/menu,https://example.com/images/rice-chilli-garlic-fried-rice.jpg,TREAT,RICE
+rice-veg-biryani,Veg Biryani,Veg.,in stock,new,240.00 INR,https://example.com/menu,https://example.com/images/rice-veg-biryani.jpg,TREAT,RICE
+rice-egg-fried-rice,Egg Fried Rice,Non-Veg.,in stock,new,130.00 INR,https://example.com/menu,https://example.com/images/rice-egg-fried-rice.jpg,TREAT,RICE
+rice-chicken-fried-rice,Chicken Fried Rice,Non-Veg.,in stock,new,150.00 INR,https://example.com/menu,https://example.com/images/rice-chicken-fried-rice.jpg,TREAT,RICE
+rice-garlic-chicken-fried-rice,Garlic Chicken Fried Rice,Non-Veg.,in stock,new,170.00 INR,https://example.com/menu,https://example.com/images/rice-garlic-chicken-fried-rice.jpg,TREAT,RICE
+rice-egg-chicken-fried-rice,Egg + Chicken Fried Rice,Non-Veg.,in stock,new,200.00 INR,https://example.com/menu,https://example.com/images/rice-egg-chicken-fried-rice.jpg,TREAT,RICE
+rice-matka-chicken-biryani,Matka Chicken Biryani,Non-Veg.,in stock,new,420.00 INR,https://example.com/menu,https://example.com/images/rice-matka-chicken-biryani.jpg,TREAT,RICE
+burgers-aloo-tikki-burger,Aloo Tikki Burger,Veg.,in stock,new,70.00 INR,https://example.com/menu,https://example.com/images/burgers-aloo-tikki-burger.jpg,TREAT,BURGERS
+burgers-veg-cheese-burger,Veg Cheese Burger,Veg.,in stock,new,90.00 INR,https://example.com/menu,https://example.com/images/burgers-veg-cheese-burger.jpg,TREAT,BURGERS
+burgers-paneer-cheese-burger,Paneer Cheese Burger,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/burgers-paneer-cheese-burger.jpg,TREAT,BURGERS
+burgers-double-decker-burger,Double Decker Burger,Veg.,in stock,new,150.00 INR,https://example.com/menu,https://example.com/images/burgers-double-decker-burger.jpg,TREAT,BURGERS
+pizza-margherita-pizza,Margherita Pizza,"Veg. Oregano, chilly flakes, Mozzarella Cheese. Extra cheese option after the cart.",in stock,new,160.00 INR,https://example.com/menu,https://example.com/images/pizza-margherita-pizza.jpg,TREAT,PIZZA
+pizza-veg-deluxe-pizza,Veg Deluxe Pizza,"Veg. Capsicum, Onion, Corn. Extra cheese option after the cart.",in stock,new,200.00 INR,https://example.com/menu,https://example.com/images/pizza-veg-deluxe-pizza.jpg,TREAT,PIZZA
+pizza-cheese-chilli-pizza,Cheese Chilli Pizza,"Veg. Paneer, Capsicum, Chilly Sauce, Onion. Extra cheese option after the cart.",in stock,new,220.00 INR,https://example.com/menu,https://example.com/images/pizza-cheese-chilli-pizza.jpg,TREAT,PIZZA
+pizza-farm-house-pizza,Farm House Pizza,"Veg. Capsicum, Onion, Paneer, Red Paprika, Black Olives. Extra cheese option after the cart.",in stock,new,250.00 INR,https://example.com/menu,https://example.com/images/pizza-farm-house-pizza.jpg,TREAT,PIZZA
+pizza-italian-pizza,Italian Pizza,"Veg. Capsicum, Onion, Black Olives, Jalapeno, Paneer. Extra cheese option after the cart.",in stock,new,270.00 INR,https://example.com/menu,https://example.com/images/pizza-italian-pizza.jpg,TREAT,PIZZA
+pizza-treat-signature-pizza,Treat Signature Pizza,"Veg. Capsicum, Corn, Black Olives, Paneer, Red Paprika, Jalapenos. Extra cheese option after the cart.",in stock,new,300.00 INR,https://example.com/menu,https://example.com/images/pizza-treat-signature-pizza.jpg,TREAT,PIZZA
+pasta-red-sauce-pasta,Red Sauce Pasta,Veg.,in stock,new,150.00 INR,https://example.com/menu,https://example.com/images/pasta-red-sauce-pasta.jpg,TREAT,PASTA
+pasta-white-sauce-pasta,White Sauce Pasta,Veg.,in stock,new,170.00 INR,https://example.com/menu,https://example.com/images/pasta-white-sauce-pasta.jpg,TREAT,PASTA
+pasta-veggie-masala-pasta,Veggie Masala Pasta,Veg.,in stock,new,160.00 INR,https://example.com/menu,https://example.com/images/pasta-veggie-masala-pasta.jpg,TREAT,PASTA
+pasta-mexican-pasta,Mexican Pasta,Veg.,in stock,new,180.00 INR,https://example.com/menu,https://example.com/images/pasta-mexican-pasta.jpg,TREAT,PASTA
+rolls-spring-roll,Spring Roll,Veg.,in stock,new,90.00 INR,https://example.com/menu,https://example.com/images/rolls-spring-roll.jpg,TREAT,ROLLS
+rolls-veggie-roll,Veggie Roll,Veg.,in stock,new,110.00 INR,https://example.com/menu,https://example.com/images/rolls-veggie-roll.jpg,TREAT,ROLLS
+rolls-cheese-corn-roll,Cheese Corn Roll,Veg.,in stock,new,130.00 INR,https://example.com/menu,https://example.com/images/rolls-cheese-corn-roll.jpg,TREAT,ROLLS
+rolls-chaap-roll,Chaap Roll,Veg.,in stock,new,140.00 INR,https://example.com/menu,https://example.com/images/rolls-chaap-roll.jpg,TREAT,ROLLS
+rolls-paneer-roll,Paneer Roll,Veg.,in stock,new,150.00 INR,https://example.com/menu,https://example.com/images/rolls-paneer-roll.jpg,TREAT,ROLLS
+rolls-egg-roll,Egg Roll,Non-Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/rolls-egg-roll.jpg,TREAT,ROLLS
+rolls-chicken-roll,Chicken Roll,Non-Veg.,in stock,new,140.00 INR,https://example.com/menu,https://example.com/images/rolls-chicken-roll.jpg,TREAT,ROLLS
+rolls-chicken-chilli-roll,Chicken Chilli Roll,Non-Veg.,in stock,new,160.00 INR,https://example.com/menu,https://example.com/images/rolls-chicken-chilli-roll.jpg,TREAT,ROLLS
+soups-veg-clear-soup,Veg Clear Soup,Veg.,in stock,new,90.00 INR,https://example.com/menu,https://example.com/images/soups-veg-clear-soup.jpg,TREAT,SOUPS
+soups-sweet-corn-soup,Sweet Corn Soup,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/soups-sweet-corn-soup.jpg,TREAT,SOUPS
+soups-manchow-soup,Manchow Soup,Veg.,in stock,new,130.00 INR,https://example.com/menu,https://example.com/images/soups-manchow-soup.jpg,TREAT,SOUPS
+soups-hot-and-sour-soup,Hot & Sour Soup,Veg.,in stock,new,140.00 INR,https://example.com/menu,https://example.com/images/soups-hot-and-sour-soup.jpg,TREAT,SOUPS
+soups-lemon-coriander-soup,Lemon Coriander Soup,Veg.,in stock,new,170.00 INR,https://example.com/menu,https://example.com/images/soups-lemon-coriander-soup.jpg,TREAT,SOUPS
+soups-egg-soup,Egg Soup,Non-Veg.,in stock,new,90.00 INR,https://example.com/menu,https://example.com/images/soups-egg-soup.jpg,TREAT,SOUPS
+soups-chicken-manchow-soup,Chicken Manchow Soup,Non-Veg.,in stock,new,130.00 INR,https://example.com/menu,https://example.com/images/soups-chicken-manchow-soup.jpg,TREAT,SOUPS
+soups-chicken-hot-and-sour-soup,Chicken Hot & Sour Soup,Non-Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/soups-chicken-hot-and-sour-soup.jpg,TREAT,SOUPS
+soups-chicken-clear-soup,Chicken Clear Soup,Non-Veg.,in stock,new,140.00 INR,https://example.com/menu,https://example.com/images/soups-chicken-clear-soup.jpg,TREAT,SOUPS
+mocktails-lime-soda,Lime Soda,Veg.,in stock,new,80.00 INR,https://example.com/menu,https://example.com/images/mocktails-lime-soda.jpg,TREAT,MOCKTAILS
+mocktails-virgin-mojito,Virgin Mojito,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/mocktails-virgin-mojito.jpg,TREAT,MOCKTAILS
+mocktails-blue-heaven,Blue Heaven,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/mocktails-blue-heaven.jpg,TREAT,MOCKTAILS
+mocktails-green-apple,Green Apple,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/mocktails-green-apple.jpg,TREAT,MOCKTAILS
+mocktails-black-currant,Black Currant,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/mocktails-black-currant.jpg,TREAT,MOCKTAILS
+mocktails-blue-berry,Blue Berry,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/mocktails-blue-berry.jpg,TREAT,MOCKTAILS
+shakes-strawberry-shake,Strawberry Shake,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/shakes-strawberry-shake.jpg,TREAT,SHAKES
+shakes-blue-berry-shake,Blue Berry Shake,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/shakes-blue-berry-shake.jpg,TREAT,SHAKES
+shakes-kitkat-shake,KitKat Shake,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/shakes-kitkat-shake.jpg,TREAT,SHAKES
+shakes-oreo-chocolate-shake,Oreo Chocolate Shake,Veg.,in stock,new,140.00 INR,https://example.com/menu,https://example.com/images/shakes-oreo-chocolate-shake.jpg,TREAT,SHAKES
+shakes-black-current-shake,Black Current Shake,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/shakes-black-current-shake.jpg,TREAT,SHAKES
+coffee-and-desserts-hot-coffee,Hot Coffee,Veg.,in stock,new,50.00 INR,https://example.com/menu,https://example.com/images/coffee-and-desserts-hot-coffee.jpg,TREAT,COFFEE & DESSERTS
+coffee-and-desserts-cold-coffee,Cold Coffee,Veg.,in stock,new,120.00 INR,https://example.com/menu,https://example.com/images/coffee-and-desserts-cold-coffee.jpg,TREAT,COFFEE & DESSERTS
+coffee-and-desserts-oreo-cold-coffee,Oreo Cold Coffee,Veg.,in stock,new,140.00 INR,https://example.com/menu,https://example.com/images/coffee-and-desserts-oreo-cold-coffee.jpg,TREAT,COFFEE & DESSERTS
+coffee-and-desserts-vanilla-ice-cream,Vanilla Ice Cream,Veg.,in stock,new,40.00 INR,https://example.com/menu,https://example.com/images/coffee-and-desserts-vanilla-ice-cream.jpg,TREAT,COFFEE & DESSERTS
+coffee-and-desserts-butterscotch-ice-cream,Butterscotch Ice Cream,Veg.,in stock,new,60.00 INR,https://example.com/menu,https://example.com/images/coffee-and-desserts-butterscotch-ice-cream.jpg,TREAT,COFFEE & DESSERTS
+coffee-and-desserts-gulab-jamun-2-pcs,Gulab Jamun (2 Pcs),Veg.,in stock,new,60.00 INR,https://example.com/menu,https://example.com/images/coffee-and-desserts-gulab-jamun-2-pcs.jpg,TREAT,COFFEE & DESSERTS
+coffee-and-desserts-vanilla-and-butterscotch-mix,Vanilla & Butterscotch Mix,Veg.,in stock,new,70.00 INR,https://example.com/menu,https://example.com/images/coffee-and-desserts-vanilla-and-butterscotch-mix.jpg,TREAT,COFFEE & DESSERTS
+extras-salad,Salad,Veg / Non-Veg.,in stock,new,50.00 INR,https://example.com/menu,https://example.com/images/extras-salad.jpg,TREAT,EXTRAS
+extras-water,Water,Veg / Non-Veg.,in stock,new,10.00 INR,https://example.com/menu,https://example.com/images/extras-water.jpg,TREAT,EXTRAS
+extras-water-bottle,Water Bottle,Veg / Non-Veg.,in stock,new,20.00 INR,https://example.com/menu,https://example.com/images/extras-water-bottle.jpg,TREAT,EXTRAS
+extras-disposable-glass,Disposable Glass,Veg / Non-Veg.,in stock,new,5.00 INR,https://example.com/menu,https://example.com/images/extras-disposable-glass.jpg,TREAT,EXTRAS
+extras-colddrink,Colddrink,Veg / Non-Veg.,in stock,new,20.00 INR,https://example.com/menu,https://example.com/images/extras-colddrink.jpg,TREAT,EXTRAS
+extras-coke-can,Coke Can,Veg / Non-Veg.,in stock,new,30.00 INR,https://example.com/menu,https://example.com/images/extras-coke-can.jpg,TREAT,EXTRAS
+extras-can,Can,Veg / Non-Veg.,in stock,new,50.00 INR,https://example.com/menu,https://example.com/images/extras-can.jpg,TREAT,EXTRAS
+chicken-snacks-crispy-chicken,Crispy Chicken (Half/Full),Non-Veg. Half ₹260 / Full ₹480 - choose Half or Full after the cart.,in stock,new,260.00 INR,https://example.com/menu,https://example.com/images/chicken-snacks-crispy-chicken.jpg,TREAT,CHICKEN SNACKS
+chicken-snacks-chilli-chicken,Chilli Chicken (Half/Full),Non-Veg. Half ₹250 / Full ₹480 - choose Half or Full after the cart.,in stock,new,250.00 INR,https://example.com/menu,https://example.com/images/chicken-snacks-chilli-chicken.jpg,TREAT,CHICKEN SNACKS
+chicken-snacks-garlic-chicken,Garlic Chicken (Half/Full),Non-Veg. Half ₹250 / Full ₹480 - choose Half or Full after the cart.,in stock,new,250.00 INR,https://example.com/menu,https://example.com/images/chicken-snacks-garlic-chicken.jpg,TREAT,CHICKEN SNACKS
+chicken-snacks-lemon-chicken-dry-gravy,Lemon Chicken (Dry/Gravy),Non-Veg.,in stock,new,380.00 INR,https://example.com/menu,https://example.com/images/chicken-snacks-lemon-chicken-dry-gravy.jpg,TREAT,CHICKEN SNACKS
+chicken-snacks-chicken-65-boneless,Chicken 65 (Boneless),Non-Veg.,in stock,new,380.00 INR,https://example.com/menu,https://example.com/images/chicken-snacks-chicken-65-boneless.jpg,TREAT,CHICKEN SNACKS
+chicken-snacks-dragon-chicken-boneless,Dragon Chicken (Boneless),Non-Veg.,in stock,new,380.00 INR,https://example.com/menu,https://example.com/images/chicken-snacks-dragon-chicken-boneless.jpg,TREAT,CHICKEN SNACKS
+chicken-snacks-chicken-lollipop-6-pcs,Chicken Lollipop (6 Pcs),Non-Veg.,in stock,new,380.00 INR,https://example.com/menu,https://example.com/images/chicken-snacks-chicken-lollipop-6-pcs.jpg,TREAT,CHICKEN SNACKS
+breads-plain-roti,Plain Roti,Non-Veg.,in stock,new,15.00 INR,https://example.com/menu,https://example.com/images/breads-plain-roti.jpg,TREAT,BREADS
+breads-butter-roti,Butter Roti,Non-Veg.,in stock,new,20.00 INR,https://example.com/menu,https://example.com/images/breads-butter-roti.jpg,TREAT,BREADS
+breads-garlic-naan,Garlic Naan,Non-Veg.,in stock,new,60.00 INR,https://example.com/menu,https://example.com/images/breads-garlic-naan.jpg,TREAT,BREADS
+breads-lacchha-paratha,Lacchha Paratha,Non-Veg.,in stock,new,70.00 INR,https://example.com/menu,https://example.com/images/breads-lacchha-paratha.jpg,TREAT,BREADS
+breads-butter-naan,Butter Naan,Non-Veg.,in stock,new,40.00 INR,https://example.com/menu,https://example.com/images/breads-butter-naan.jpg,TREAT,BREADS
+tandoori-tandoori-chicken,Tandoori Chicken (Half/Full),Non-Veg. Half ₹240 / Full ₹450 - choose Half or Full after the cart.,in stock,new,240.00 INR,https://example.com/menu,https://example.com/images/tandoori-tandoori-chicken.jpg,TREAT,TANDOORI
+tandoori-tandoori-lemon-chicken,Tandoori Lemon Chicken (Half/Full),Non-Veg. Half ₹250 / Full ₹470 - choose Half or Full after the cart.,in stock,new,250.00 INR,https://example.com/menu,https://example.com/images/tandoori-tandoori-lemon-chicken.jpg,TREAT,TANDOORI
+tandoori-afghani-chicken,Afghani Chicken (Half/Full),Non-Veg. Half ₹270 / Full ₹480 - choose Half or Full after the cart.,in stock,new,270.00 INR,https://example.com/menu,https://example.com/images/tandoori-afghani-chicken.jpg,TREAT,TANDOORI
+tandoori-chicken-tikka-8-pcs,Chicken Tikka (8 pcs),Non-Veg.,in stock,new,280.00 INR,https://example.com/menu,https://example.com/images/tandoori-chicken-tikka-8-pcs.jpg,TREAT,TANDOORI
+tandoori-chicken-seekh-kebab,Chicken Seekh Kebab,Non-Veg.,in stock,new,220.00 INR,https://example.com/menu,https://example.com/images/tandoori-chicken-seekh-kebab.jpg,TREAT,TANDOORI

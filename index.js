@@ -21,6 +21,7 @@ const { calculateOrderTotal, deliveryChargeFor } = require("./billing");
 const db = require("./db");
 const createWebMenu = require("./webmenu");
 const createFlowMenu = require("./flowmenu");
+const createCatalogMenu = require("./catalogmenu");
 const { LiveKitAPI, DisconnectWhatsAppCallRequest_DisconnectReason } = require("livekit-server-sdk");
 
 const app = express();
@@ -535,7 +536,7 @@ async function processIncomingInner(value, message) {
     // Only react to things a customer actually SENT for the bot to answer.
     // reaction / system / unsupported / unknown / button / order / request_welcome
     // are NOT messages to reply to.
-    const REPLYABLE = ["text", "location", "interactive", "image", "audio", "video", "document", "sticker"];
+    const REPLYABLE = ["text", "location", "interactive", "image", "audio", "video", "document", "sticker", "order"];
     if (!REPLYABLE.includes(message.type)) {
       console.log("Ignoring non-reply message type:", message.type);
       return;
@@ -567,6 +568,13 @@ async function processIncomingInner(value, message) {
       return;
     }
 
+    // customer pressed "Place order" in WhatsApp's native catalog cart
+    if (message.type === "order") {
+      const ok = catalogMenu.enabled ? await catalogMenu.handleOrder(from, message.order) : false;
+      if (!ok) await sendText(from, "Koi item select nahi hua. Neeche se menu dobara kholo 🙏");
+      return;
+    }
+
     if (message.type === "text") {
       await handleText(from, message.text?.body || "");
       return;
@@ -581,7 +589,8 @@ async function processIncomingInner(value, message) {
       // customer finished the in-chat menu (WhatsApp Flow)
       if (message.interactive?.type === "nfm_reply") {
         const ok = await flowMenu.handleReply(from, message.interactive.nfm_reply?.response_json);
-        if (!ok) await sendText(from, "Koi item select nahi hua. Dobara menu khol ke dish chuno.");
+        if (ok === "stale") await sendText(from, "Menu update ho gaya hai. Neeche se menu dobara kholo 🙏");
+        else if (!ok) await sendText(from, "Koi item select nahi hua. Dobara menu khol ke dish chuno.");
         return;
       }
       const id =
@@ -1105,6 +1114,14 @@ async function handleAction(to, id) {
     return;
   }
 
+  if (id === "menu_open" || (id === "add_more" && catalogMenu.enabled)) {
+    resetSelection(session);
+    session.type = "BOTH";
+    session.category = null;
+    await sendCategoryList(to, 0);
+    return;
+  }
+
   if (id === "add_more" && flowMenu.enabled) {
     resetSelection(session);
     await sendMenuEntry(to);
@@ -1135,6 +1152,8 @@ async function handleAction(to, id) {
   if (id.startsWith("cat:")) {
     session.category = id.slice(4);
     if (!session.type) session.type = "BOTH";
+    // catalog mode: WhatsApp's own product view (+ / - quantity, cart) instead of the text list
+    if (catalogMenu.enabled && (await catalogMenu.sendCategory(to, session.category))) return;
     await sendItemList(to, 0);
     return;
   }
@@ -1351,7 +1370,7 @@ async function sendWelcomeMessage(to) {
 // Step 2: VEG / NON-VEG / BOTH
 async function sendMenuStart(to) {
   // Web menu (opens inside WhatsApp). Falls back to the old chat menu if it is not configured.
-  if (flowMenu.enabled || webMenu.enabled) {
+  if (catalogMenu.enabled || flowMenu.enabled || webMenu.enabled) {
     await sendMenuEntry(to);
     // clean welcome: ONE card only. Set SHOW_EXTRA_BUTTONS=1 to also send the PDF / write-order / language buttons.
     if (menuFirst() && process.env.SHOW_EXTRA_BUTTONS !== "1") return;
@@ -2590,10 +2609,17 @@ const webMenu = createWebMenu({
 });
 webMenu.register();
 
+// CATALOG MENU (WhatsApp's native product view + cart) - active only when WHATSAPP_CATALOG_ID is set
+const catalogMenu = createCatalogMenu({ getSession, sendWhatsAppMessage, processQueue, MAX_QTY });
+
 // IN-CHAT MENU (WhatsApp Flow) - active only when WHATSAPP_FLOW_ID is set
 const flowMenu = createFlowMenu({ getSession, sendWhatsAppMessage, startTypedItem, processQueue });
 // Flow first; if Meta rejects it (wrong / unpublished Flow ID) fall back to the web menu so the customer is never stuck
 async function sendMenuEntry(to) {
+  if (catalogMenu.enabled) {
+    await sendCatalogWelcome(to);
+    return;
+  }
   if (flowMenu.enabled) {
     try {
       await sendFlowMenu(to);
@@ -2605,9 +2631,34 @@ async function sendMenuEntry(to) {
   if (webMenu.enabled) await webMenu.sendLink(to);
 }
 
+// catalog mode welcome: ONE card = banner image + welcome text + "View Menu" button
+async function sendCatalogWelcome(to) {
+  const lang = getSession(to).lang || "hg";
+  const body = {
+    en: "🍽️ *TREAT Restaurant*\n\nWelcome! 🙏\nWe're delighted to serve you delicious food. Tap below to see our menu 👇",
+    hi: "🍽️ *TREAT Restaurant*\n\nस्वागत है! 🙏\nस्वादिष्ट खाने के लिए नीचे मेनू देखें 👇",
+    hg: "🍽️ *TREAT Restaurant*\n\nWelcome! 🙏\nSwadisht khane ke liye neeche menu dekho 👇"
+  }[lang] || "Welcome! 🙏";
+  const btn = { en: "🍽️ View Menu", hi: "🍽️ मेनू देखें", hg: "🍽️ Menu Dekho" }[lang] || "🍽️ Menu Dekho";
+  const img = process.env.WELCOME_IMAGE_URL || "";
+  await sendWhatsAppMessage(to, {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to,
+    type: "interactive",
+    interactive: {
+      type: "button",
+      ...(/^https:\/\//.test(img) ? { header: { type: "image", image: { link: img } } } : {}),
+      body: { text: body },
+      footer: { text: cut(process.env.WELCOME_FOOTER || "Powered by TREAT", 60) },
+      action: { buttons: [{ type: "reply", reply: { id: "menu_open", title: cut(btn, 20) } }] }
+    }
+  });
+}
+
 // Menu-first mode: Hi -> welcome card -> menu opens directly. Turn off with MENU_FIRST=0
 function menuFirst() {
-  return flowMenu.enabled && process.env.MENU_FIRST !== "0";
+  return (catalogMenu.enabled || flowMenu.enabled) && process.env.MENU_FIRST !== "0";
 }
 
 // order type + its details are done: go on to billing if the cart already has items, else show the menu
