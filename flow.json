@@ -4,831 +4,55 @@
     {
       "id": "CATS",
       "title": "TREAT Menu",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
       "layout": {
         "type": "SingleColumnLayout",
         "children": [
           {
-            "type": "TextBody",
-            "text": "Category chuno, dish select karo. Sab chunne ke baad 'Order bhejo' dabao."
-          },
-          {
             "type": "NavigationList",
-            "name": "cats",
+            "name": "types",
+            "label": "What would you like?",
+            "description": "Pick menu type",
             "list-items": [
               {
-                "id": "p0",
+                "id": "fV",
                 "main-content": {
-                  "title": "MOMOS"
+                  "title": "🟢 VEG"
                 },
                 "on-click-action": {
                   "name": "navigate",
                   "next": {
                     "type": "screen",
-                    "name": "PAGE_0"
+                    "name": "MENU_V"
                   },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
+                  "payload": {}
                 }
               },
               {
-                "id": "p1",
+                "id": "fN",
                 "main-content": {
-                  "title": "NOODLES"
+                  "title": "🔴 NON-VEG"
                 },
                 "on-click-action": {
                   "name": "navigate",
                   "next": {
                     "type": "screen",
-                    "name": "PAGE_1"
+                    "name": "MENU_N"
                   },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
+                  "payload": {}
                 }
               },
               {
-                "id": "p2",
+                "id": "fA",
                 "main-content": {
-                  "title": "CHINESE SNACKS"
+                  "title": "🍽️ ALL (VEG + NON-VEG)"
                 },
                 "on-click-action": {
                   "name": "navigate",
                   "next": {
                     "type": "screen",
-                    "name": "PAGE_2"
+                    "name": "MENU_A"
                   },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p3",
-                "main-content": {
-                  "title": "TANDOORI SNACKS"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_3"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p4",
-                "main-content": {
-                  "title": "MAIN COURSE 1"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_4"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p5",
-                "main-content": {
-                  "title": "MAIN COURSE 2"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_5"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p6",
-                "main-content": {
-                  "title": "RICE"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_6"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p7",
-                "main-content": {
-                  "title": "BURGERS"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_7"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p8",
-                "main-content": {
-                  "title": "PIZZA"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_8"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p9",
-                "main-content": {
-                  "title": "PASTA"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_9"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p10",
-                "main-content": {
-                  "title": "ROLLS"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_10"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p11",
-                "main-content": {
-                  "title": "SOUPS"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_11"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p12",
-                "main-content": {
-                  "title": "MOCKTAILS"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_12"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p13",
-                "main-content": {
-                  "title": "SHAKES"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_13"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p14",
-                "main-content": {
-                  "title": "COFFEE & DESSERTS"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_14"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p15",
-                "main-content": {
-                  "title": "EXTRAS"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_15"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p16",
-                "main-content": {
-                  "title": "CHICKEN SNACKS"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_16"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p17",
-                "main-content": {
-                  "title": "BREADS"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_17"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "p18",
-                "main-content": {
-                  "title": "TANDOORI"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "PAGE_18"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              },
-              {
-                "id": "done",
-                "main-content": {
-                  "title": "✅ Order bhejo",
-                  "description": "Review"
-                },
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CONFIRM"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
+                  "payload": {}
                 }
               }
             ]
@@ -837,143 +61,9 @@
       }
     },
     {
-      "id": "PAGE_0",
-      "title": "MOMOS",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
+      "id": "MENU_V",
+      "title": "🟢 VEG",
+      "terminal": true,
       "layout": {
         "type": "SingleColumnLayout",
         "children": [
@@ -983,3577 +73,549 @@
             "children": [
               {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel0",
                 "label": "MOMOS",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Veg Steam Momos",
-                    "title": "Veg Steam Momos",
-                    "description": "🟢 ₹70"
+                    "title": "🟢 Veg Steam Momos ₹70"
                   },
                   {
                     "id": "Veg Fried Momos",
-                    "title": "Veg Fried Momos",
-                    "description": "🟢 ₹80"
+                    "title": "🟢 Veg Fried Momos ₹80"
                   },
                   {
                     "id": "Kurkure Veg Momos",
-                    "title": "Kurkure Veg Momos",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Kurkure Veg Momos ₹120"
                   },
                   {
                     "id": "Chilli Veg Momos",
-                    "title": "Chilli Veg Momos",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Chilli Veg Momos ₹120"
                   },
                   {
                     "id": "Malai Veg Momos",
-                    "title": "Malai Veg Momos",
-                    "description": "🟢 ₹140"
+                    "title": "🟢 Malai Veg Momos ₹140"
                   },
                   {
                     "id": "Steam Paneer Momos",
-                    "title": "Steam Paneer Momos",
-                    "description": "🟢 ₹100"
+                    "title": "🟢 Steam Paneer Momos ₹100"
                   },
                   {
                     "id": "Paneer Fried Momos",
-                    "title": "Paneer Fried Momos",
-                    "description": "🟢 ₹110"
+                    "title": "🟢 Paneer Fried Momos ₹110"
                   },
                   {
                     "id": "Kurkure Paneer Momos",
-                    "title": "Kurkure Paneer Momos",
-                    "description": "🟢 ₹130"
+                    "title": "🟢 Kurkure Paneer Momos ₹130"
                   },
                   {
                     "id": "Chilli Paneer Momos",
-                    "title": "Chilli Paneer Momos",
-                    "description": "🟢 ₹140"
+                    "title": "🟢 Chilli Paneer Momos ₹140"
                   },
                   {
                     "id": "Malai Paneer Momos",
-                    "title": "Malai Paneer Momos",
-                    "description": "🟢 ₹160"
-                  },
-                  {
-                    "id": "Chicken Steam Momos",
-                    "title": "Chicken Steam Momos",
-                    "description": "🔴 ₹120"
-                  },
-                  {
-                    "id": "Chicken Fried Momos",
-                    "title": "Chicken Fried Momos",
-                    "description": "🔴 ₹140"
-                  },
-                  {
-                    "id": "Chicken Chilli Momos",
-                    "title": "Chicken Chilli Momos",
-                    "description": "🔴 ₹160"
-                  },
-                  {
-                    "id": "Chicken Malai Momos",
-                    "title": "Chicken Malai Momos",
-                    "description": "🔴 ₹180"
+                    "title": "🟢 Malai Paneer Momos ₹160"
                   }
-                ],
-                "init-value": "${data.c0}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${form.sel}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_1",
-      "title": "NOODLES",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel1",
                 "label": "NOODLES",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Veg Noodles",
-                    "title": "Veg Noodles",
-                    "description": "🟢 ₹100"
+                    "title": "🟢 Veg Noodles ₹100"
                   },
                   {
                     "id": "Veg Hakka Noodles",
-                    "title": "Veg Hakka Noodles",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Veg Hakka Noodles ₹120"
                   },
                   {
                     "id": "Paneer Noodle",
-                    "title": "Paneer Noodle",
-                    "description": "🟢 ₹130"
+                    "title": "🟢 Paneer Noodle ₹130"
                   },
                   {
                     "id": "Chilli Garlic Noodles",
-                    "title": "Chilli Garlic Noodles",
-                    "description": "🟢 ₹140"
-                  },
-                  {
-                    "id": "Egg Noodles",
-                    "title": "Egg Noodles",
-                    "description": "🔴 ₹130"
-                  },
-                  {
-                    "id": "Chicken Noodles",
-                    "title": "Chicken Noodles",
-                    "description": "🔴 ₹150"
-                  },
-                  {
-                    "id": "Schezwan Noodles",
-                    "title": "Schezwan Noodles",
-                    "description": "🔴 ₹170"
-                  },
-                  {
-                    "id": "Chicken Hakka Noodles",
-                    "title": "Chicken Hakka Noodles",
-                    "description": "🔴 ₹180"
-                  },
-                  {
-                    "id": "Chicken Garlic Noodles",
-                    "title": "Chicken Garlic Noodles",
-                    "description": "🔴 ₹180"
+                    "title": "🟢 Chilli Garlic Noodles ₹140"
                   }
-                ],
-                "init-value": "${data.c1}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${form.sel}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_2",
-      "title": "CHINESE SNACKS",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel2",
                 "label": "CHINESE SNACKS",
                 "required": false,
                 "data-source": [
                   {
                     "id": "French Fries",
-                    "title": "French Fries",
-                    "description": "🟢 ₹80"
+                    "title": "🟢 French Fries ₹80"
                   },
                   {
                     "id": "Peri Peri Fries",
-                    "title": "Peri Peri Fries",
-                    "description": "🟢 ₹100"
+                    "title": "🟢 Peri Peri Fries ₹100"
                   },
                   {
                     "id": "Honey Chilli Potato",
-                    "title": "Honey Chilli Potato",
-                    "description": "🟢 ₹150"
+                    "title": "🟢 Honey Chilli Potato ₹150"
                   },
                   {
                     "id": "Veg Manchurian Dry",
-                    "title": "Veg Manchurian Dry",
-                    "description": "🟢 ₹150"
+                    "title": "🟢 Veg Manchurian Dry ₹150"
                   },
                   {
                     "id": "Veg Manchurian Gravy",
-                    "title": "Veg Manchurian Gravy",
-                    "description": "🟢 ₹170"
+                    "title": "🟢 Veg Manchurian Gravy ₹170"
                   },
                   {
                     "id": "Chilly Chaap",
-                    "title": "Chilly Chaap",
-                    "description": "🟢 ₹180"
+                    "title": "🟢 Chilly Chaap ₹180"
                   },
                   {
                     "id": "Chilly Mushroom",
-                    "title": "Chilly Mushroom",
-                    "description": "🟢 ₹200"
+                    "title": "🟢 Chilly Mushroom ₹200"
                   },
                   {
                     "id": "Chilly Paneer",
-                    "title": "Chilly Paneer",
-                    "description": "🟢 ₹210"
+                    "title": "🟢 Chilly Paneer ₹210"
                   },
                   {
                     "id": "Crispy Corn",
-                    "title": "Crispy Corn",
-                    "description": "🟢 ₹190"
+                    "title": "🟢 Crispy Corn ₹190"
                   },
                   {
                     "id": "Butterfly Paneer",
-                    "title": "Butterfly Paneer",
-                    "description": "🟢 ₹220"
+                    "title": "🟢 Butterfly Paneer ₹220"
                   },
                   {
                     "id": "Garlic Mushroom",
-                    "title": "Garlic Mushroom",
-                    "description": "🟢 ₹220"
+                    "title": "🟢 Garlic Mushroom ₹220"
                   },
                   {
                     "id": "Paneer 65",
-                    "title": "Paneer 65",
-                    "description": "🟢 ₹250"
+                    "title": "🟢 Paneer 65 ₹250"
                   },
                   {
                     "id": "Mushroom Duplex",
-                    "title": "Mushroom Duplex",
-                    "description": "🟢 ₹250"
+                    "title": "🟢 Mushroom Duplex ₹250"
                   }
-                ],
-                "init-value": "${data.c2}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${form.sel}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_3",
-      "title": "TANDOORI SNACKS",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel3",
                 "label": "TANDOORI SNACKS",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Tandoori Chaap",
-                    "title": "Tandoori Chaap",
-                    "description": "🟢 ₹150"
+                    "title": "🟢 Tandoori Chaap ₹150"
                   },
                   {
                     "id": "Tandoori Lemon Chaap",
-                    "title": "Tandoori Lemon Chaap",
-                    "description": "🟢 ₹160"
+                    "title": "🟢 Tandoori Lemon Chaap ₹160"
                   },
                   {
                     "id": "Malai Chaap",
-                    "title": "Malai Chaap",
-                    "description": "🟢 ₹180"
+                    "title": "🟢 Malai Chaap ₹180"
                   },
                   {
                     "id": "Paneer Tikka",
-                    "title": "Paneer Tikka",
-                    "description": "🟢 ₹200"
+                    "title": "🟢 Paneer Tikka ₹200"
                   },
                   {
                     "id": "Paneer Malai Tikka",
-                    "title": "Paneer Malai Tikka",
-                    "description": "🟢 ₹220"
+                    "title": "🟢 Paneer Malai Tikka ₹220"
                   }
-                ],
-                "init-value": "${data.c3}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${form.sel}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_4",
-      "title": "MAIN COURSE",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
-                "label": "MAIN COURSE",
+                "name": "sel4",
+                "label": "MAIN COURSE (1)",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Dal Fry",
-                    "title": "Dal Fry",
-                    "description": "🟢 ₹200"
+                    "title": "🟢 Dal Fry ₹200"
                   },
                   {
                     "id": "Dal Makhani",
-                    "title": "Dal Makhani",
-                    "description": "🟢 ₹220"
+                    "title": "🟢 Dal Makhani ₹220"
                   },
                   {
                     "id": "Paneer Butter Masala",
-                    "title": "Paneer Butter Masala",
-                    "description": "🟢 ₹250"
+                    "title": "🟢 Paneer Butter Masala ₹250"
                   },
                   {
                     "id": "Masala Paneer",
-                    "title": "Masala Paneer",
-                    "description": "🟢 ₹230"
+                    "title": "🟢 Masala Paneer ₹230"
                   },
                   {
                     "id": "Kadai Paneer",
-                    "title": "Kadai Paneer",
-                    "description": "🟢 ₹230"
+                    "title": "🟢 Kadai Paneer ₹230"
                   },
                   {
                     "id": "Paneer Lababdar",
-                    "title": "Paneer Lababdar",
-                    "description": "🟢 ₹230"
+                    "title": "🟢 Paneer Lababdar ₹230"
                   },
                   {
                     "id": "Mushroom Do Pyaza",
-                    "title": "Mushroom Do Pyaza",
-                    "description": "🟢 ₹240"
+                    "title": "🟢 Mushroom Do Pyaza ₹240"
                   },
                   {
                     "id": "Masala Mushroom",
-                    "title": "Masala Mushroom",
-                    "description": "🟢 ₹220"
+                    "title": "🟢 Masala Mushroom ₹220"
                   },
                   {
                     "id": "Paneer Bhurji",
-                    "title": "Paneer Bhurji",
-                    "description": "🟢 ₹220"
+                    "title": "🟢 Paneer Bhurji ₹220"
                   },
                   {
                     "id": "Paneer Do Pyaza",
-                    "title": "Paneer Do Pyaza",
-                    "description": "🟢 ₹240"
+                    "title": "🟢 Paneer Do Pyaza ₹240"
                   },
                   {
                     "id": "Kadai Chaap",
-                    "title": "Kadai Chaap",
-                    "description": "🟢 ₹240"
+                    "title": "🟢 Kadai Chaap ₹240"
                   },
                   {
                     "id": "Tawa Chaap",
-                    "title": "Tawa Chaap",
-                    "description": "🟢 ₹240"
+                    "title": "🟢 Tawa Chaap ₹240"
                   },
                   {
                     "id": "Masala Chaap",
-                    "title": "Masala Chaap",
-                    "description": "🟢 ₹230"
+                    "title": "🟢 Masala Chaap ₹230"
                   },
                   {
                     "id": "Rara Paneer",
-                    "title": "Rara Paneer",
-                    "description": "🟢 ₹300"
-                  },
-                  {
-                    "id": "Masala Chicken|H",
-                    "title": "Masala Chicken (Half)",
-                    "description": "🔴 ₹260"
-                  },
-                  {
-                    "id": "Masala Chicken|F",
-                    "title": "Masala Chicken (Full)",
-                    "description": "🔴 ₹480"
-                  },
-                  {
-                    "id": "Kadai Chicken|H",
-                    "title": "Kadai Chicken (Half)",
-                    "description": "🔴 ₹260"
-                  },
-                  {
-                    "id": "Kadai Chicken|F",
-                    "title": "Kadai Chicken (Full)",
-                    "description": "🔴 ₹480"
-                  },
-                  {
-                    "id": "Rara Chicken|H",
-                    "title": "Rara Chicken (Half)",
-                    "description": "🔴 ₹300"
-                  },
-                  {
-                    "id": "Rara Chicken|F",
-                    "title": "Rara Chicken (Full)",
-                    "description": "🔴 ₹500"
+                    "title": "🟢 Rara Paneer ₹300"
                   }
-                ],
-                "init-value": "${data.c4}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${form.sel}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_5",
-      "title": "MAIN COURSE",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
-                "label": "MAIN COURSE",
-                "required": false,
-                "data-source": [
-                  {
-                    "id": "Butter Chicken|H",
-                    "title": "Butter Chicken (Half)",
-                    "description": "🔴 ₹280"
-                  },
-                  {
-                    "id": "Butter Chicken|F",
-                    "title": "Butter Chicken (Full)",
-                    "description": "🔴 ₹490"
-                  },
-                  {
-                    "id": "Chicken Do Pyaza|H",
-                    "title": "Chicken Do Pyaza (Half)",
-                    "description": "🔴 ₹270"
-                  },
-                  {
-                    "id": "Chicken Do Pyaza|F",
-                    "title": "Chicken Do Pyaza (Full)",
-                    "description": "🔴 ₹480"
-                  },
-                  {
-                    "id": "Chicken Lababdar|H",
-                    "title": "Chicken Lababdar (Half)",
-                    "description": "🔴 ₹270"
-                  },
-                  {
-                    "id": "Chicken Lababdar|F",
-                    "title": "Chicken Lababdar (Full)",
-                    "description": "🔴 ₹480"
-                  }
-                ],
-                "init-value": "${data.c5}"
-              },
-              {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${form.sel}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_6",
-      "title": "RICE",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
-                "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel6",
                 "label": "RICE",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Plain Rice",
-                    "title": "Plain Rice",
-                    "description": "🟡 ₹80"
+                    "title": "🟡 Plain Rice ₹80"
                   },
                   {
                     "id": "Jeera Rice",
-                    "title": "Jeera Rice",
-                    "description": "🟡 ₹100"
+                    "title": "🟡 Jeera Rice ₹100"
                   },
                   {
                     "id": "Veg Fried Rice",
-                    "title": "Veg Fried Rice",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Veg Fried Rice ₹120"
                   },
                   {
                     "id": "Paneer Fried Rice",
-                    "title": "Paneer Fried Rice",
-                    "description": "🟢 ₹150"
+                    "title": "🟢 Paneer Fried Rice ₹150"
                   },
                   {
                     "id": "Chilli Garlic Fried Rice",
-                    "title": "Chilli Garlic Fried Rice",
-                    "description": "🟢 ₹140"
+                    "title": "🟢 Chilli Garlic Fried R… ₹140"
                   },
                   {
                     "id": "Veg Biryani",
-                    "title": "Veg Biryani",
-                    "description": "🟢 ₹240"
-                  },
-                  {
-                    "id": "Egg Fried Rice",
-                    "title": "Egg Fried Rice",
-                    "description": "🔴 ₹130"
-                  },
-                  {
-                    "id": "Chicken Fried Rice",
-                    "title": "Chicken Fried Rice",
-                    "description": "🔴 ₹150"
-                  },
-                  {
-                    "id": "Garlic Chicken Fried Rice",
-                    "title": "Garlic Chicken Fried Rice",
-                    "description": "🔴 ₹170"
-                  },
-                  {
-                    "id": "Egg + Chicken Fried Rice",
-                    "title": "Egg + Chicken Fried Rice",
-                    "description": "🔴 ₹200"
-                  },
-                  {
-                    "id": "Matka Chicken Biryani",
-                    "title": "Matka Chicken Biryani",
-                    "description": "🔴 ₹420"
+                    "title": "🟢 Veg Biryani ₹240"
                   }
-                ],
-                "init-value": "${data.c6}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${form.sel}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_7",
-      "title": "BURGERS",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel7",
                 "label": "BURGERS",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Aloo Tikki Burger",
-                    "title": "Aloo Tikki Burger",
-                    "description": "🟢 ₹70"
+                    "title": "🟢 Aloo Tikki Burger ₹70"
                   },
                   {
                     "id": "Veg Cheese Burger",
-                    "title": "Veg Cheese Burger",
-                    "description": "🟢 ₹90"
+                    "title": "🟢 Veg Cheese Burger ₹90"
                   },
                   {
                     "id": "Paneer Cheese Burger",
-                    "title": "Paneer Cheese Burger",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Paneer Cheese Burger ₹120"
                   },
                   {
                     "id": "Double Decker Burger",
-                    "title": "Double Decker Burger",
-                    "description": "🟢 ₹150"
+                    "title": "🟢 Double Decker Burger ₹150"
                   }
-                ],
-                "init-value": "${data.c7}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${form.sel}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_8",
-      "title": "PIZZA",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel8",
                 "label": "PIZZA",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Margherita Pizza",
-                    "title": "Margherita Pizza",
-                    "description": "🟢 ₹160 · Oregano, chilly flakes, Mozzarella Cheese"
+                    "title": "🟢 Margherita Pizza ₹160"
                   },
                   {
                     "id": "Veg Deluxe Pizza",
-                    "title": "Veg Deluxe Pizza",
-                    "description": "🟢 ₹200 · Capsicum, Onion, Corn"
+                    "title": "🟢 Veg Deluxe Pizza ₹200"
                   },
                   {
                     "id": "Cheese Chilli Pizza",
-                    "title": "Cheese Chilli Pizza",
-                    "description": "🟢 ₹220 · Paneer, Capsicum, Chilly Sauce, Onion"
+                    "title": "🟢 Cheese Chilli Pizza ₹220"
                   },
                   {
                     "id": "Farm House Pizza",
-                    "title": "Farm House Pizza",
-                    "description": "🟢 ₹250 · Capsicum, Onion, Paneer, Red Paprika, Black Olives"
+                    "title": "🟢 Farm House Pizza ₹250"
                   },
                   {
                     "id": "Italian Pizza",
-                    "title": "Italian Pizza",
-                    "description": "🟢 ₹270 · Capsicum, Onion, Black Olives, Jalapeno, Paneer"
+                    "title": "🟢 Italian Pizza ₹270"
                   },
                   {
                     "id": "Treat Signature Pizza",
-                    "title": "Treat Signature Pizza",
-                    "description": "🟢 ₹300 · Capsicum, Corn, Black Olives, Paneer, Red Paprika, Jalapenos"
+                    "title": "🟢 Treat Signature Pizza ₹300"
                   }
-                ],
-                "init-value": "${data.c8}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${form.sel}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_9",
-      "title": "PASTA",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel9",
                 "label": "PASTA",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Red Sauce Pasta",
-                    "title": "Red Sauce Pasta",
-                    "description": "🟢 ₹150"
+                    "title": "🟢 Red Sauce Pasta ₹150"
                   },
                   {
                     "id": "White Sauce Pasta",
-                    "title": "White Sauce Pasta",
-                    "description": "🟢 ₹170"
+                    "title": "🟢 White Sauce Pasta ₹170"
                   },
                   {
                     "id": "Veggie Masala Pasta",
-                    "title": "Veggie Masala Pasta",
-                    "description": "🟢 ₹160"
+                    "title": "🟢 Veggie Masala Pasta ₹160"
                   },
                   {
                     "id": "Mexican Pasta",
-                    "title": "Mexican Pasta",
-                    "description": "🟢 ₹180"
+                    "title": "🟢 Mexican Pasta ₹180"
                   }
-                ],
-                "init-value": "${data.c9}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${form.sel}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_10",
-      "title": "ROLLS",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel10",
                 "label": "ROLLS",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Spring Roll",
-                    "title": "Spring Roll",
-                    "description": "🟢 ₹90"
+                    "title": "🟢 Spring Roll ₹90"
                   },
                   {
                     "id": "Veggie Roll",
-                    "title": "Veggie Roll",
-                    "description": "🟢 ₹110"
+                    "title": "🟢 Veggie Roll ₹110"
                   },
                   {
                     "id": "Cheese Corn Roll",
-                    "title": "Cheese Corn Roll",
-                    "description": "🟢 ₹130"
+                    "title": "🟢 Cheese Corn Roll ₹130"
                   },
                   {
                     "id": "Chaap Roll",
-                    "title": "Chaap Roll",
-                    "description": "🟢 ₹140"
+                    "title": "🟢 Chaap Roll ₹140"
                   },
                   {
                     "id": "Paneer Roll",
-                    "title": "Paneer Roll",
-                    "description": "🟢 ₹150"
-                  },
-                  {
-                    "id": "Egg Roll",
-                    "title": "Egg Roll",
-                    "description": "🔴 ₹120"
-                  },
-                  {
-                    "id": "Chicken Roll",
-                    "title": "Chicken Roll",
-                    "description": "🔴 ₹140"
-                  },
-                  {
-                    "id": "Chicken Chilli Roll",
-                    "title": "Chicken Chilli Roll",
-                    "description": "🔴 ₹160"
+                    "title": "🟢 Paneer Roll ₹150"
                   }
-                ],
-                "init-value": "${data.c10}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${form.sel}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_11",
-      "title": "SOUPS",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel11",
                 "label": "SOUPS",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Veg Clear Soup",
-                    "title": "Veg Clear Soup",
-                    "description": "🟢 ₹90"
+                    "title": "🟢 Veg Clear Soup ₹90"
                   },
                   {
                     "id": "Sweet Corn Soup",
-                    "title": "Sweet Corn Soup",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Sweet Corn Soup ₹120"
                   },
                   {
                     "id": "Manchow Soup",
-                    "title": "Manchow Soup",
-                    "description": "🟢 ₹130"
+                    "title": "🟢 Manchow Soup ₹130"
                   },
                   {
                     "id": "Hot & Sour Soup",
-                    "title": "Hot & Sour Soup",
-                    "description": "🟢 ₹140"
+                    "title": "🟢 Hot & Sour Soup ₹140"
                   },
                   {
                     "id": "Lemon Coriander Soup",
-                    "title": "Lemon Coriander Soup",
-                    "description": "🟢 ₹170"
-                  },
-                  {
-                    "id": "Egg Soup",
-                    "title": "Egg Soup",
-                    "description": "🔴 ₹90"
-                  },
-                  {
-                    "id": "Chicken Manchow Soup",
-                    "title": "Chicken Manchow Soup",
-                    "description": "🔴 ₹130"
-                  },
-                  {
-                    "id": "Chicken Hot & Sour Soup",
-                    "title": "Chicken Hot & Sour Soup",
-                    "description": "🔴 ₹120"
-                  },
-                  {
-                    "id": "Chicken Clear Soup",
-                    "title": "Chicken Clear Soup",
-                    "description": "🔴 ₹140"
+                    "title": "🟢 Lemon Coriander Soup ₹170"
                   }
-                ],
-                "init-value": "${data.c11}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${form.sel}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_12",
-      "title": "MOCKTAILS",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel12",
                 "label": "MOCKTAILS",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Lime Soda",
-                    "title": "Lime Soda",
-                    "description": "🟢 ₹80"
+                    "title": "🟢 Lime Soda ₹80"
                   },
                   {
                     "id": "Virgin Mojito",
-                    "title": "Virgin Mojito",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Virgin Mojito ₹120"
                   },
                   {
                     "id": "Blue Heaven",
-                    "title": "Blue Heaven",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Blue Heaven ₹120"
                   },
                   {
                     "id": "Green Apple",
-                    "title": "Green Apple",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Green Apple ₹120"
                   },
                   {
                     "id": "Black Currant",
-                    "title": "Black Currant",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Black Currant ₹120"
                   },
                   {
                     "id": "Blue Berry",
-                    "title": "Blue Berry",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Blue Berry ₹120"
                   }
-                ],
-                "init-value": "${data.c12}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${form.sel}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_13",
-      "title": "SHAKES",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel13",
                 "label": "SHAKES",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Strawberry Shake",
-                    "title": "Strawberry Shake",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Strawberry Shake ₹120"
                   },
                   {
                     "id": "Blue Berry Shake",
-                    "title": "Blue Berry Shake",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Blue Berry Shake ₹120"
                   },
                   {
                     "id": "KitKat Shake",
-                    "title": "KitKat Shake",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 KitKat Shake ₹120"
                   },
                   {
                     "id": "Oreo Chocolate Shake",
-                    "title": "Oreo Chocolate Shake",
-                    "description": "🟢 ₹140"
+                    "title": "🟢 Oreo Chocolate Shake ₹140"
                   },
                   {
                     "id": "Black Current Shake",
-                    "title": "Black Current Shake",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Black Current Shake ₹120"
                   }
-                ],
-                "init-value": "${data.c13}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${form.sel}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_14",
-      "title": "COFFEE & DESSERTS",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel14",
                 "label": "COFFEE & DESSERTS",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Hot Coffee",
-                    "title": "Hot Coffee",
-                    "description": "🟢 ₹50"
+                    "title": "🟢 Hot Coffee ₹50"
                   },
                   {
                     "id": "Cold Coffee",
-                    "title": "Cold Coffee",
-                    "description": "🟢 ₹120"
+                    "title": "🟢 Cold Coffee ₹120"
                   },
                   {
                     "id": "Oreo Cold Coffee",
-                    "title": "Oreo Cold Coffee",
-                    "description": "🟢 ₹140"
+                    "title": "🟢 Oreo Cold Coffee ₹140"
                   },
                   {
                     "id": "Vanilla Ice Cream",
-                    "title": "Vanilla Ice Cream",
-                    "description": "🟢 ₹40"
+                    "title": "🟢 Vanilla Ice Cream ₹40"
                   },
                   {
                     "id": "Butterscotch Ice Cream",
-                    "title": "Butterscotch Ice Cream",
-                    "description": "🟢 ₹60"
+                    "title": "🟢 Butterscotch Ice Cream ₹60"
                   },
                   {
                     "id": "Gulab Jamun (2 Pcs)",
-                    "title": "Gulab Jamun (2 Pcs)",
-                    "description": "🟢 ₹60"
+                    "title": "🟢 Gulab Jamun (2 Pcs) ₹60"
                   },
                   {
                     "id": "Vanilla & Butterscotch Mix",
-                    "title": "Vanilla & Butterscotch Mix",
-                    "description": "🟢 ₹70"
+                    "title": "🟢 Vanilla & Butterscotch… ₹70"
                   }
-                ],
-                "init-value": "${data.c14}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${form.sel}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_15",
-      "title": "EXTRAS",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel15",
                 "label": "EXTRAS",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Salad",
-                    "title": "Salad",
-                    "description": "🟡 ₹50"
+                    "title": "🟡 Salad ₹50"
                   },
                   {
                     "id": "Water",
-                    "title": "Water",
-                    "description": "🟡 ₹10"
+                    "title": "🟡 Water ₹10"
                   },
                   {
                     "id": "Water Bottle",
-                    "title": "Water Bottle",
-                    "description": "🟡 ₹20"
+                    "title": "🟡 Water Bottle ₹20"
                   },
                   {
                     "id": "Disposable Glass",
-                    "title": "Disposable Glass",
-                    "description": "🟡 ₹5"
+                    "title": "🟡 Disposable Glass ₹5"
                   },
                   {
                     "id": "Colddrink",
-                    "title": "Colddrink",
-                    "description": "🟡 ₹20"
+                    "title": "🟡 Colddrink ₹20"
                   },
                   {
                     "id": "Coke Can",
-                    "title": "Coke Can",
-                    "description": "🟡 ₹30"
+                    "title": "🟡 Coke Can ₹30"
                   },
                   {
                     "id": "Can",
-                    "title": "Can",
-                    "description": "🟡 ₹50"
+                    "title": "🟡 Can ₹50"
                   }
-                ],
-                "init-value": "${data.c15}"
+                ]
               },
               {
                 "type": "Footer",
-                "label": "Add karo",
+                "label": "Send order",
                 "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
+                  "name": "complete",
                   "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${form.sel}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
+                    "c0": "${form.sel0}",
+                    "c1": "${form.sel1}",
+                    "c2": "${form.sel2}",
+                    "c3": "${form.sel3}",
+                    "c4": "${form.sel4}",
+                    "c6": "${form.sel6}",
+                    "c7": "${form.sel7}",
+                    "c8": "${form.sel8}",
+                    "c9": "${form.sel9}",
+                    "c10": "${form.sel10}",
+                    "c11": "${form.sel11}",
+                    "c12": "${form.sel12}",
+                    "c13": "${form.sel13}",
+                    "c14": "${form.sel14}",
+                    "c15": "${form.sel15}"
                   }
                 }
               }
@@ -4563,143 +625,9 @@
       }
     },
     {
-      "id": "PAGE_16",
-      "title": "CHICKEN SNACKS",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
+      "id": "MENU_N",
+      "title": "🔴 NON-VEG",
+      "terminal": true,
       "layout": {
         "type": "SingleColumnLayout",
         "children": [
@@ -4709,308 +637,369 @@
             "children": [
               {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel0",
+                "label": "MOMOS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Chicken Steam Momos",
+                    "title": "🔴 Chicken Steam Momos ₹120"
+                  },
+                  {
+                    "id": "Chicken Fried Momos",
+                    "title": "🔴 Chicken Fried Momos ₹140"
+                  },
+                  {
+                    "id": "Chicken Chilli Momos",
+                    "title": "🔴 Chicken Chilli Momos ₹160"
+                  },
+                  {
+                    "id": "Chicken Malai Momos",
+                    "title": "🔴 Chicken Malai Momos ₹180"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel1",
+                "label": "NOODLES",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Egg Noodles",
+                    "title": "🔴 Egg Noodles ₹130"
+                  },
+                  {
+                    "id": "Chicken Noodles",
+                    "title": "🔴 Chicken Noodles ₹150"
+                  },
+                  {
+                    "id": "Schezwan Noodles",
+                    "title": "🔴 Schezwan Noodles ₹170"
+                  },
+                  {
+                    "id": "Chicken Hakka Noodles",
+                    "title": "🔴 Chicken Hakka Noodles ₹180"
+                  },
+                  {
+                    "id": "Chicken Garlic Noodles",
+                    "title": "🔴 Chicken Garlic Noodles ₹180"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel4",
+                "label": "MAIN COURSE (1)",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Masala Chicken|H",
+                    "title": "🔴 Masala Chicken (Half) ₹260"
+                  },
+                  {
+                    "id": "Masala Chicken|F",
+                    "title": "🔴 Masala Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Kadai Chicken|H",
+                    "title": "🔴 Kadai Chicken (Half) ₹260"
+                  },
+                  {
+                    "id": "Kadai Chicken|F",
+                    "title": "🔴 Kadai Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Rara Chicken|H",
+                    "title": "🔴 Rara Chicken (Half) ₹300"
+                  },
+                  {
+                    "id": "Rara Chicken|F",
+                    "title": "🔴 Rara Chicken (Full) ₹500"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel5",
+                "label": "MAIN COURSE (2)",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Butter Chicken|H",
+                    "title": "🔴 Butter Chicken (Half) ₹280"
+                  },
+                  {
+                    "id": "Butter Chicken|F",
+                    "title": "🔴 Butter Chicken (Full) ₹490"
+                  },
+                  {
+                    "id": "Chicken Do Pyaza|H",
+                    "title": "🔴 Chicken Do Pyaza (Hal… ₹270"
+                  },
+                  {
+                    "id": "Chicken Do Pyaza|F",
+                    "title": "🔴 Chicken Do Pyaza (Ful… ₹480"
+                  },
+                  {
+                    "id": "Chicken Lababdar|H",
+                    "title": "🔴 Chicken Lababdar (Hal… ₹270"
+                  },
+                  {
+                    "id": "Chicken Lababdar|F",
+                    "title": "🔴 Chicken Lababdar (Ful… ₹480"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel6",
+                "label": "RICE",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Plain Rice",
+                    "title": "🟡 Plain Rice ₹80"
+                  },
+                  {
+                    "id": "Jeera Rice",
+                    "title": "🟡 Jeera Rice ₹100"
+                  },
+                  {
+                    "id": "Egg Fried Rice",
+                    "title": "🔴 Egg Fried Rice ₹130"
+                  },
+                  {
+                    "id": "Chicken Fried Rice",
+                    "title": "🔴 Chicken Fried Rice ₹150"
+                  },
+                  {
+                    "id": "Garlic Chicken Fried Rice",
+                    "title": "🔴 Garlic Chicken Fried … ₹170"
+                  },
+                  {
+                    "id": "Egg + Chicken Fried Rice",
+                    "title": "🔴 Egg + Chicken Fried R… ₹200"
+                  },
+                  {
+                    "id": "Matka Chicken Biryani",
+                    "title": "🔴 Matka Chicken Biryani ₹420"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel10",
+                "label": "ROLLS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Egg Roll",
+                    "title": "🔴 Egg Roll ₹120"
+                  },
+                  {
+                    "id": "Chicken Roll",
+                    "title": "🔴 Chicken Roll ₹140"
+                  },
+                  {
+                    "id": "Chicken Chilli Roll",
+                    "title": "🔴 Chicken Chilli Roll ₹160"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel11",
+                "label": "SOUPS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Egg Soup",
+                    "title": "🔴 Egg Soup ₹90"
+                  },
+                  {
+                    "id": "Chicken Manchow Soup",
+                    "title": "🔴 Chicken Manchow Soup ₹130"
+                  },
+                  {
+                    "id": "Chicken Hot & Sour Soup",
+                    "title": "🔴 Chicken Hot & Sour So… ₹120"
+                  },
+                  {
+                    "id": "Chicken Clear Soup",
+                    "title": "🔴 Chicken Clear Soup ₹140"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel15",
+                "label": "EXTRAS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Salad",
+                    "title": "🟡 Salad ₹50"
+                  },
+                  {
+                    "id": "Water",
+                    "title": "🟡 Water ₹10"
+                  },
+                  {
+                    "id": "Water Bottle",
+                    "title": "🟡 Water Bottle ₹20"
+                  },
+                  {
+                    "id": "Disposable Glass",
+                    "title": "🟡 Disposable Glass ₹5"
+                  },
+                  {
+                    "id": "Colddrink",
+                    "title": "🟡 Colddrink ₹20"
+                  },
+                  {
+                    "id": "Coke Can",
+                    "title": "🟡 Coke Can ₹30"
+                  },
+                  {
+                    "id": "Can",
+                    "title": "🟡 Can ₹50"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel16",
                 "label": "CHICKEN SNACKS",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Crispy Chicken|H",
-                    "title": "Crispy Chicken (Half)",
-                    "description": "🔴 ₹260"
+                    "title": "🔴 Crispy Chicken (Half) ₹260"
                   },
                   {
                     "id": "Crispy Chicken|F",
-                    "title": "Crispy Chicken (Full)",
-                    "description": "🔴 ₹480"
+                    "title": "🔴 Crispy Chicken (Full) ₹480"
                   },
                   {
                     "id": "Chilli Chicken|H",
-                    "title": "Chilli Chicken (Half)",
-                    "description": "🔴 ₹250"
+                    "title": "🔴 Chilli Chicken (Half) ₹250"
                   },
                   {
                     "id": "Chilli Chicken|F",
-                    "title": "Chilli Chicken (Full)",
-                    "description": "🔴 ₹480"
+                    "title": "🔴 Chilli Chicken (Full) ₹480"
                   },
                   {
                     "id": "Garlic Chicken|H",
-                    "title": "Garlic Chicken (Half)",
-                    "description": "🔴 ₹250"
+                    "title": "🔴 Garlic Chicken (Half) ₹250"
                   },
                   {
                     "id": "Garlic Chicken|F",
-                    "title": "Garlic Chicken (Full)",
-                    "description": "🔴 ₹480"
+                    "title": "🔴 Garlic Chicken (Full) ₹480"
                   },
                   {
                     "id": "Lemon Chicken (Dry/Gravy)",
-                    "title": "Lemon Chicken (Dry/Gravy)",
-                    "description": "🔴 ₹380"
+                    "title": "🔴 Lemon Chicken (Dry/Gr… ₹380"
                   },
                   {
                     "id": "Chicken 65 (Boneless)",
-                    "title": "Chicken 65 (Boneless)",
-                    "description": "🔴 ₹380"
+                    "title": "🔴 Chicken 65 (Boneless) ₹380"
                   },
                   {
                     "id": "Dragon Chicken (Boneless)",
-                    "title": "Dragon Chicken (Boneless)",
-                    "description": "🔴 ₹380"
+                    "title": "🔴 Dragon Chicken (Bonel… ₹380"
                   },
                   {
                     "id": "Chicken Lollipop (6 Pcs)",
-                    "title": "Chicken Lollipop (6 Pcs)",
-                    "description": "🔴 ₹380"
+                    "title": "🔴 Chicken Lollipop (6 P… ₹380"
                   }
-                ],
-                "init-value": "${data.c16}"
+                ]
               },
               {
-                "type": "Footer",
-                "label": "Add karo",
-                "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
-                  "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${form.sel}",
-                    "c17": "${data.c17}",
-                    "c18": "${data.c18}"
-                  }
-                }
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "PAGE_17",
-      "title": "BREADS",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "Form",
-            "name": "form",
-            "children": [
-              {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel17",
                 "label": "BREADS",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Plain Roti",
-                    "title": "Plain Roti",
-                    "description": "🔴 ₹15"
+                    "title": "🔴 Plain Roti ₹15"
                   },
                   {
                     "id": "Butter Roti",
-                    "title": "Butter Roti",
-                    "description": "🔴 ₹20"
+                    "title": "🔴 Butter Roti ₹20"
                   },
                   {
                     "id": "Garlic Naan",
-                    "title": "Garlic Naan",
-                    "description": "🔴 ₹60"
+                    "title": "🔴 Garlic Naan ₹60"
                   },
                   {
                     "id": "Lacchha Paratha",
-                    "title": "Lacchha Paratha",
-                    "description": "🔴 ₹70"
+                    "title": "🔴 Lacchha Paratha ₹70"
                   },
                   {
                     "id": "Butter Naan",
-                    "title": "Butter Naan",
-                    "description": "🔴 ₹40"
+                    "title": "🔴 Butter Naan ₹40"
                   }
-                ],
-                "init-value": "${data.c17}"
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel18",
+                "label": "TANDOORI",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Tandoori Chicken|H",
+                    "title": "🔴 Tandoori Chicken (Hal… ₹240"
+                  },
+                  {
+                    "id": "Tandoori Chicken|F",
+                    "title": "🔴 Tandoori Chicken (Ful… ₹450"
+                  },
+                  {
+                    "id": "Tandoori Lemon Chicken|H",
+                    "title": "🔴 Tandoori Lemon Chicke… ₹250"
+                  },
+                  {
+                    "id": "Tandoori Lemon Chicken|F",
+                    "title": "🔴 Tandoori Lemon Chicke… ₹470"
+                  },
+                  {
+                    "id": "Afghani Chicken|H",
+                    "title": "🔴 Afghani Chicken (Half) ₹270"
+                  },
+                  {
+                    "id": "Afghani Chicken|F",
+                    "title": "🔴 Afghani Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Chicken Tikka (8 pcs)",
+                    "title": "🔴 Chicken Tikka (8 pcs) ₹280"
+                  },
+                  {
+                    "id": "Chicken Seekh Kebab",
+                    "title": "🔴 Chicken Seekh Kebab ₹220"
+                  }
+                ]
               },
               {
                 "type": "Footer",
-                "label": "Add karo",
+                "label": "Send order",
                 "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
+                  "name": "complete",
                   "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${form.sel}",
-                    "c18": "${data.c18}"
+                    "c0": "${form.sel0}",
+                    "c1": "${form.sel1}",
+                    "c4": "${form.sel4}",
+                    "c5": "${form.sel5}",
+                    "c6": "${form.sel6}",
+                    "c10": "${form.sel10}",
+                    "c11": "${form.sel11}",
+                    "c15": "${form.sel15}",
+                    "c16": "${form.sel16}",
+                    "c17": "${form.sel17}",
+                    "c18": "${form.sel18}"
                   }
                 }
               }
@@ -5020,143 +1009,9 @@
       }
     },
     {
-      "id": "PAGE_18",
-      "title": "TANDOORI",
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
+      "id": "MENU_A",
+      "title": "ALL (VEG + NON-VEG)",
+      "terminal": true,
       "layout": {
         "type": "SingleColumnLayout",
         "children": [
@@ -5166,263 +1021,813 @@
             "children": [
               {
                 "type": "CheckboxGroup",
-                "name": "sel",
+                "name": "sel0",
+                "label": "MOMOS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Veg Steam Momos",
+                    "title": "🟢 Veg Steam Momos ₹70"
+                  },
+                  {
+                    "id": "Veg Fried Momos",
+                    "title": "🟢 Veg Fried Momos ₹80"
+                  },
+                  {
+                    "id": "Kurkure Veg Momos",
+                    "title": "🟢 Kurkure Veg Momos ₹120"
+                  },
+                  {
+                    "id": "Chilli Veg Momos",
+                    "title": "🟢 Chilli Veg Momos ₹120"
+                  },
+                  {
+                    "id": "Malai Veg Momos",
+                    "title": "🟢 Malai Veg Momos ₹140"
+                  },
+                  {
+                    "id": "Steam Paneer Momos",
+                    "title": "🟢 Steam Paneer Momos ₹100"
+                  },
+                  {
+                    "id": "Paneer Fried Momos",
+                    "title": "🟢 Paneer Fried Momos ₹110"
+                  },
+                  {
+                    "id": "Kurkure Paneer Momos",
+                    "title": "🟢 Kurkure Paneer Momos ₹130"
+                  },
+                  {
+                    "id": "Chilli Paneer Momos",
+                    "title": "🟢 Chilli Paneer Momos ₹140"
+                  },
+                  {
+                    "id": "Malai Paneer Momos",
+                    "title": "🟢 Malai Paneer Momos ₹160"
+                  },
+                  {
+                    "id": "Chicken Steam Momos",
+                    "title": "🔴 Chicken Steam Momos ₹120"
+                  },
+                  {
+                    "id": "Chicken Fried Momos",
+                    "title": "🔴 Chicken Fried Momos ₹140"
+                  },
+                  {
+                    "id": "Chicken Chilli Momos",
+                    "title": "🔴 Chicken Chilli Momos ₹160"
+                  },
+                  {
+                    "id": "Chicken Malai Momos",
+                    "title": "🔴 Chicken Malai Momos ₹180"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel1",
+                "label": "NOODLES",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Veg Noodles",
+                    "title": "🟢 Veg Noodles ₹100"
+                  },
+                  {
+                    "id": "Veg Hakka Noodles",
+                    "title": "🟢 Veg Hakka Noodles ₹120"
+                  },
+                  {
+                    "id": "Paneer Noodle",
+                    "title": "🟢 Paneer Noodle ₹130"
+                  },
+                  {
+                    "id": "Chilli Garlic Noodles",
+                    "title": "🟢 Chilli Garlic Noodles ₹140"
+                  },
+                  {
+                    "id": "Egg Noodles",
+                    "title": "🔴 Egg Noodles ₹130"
+                  },
+                  {
+                    "id": "Chicken Noodles",
+                    "title": "🔴 Chicken Noodles ₹150"
+                  },
+                  {
+                    "id": "Schezwan Noodles",
+                    "title": "🔴 Schezwan Noodles ₹170"
+                  },
+                  {
+                    "id": "Chicken Hakka Noodles",
+                    "title": "🔴 Chicken Hakka Noodles ₹180"
+                  },
+                  {
+                    "id": "Chicken Garlic Noodles",
+                    "title": "🔴 Chicken Garlic Noodles ₹180"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel2",
+                "label": "CHINESE SNACKS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "French Fries",
+                    "title": "🟢 French Fries ₹80"
+                  },
+                  {
+                    "id": "Peri Peri Fries",
+                    "title": "🟢 Peri Peri Fries ₹100"
+                  },
+                  {
+                    "id": "Honey Chilli Potato",
+                    "title": "🟢 Honey Chilli Potato ₹150"
+                  },
+                  {
+                    "id": "Veg Manchurian Dry",
+                    "title": "🟢 Veg Manchurian Dry ₹150"
+                  },
+                  {
+                    "id": "Veg Manchurian Gravy",
+                    "title": "🟢 Veg Manchurian Gravy ₹170"
+                  },
+                  {
+                    "id": "Chilly Chaap",
+                    "title": "🟢 Chilly Chaap ₹180"
+                  },
+                  {
+                    "id": "Chilly Mushroom",
+                    "title": "🟢 Chilly Mushroom ₹200"
+                  },
+                  {
+                    "id": "Chilly Paneer",
+                    "title": "🟢 Chilly Paneer ₹210"
+                  },
+                  {
+                    "id": "Crispy Corn",
+                    "title": "🟢 Crispy Corn ₹190"
+                  },
+                  {
+                    "id": "Butterfly Paneer",
+                    "title": "🟢 Butterfly Paneer ₹220"
+                  },
+                  {
+                    "id": "Garlic Mushroom",
+                    "title": "🟢 Garlic Mushroom ₹220"
+                  },
+                  {
+                    "id": "Paneer 65",
+                    "title": "🟢 Paneer 65 ₹250"
+                  },
+                  {
+                    "id": "Mushroom Duplex",
+                    "title": "🟢 Mushroom Duplex ₹250"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel3",
+                "label": "TANDOORI SNACKS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Tandoori Chaap",
+                    "title": "🟢 Tandoori Chaap ₹150"
+                  },
+                  {
+                    "id": "Tandoori Lemon Chaap",
+                    "title": "🟢 Tandoori Lemon Chaap ₹160"
+                  },
+                  {
+                    "id": "Malai Chaap",
+                    "title": "🟢 Malai Chaap ₹180"
+                  },
+                  {
+                    "id": "Paneer Tikka",
+                    "title": "🟢 Paneer Tikka ₹200"
+                  },
+                  {
+                    "id": "Paneer Malai Tikka",
+                    "title": "🟢 Paneer Malai Tikka ₹220"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel4",
+                "label": "MAIN COURSE (1)",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Dal Fry",
+                    "title": "🟢 Dal Fry ₹200"
+                  },
+                  {
+                    "id": "Dal Makhani",
+                    "title": "🟢 Dal Makhani ₹220"
+                  },
+                  {
+                    "id": "Paneer Butter Masala",
+                    "title": "🟢 Paneer Butter Masala ₹250"
+                  },
+                  {
+                    "id": "Masala Paneer",
+                    "title": "🟢 Masala Paneer ₹230"
+                  },
+                  {
+                    "id": "Kadai Paneer",
+                    "title": "🟢 Kadai Paneer ₹230"
+                  },
+                  {
+                    "id": "Paneer Lababdar",
+                    "title": "🟢 Paneer Lababdar ₹230"
+                  },
+                  {
+                    "id": "Mushroom Do Pyaza",
+                    "title": "🟢 Mushroom Do Pyaza ₹240"
+                  },
+                  {
+                    "id": "Masala Mushroom",
+                    "title": "🟢 Masala Mushroom ₹220"
+                  },
+                  {
+                    "id": "Paneer Bhurji",
+                    "title": "🟢 Paneer Bhurji ₹220"
+                  },
+                  {
+                    "id": "Paneer Do Pyaza",
+                    "title": "🟢 Paneer Do Pyaza ₹240"
+                  },
+                  {
+                    "id": "Kadai Chaap",
+                    "title": "🟢 Kadai Chaap ₹240"
+                  },
+                  {
+                    "id": "Tawa Chaap",
+                    "title": "🟢 Tawa Chaap ₹240"
+                  },
+                  {
+                    "id": "Masala Chaap",
+                    "title": "🟢 Masala Chaap ₹230"
+                  },
+                  {
+                    "id": "Rara Paneer",
+                    "title": "🟢 Rara Paneer ₹300"
+                  },
+                  {
+                    "id": "Masala Chicken|H",
+                    "title": "🔴 Masala Chicken (Half) ₹260"
+                  },
+                  {
+                    "id": "Masala Chicken|F",
+                    "title": "🔴 Masala Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Kadai Chicken|H",
+                    "title": "🔴 Kadai Chicken (Half) ₹260"
+                  },
+                  {
+                    "id": "Kadai Chicken|F",
+                    "title": "🔴 Kadai Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Rara Chicken|H",
+                    "title": "🔴 Rara Chicken (Half) ₹300"
+                  },
+                  {
+                    "id": "Rara Chicken|F",
+                    "title": "🔴 Rara Chicken (Full) ₹500"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel5",
+                "label": "MAIN COURSE (2)",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Butter Chicken|H",
+                    "title": "🔴 Butter Chicken (Half) ₹280"
+                  },
+                  {
+                    "id": "Butter Chicken|F",
+                    "title": "🔴 Butter Chicken (Full) ₹490"
+                  },
+                  {
+                    "id": "Chicken Do Pyaza|H",
+                    "title": "🔴 Chicken Do Pyaza (Hal… ₹270"
+                  },
+                  {
+                    "id": "Chicken Do Pyaza|F",
+                    "title": "🔴 Chicken Do Pyaza (Ful… ₹480"
+                  },
+                  {
+                    "id": "Chicken Lababdar|H",
+                    "title": "🔴 Chicken Lababdar (Hal… ₹270"
+                  },
+                  {
+                    "id": "Chicken Lababdar|F",
+                    "title": "🔴 Chicken Lababdar (Ful… ₹480"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel6",
+                "label": "RICE",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Plain Rice",
+                    "title": "🟡 Plain Rice ₹80"
+                  },
+                  {
+                    "id": "Jeera Rice",
+                    "title": "🟡 Jeera Rice ₹100"
+                  },
+                  {
+                    "id": "Veg Fried Rice",
+                    "title": "🟢 Veg Fried Rice ₹120"
+                  },
+                  {
+                    "id": "Paneer Fried Rice",
+                    "title": "🟢 Paneer Fried Rice ₹150"
+                  },
+                  {
+                    "id": "Chilli Garlic Fried Rice",
+                    "title": "🟢 Chilli Garlic Fried R… ₹140"
+                  },
+                  {
+                    "id": "Veg Biryani",
+                    "title": "🟢 Veg Biryani ₹240"
+                  },
+                  {
+                    "id": "Egg Fried Rice",
+                    "title": "🔴 Egg Fried Rice ₹130"
+                  },
+                  {
+                    "id": "Chicken Fried Rice",
+                    "title": "🔴 Chicken Fried Rice ₹150"
+                  },
+                  {
+                    "id": "Garlic Chicken Fried Rice",
+                    "title": "🔴 Garlic Chicken Fried … ₹170"
+                  },
+                  {
+                    "id": "Egg + Chicken Fried Rice",
+                    "title": "🔴 Egg + Chicken Fried R… ₹200"
+                  },
+                  {
+                    "id": "Matka Chicken Biryani",
+                    "title": "🔴 Matka Chicken Biryani ₹420"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel7",
+                "label": "BURGERS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Aloo Tikki Burger",
+                    "title": "🟢 Aloo Tikki Burger ₹70"
+                  },
+                  {
+                    "id": "Veg Cheese Burger",
+                    "title": "🟢 Veg Cheese Burger ₹90"
+                  },
+                  {
+                    "id": "Paneer Cheese Burger",
+                    "title": "🟢 Paneer Cheese Burger ₹120"
+                  },
+                  {
+                    "id": "Double Decker Burger",
+                    "title": "🟢 Double Decker Burger ₹150"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel8",
+                "label": "PIZZA",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Margherita Pizza",
+                    "title": "🟢 Margherita Pizza ₹160"
+                  },
+                  {
+                    "id": "Veg Deluxe Pizza",
+                    "title": "🟢 Veg Deluxe Pizza ₹200"
+                  },
+                  {
+                    "id": "Cheese Chilli Pizza",
+                    "title": "🟢 Cheese Chilli Pizza ₹220"
+                  },
+                  {
+                    "id": "Farm House Pizza",
+                    "title": "🟢 Farm House Pizza ₹250"
+                  },
+                  {
+                    "id": "Italian Pizza",
+                    "title": "🟢 Italian Pizza ₹270"
+                  },
+                  {
+                    "id": "Treat Signature Pizza",
+                    "title": "🟢 Treat Signature Pizza ₹300"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel9",
+                "label": "PASTA",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Red Sauce Pasta",
+                    "title": "🟢 Red Sauce Pasta ₹150"
+                  },
+                  {
+                    "id": "White Sauce Pasta",
+                    "title": "🟢 White Sauce Pasta ₹170"
+                  },
+                  {
+                    "id": "Veggie Masala Pasta",
+                    "title": "🟢 Veggie Masala Pasta ₹160"
+                  },
+                  {
+                    "id": "Mexican Pasta",
+                    "title": "🟢 Mexican Pasta ₹180"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel10",
+                "label": "ROLLS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Spring Roll",
+                    "title": "🟢 Spring Roll ₹90"
+                  },
+                  {
+                    "id": "Veggie Roll",
+                    "title": "🟢 Veggie Roll ₹110"
+                  },
+                  {
+                    "id": "Cheese Corn Roll",
+                    "title": "🟢 Cheese Corn Roll ₹130"
+                  },
+                  {
+                    "id": "Chaap Roll",
+                    "title": "🟢 Chaap Roll ₹140"
+                  },
+                  {
+                    "id": "Paneer Roll",
+                    "title": "🟢 Paneer Roll ₹150"
+                  },
+                  {
+                    "id": "Egg Roll",
+                    "title": "🔴 Egg Roll ₹120"
+                  },
+                  {
+                    "id": "Chicken Roll",
+                    "title": "🔴 Chicken Roll ₹140"
+                  },
+                  {
+                    "id": "Chicken Chilli Roll",
+                    "title": "🔴 Chicken Chilli Roll ₹160"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel11",
+                "label": "SOUPS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Veg Clear Soup",
+                    "title": "🟢 Veg Clear Soup ₹90"
+                  },
+                  {
+                    "id": "Sweet Corn Soup",
+                    "title": "🟢 Sweet Corn Soup ₹120"
+                  },
+                  {
+                    "id": "Manchow Soup",
+                    "title": "🟢 Manchow Soup ₹130"
+                  },
+                  {
+                    "id": "Hot & Sour Soup",
+                    "title": "🟢 Hot & Sour Soup ₹140"
+                  },
+                  {
+                    "id": "Lemon Coriander Soup",
+                    "title": "🟢 Lemon Coriander Soup ₹170"
+                  },
+                  {
+                    "id": "Egg Soup",
+                    "title": "🔴 Egg Soup ₹90"
+                  },
+                  {
+                    "id": "Chicken Manchow Soup",
+                    "title": "🔴 Chicken Manchow Soup ₹130"
+                  },
+                  {
+                    "id": "Chicken Hot & Sour Soup",
+                    "title": "🔴 Chicken Hot & Sour So… ₹120"
+                  },
+                  {
+                    "id": "Chicken Clear Soup",
+                    "title": "🔴 Chicken Clear Soup ₹140"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel12",
+                "label": "MOCKTAILS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Lime Soda",
+                    "title": "🟢 Lime Soda ₹80"
+                  },
+                  {
+                    "id": "Virgin Mojito",
+                    "title": "🟢 Virgin Mojito ₹120"
+                  },
+                  {
+                    "id": "Blue Heaven",
+                    "title": "🟢 Blue Heaven ₹120"
+                  },
+                  {
+                    "id": "Green Apple",
+                    "title": "🟢 Green Apple ₹120"
+                  },
+                  {
+                    "id": "Black Currant",
+                    "title": "🟢 Black Currant ₹120"
+                  },
+                  {
+                    "id": "Blue Berry",
+                    "title": "🟢 Blue Berry ₹120"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel13",
+                "label": "SHAKES",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Strawberry Shake",
+                    "title": "🟢 Strawberry Shake ₹120"
+                  },
+                  {
+                    "id": "Blue Berry Shake",
+                    "title": "🟢 Blue Berry Shake ₹120"
+                  },
+                  {
+                    "id": "KitKat Shake",
+                    "title": "🟢 KitKat Shake ₹120"
+                  },
+                  {
+                    "id": "Oreo Chocolate Shake",
+                    "title": "🟢 Oreo Chocolate Shake ₹140"
+                  },
+                  {
+                    "id": "Black Current Shake",
+                    "title": "🟢 Black Current Shake ₹120"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel14",
+                "label": "COFFEE & DESSERTS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Hot Coffee",
+                    "title": "🟢 Hot Coffee ₹50"
+                  },
+                  {
+                    "id": "Cold Coffee",
+                    "title": "🟢 Cold Coffee ₹120"
+                  },
+                  {
+                    "id": "Oreo Cold Coffee",
+                    "title": "🟢 Oreo Cold Coffee ₹140"
+                  },
+                  {
+                    "id": "Vanilla Ice Cream",
+                    "title": "🟢 Vanilla Ice Cream ₹40"
+                  },
+                  {
+                    "id": "Butterscotch Ice Cream",
+                    "title": "🟢 Butterscotch Ice Cream ₹60"
+                  },
+                  {
+                    "id": "Gulab Jamun (2 Pcs)",
+                    "title": "🟢 Gulab Jamun (2 Pcs) ₹60"
+                  },
+                  {
+                    "id": "Vanilla & Butterscotch Mix",
+                    "title": "🟢 Vanilla & Butterscotch… ₹70"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel15",
+                "label": "EXTRAS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Salad",
+                    "title": "🟡 Salad ₹50"
+                  },
+                  {
+                    "id": "Water",
+                    "title": "🟡 Water ₹10"
+                  },
+                  {
+                    "id": "Water Bottle",
+                    "title": "🟡 Water Bottle ₹20"
+                  },
+                  {
+                    "id": "Disposable Glass",
+                    "title": "🟡 Disposable Glass ₹5"
+                  },
+                  {
+                    "id": "Colddrink",
+                    "title": "🟡 Colddrink ₹20"
+                  },
+                  {
+                    "id": "Coke Can",
+                    "title": "🟡 Coke Can ₹30"
+                  },
+                  {
+                    "id": "Can",
+                    "title": "🟡 Can ₹50"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel16",
+                "label": "CHICKEN SNACKS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Crispy Chicken|H",
+                    "title": "🔴 Crispy Chicken (Half) ₹260"
+                  },
+                  {
+                    "id": "Crispy Chicken|F",
+                    "title": "🔴 Crispy Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Chilli Chicken|H",
+                    "title": "🔴 Chilli Chicken (Half) ₹250"
+                  },
+                  {
+                    "id": "Chilli Chicken|F",
+                    "title": "🔴 Chilli Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Garlic Chicken|H",
+                    "title": "🔴 Garlic Chicken (Half) ₹250"
+                  },
+                  {
+                    "id": "Garlic Chicken|F",
+                    "title": "🔴 Garlic Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Lemon Chicken (Dry/Gravy)",
+                    "title": "🔴 Lemon Chicken (Dry/Gr… ₹380"
+                  },
+                  {
+                    "id": "Chicken 65 (Boneless)",
+                    "title": "🔴 Chicken 65 (Boneless) ₹380"
+                  },
+                  {
+                    "id": "Dragon Chicken (Boneless)",
+                    "title": "🔴 Dragon Chicken (Bonel… ₹380"
+                  },
+                  {
+                    "id": "Chicken Lollipop (6 Pcs)",
+                    "title": "🔴 Chicken Lollipop (6 P… ₹380"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel17",
+                "label": "BREADS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Plain Roti",
+                    "title": "🔴 Plain Roti ₹15"
+                  },
+                  {
+                    "id": "Butter Roti",
+                    "title": "🔴 Butter Roti ₹20"
+                  },
+                  {
+                    "id": "Garlic Naan",
+                    "title": "🔴 Garlic Naan ₹60"
+                  },
+                  {
+                    "id": "Lacchha Paratha",
+                    "title": "🔴 Lacchha Paratha ₹70"
+                  },
+                  {
+                    "id": "Butter Naan",
+                    "title": "🔴 Butter Naan ₹40"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel18",
                 "label": "TANDOORI",
                 "required": false,
                 "data-source": [
                   {
                     "id": "Tandoori Chicken|H",
-                    "title": "Tandoori Chicken (Half)",
-                    "description": "🔴 ₹240"
+                    "title": "🔴 Tandoori Chicken (Hal… ₹240"
                   },
                   {
                     "id": "Tandoori Chicken|F",
-                    "title": "Tandoori Chicken (Full)",
-                    "description": "🔴 ₹450"
+                    "title": "🔴 Tandoori Chicken (Ful… ₹450"
                   },
                   {
                     "id": "Tandoori Lemon Chicken|H",
-                    "title": "Tandoori Lemon Chicken (Half)",
-                    "description": "🔴 ₹250"
+                    "title": "🔴 Tandoori Lemon Chicke… ₹250"
                   },
                   {
                     "id": "Tandoori Lemon Chicken|F",
-                    "title": "Tandoori Lemon Chicken (Full)",
-                    "description": "🔴 ₹470"
+                    "title": "🔴 Tandoori Lemon Chicke… ₹470"
                   },
                   {
                     "id": "Afghani Chicken|H",
-                    "title": "Afghani Chicken (Half)",
-                    "description": "🔴 ₹270"
+                    "title": "🔴 Afghani Chicken (Half) ₹270"
                   },
                   {
                     "id": "Afghani Chicken|F",
-                    "title": "Afghani Chicken (Full)",
-                    "description": "🔴 ₹480"
+                    "title": "🔴 Afghani Chicken (Full) ₹480"
                   },
                   {
                     "id": "Chicken Tikka (8 pcs)",
-                    "title": "Chicken Tikka (8 pcs)",
-                    "description": "🔴 ₹280"
+                    "title": "🔴 Chicken Tikka (8 pcs) ₹280"
                   },
                   {
                     "id": "Chicken Seekh Kebab",
-                    "title": "Chicken Seekh Kebab",
-                    "description": "🔴 ₹220"
+                    "title": "🔴 Chicken Seekh Kebab ₹220"
                   }
-                ],
-                "init-value": "${data.c18}"
+                ]
               },
               {
                 "type": "Footer",
-                "label": "Add karo",
+                "label": "Send order",
                 "on-click-action": {
-                  "name": "navigate",
-                  "next": {
-                    "type": "screen",
-                    "name": "CATS"
-                  },
+                  "name": "complete",
                   "payload": {
-                    "c0": "${data.c0}",
-                    "c1": "${data.c1}",
-                    "c2": "${data.c2}",
-                    "c3": "${data.c3}",
-                    "c4": "${data.c4}",
-                    "c5": "${data.c5}",
-                    "c6": "${data.c6}",
-                    "c7": "${data.c7}",
-                    "c8": "${data.c8}",
-                    "c9": "${data.c9}",
-                    "c10": "${data.c10}",
-                    "c11": "${data.c11}",
-                    "c12": "${data.c12}",
-                    "c13": "${data.c13}",
-                    "c14": "${data.c14}",
-                    "c15": "${data.c15}",
-                    "c16": "${data.c16}",
-                    "c17": "${data.c17}",
-                    "c18": "${form.sel}"
+                    "c0": "${form.sel0}",
+                    "c1": "${form.sel1}",
+                    "c2": "${form.sel2}",
+                    "c3": "${form.sel3}",
+                    "c4": "${form.sel4}",
+                    "c5": "${form.sel5}",
+                    "c6": "${form.sel6}",
+                    "c7": "${form.sel7}",
+                    "c8": "${form.sel8}",
+                    "c9": "${form.sel9}",
+                    "c10": "${form.sel10}",
+                    "c11": "${form.sel11}",
+                    "c12": "${form.sel12}",
+                    "c13": "${form.sel13}",
+                    "c14": "${form.sel14}",
+                    "c15": "${form.sel15}",
+                    "c16": "${form.sel16}",
+                    "c17": "${form.sel17}",
+                    "c18": "${form.sel18}"
                   }
                 }
               }
             ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "CONFIRM",
-      "title": "Order bhejo",
-      "terminal": true,
-      "data": {
-        "c0": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c1": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c2": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c3": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c4": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c5": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c6": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c7": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c8": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c9": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c10": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c11": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c12": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c13": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c14": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c15": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c16": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c17": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        },
-        "c18": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "__example__": []
-        }
-      },
-      "layout": {
-        "type": "SingleColumnLayout",
-        "children": [
-          {
-            "type": "TextBody",
-            "text": "Aapke chune hue items WhatsApp chat me cart me aa jayenge. Wahan quantity, size aur checkout kar sakte ho."
-          },
-          {
-            "type": "Footer",
-            "label": "WhatsApp pe bhejo",
-            "on-click-action": {
-              "name": "complete",
-              "payload": {
-                "c0": "${data.c0}",
-                "c1": "${data.c1}",
-                "c2": "${data.c2}",
-                "c3": "${data.c3}",
-                "c4": "${data.c4}",
-                "c5": "${data.c5}",
-                "c6": "${data.c6}",
-                "c7": "${data.c7}",
-                "c8": "${data.c8}",
-                "c9": "${data.c9}",
-                "c10": "${data.c10}",
-                "c11": "${data.c11}",
-                "c12": "${data.c12}",
-                "c13": "${data.c13}",
-                "c14": "${data.c14}",
-                "c15": "${data.c15}",
-                "c16": "${data.c16}",
-                "c17": "${data.c17}",
-                "c18": "${data.c18}"
-              }
-            }
           }
         ]
       }

@@ -1,0 +1,5995 @@
+{
+  "version": "7.0",
+  "screens": [
+    {
+      "id": "CATS",
+      "title": "TREAT Menu",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "NavigationList",
+            "name": "types",
+            "label": "What would you like?",
+            "description": "Pick menu type, then dishes",
+            "list-items": [
+              {
+                "id": "done",
+                "main-content": {
+                  "title": "✅ Send my order"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CONFIRM"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "fV",
+                "main-content": {
+                  "title": "🟢 VEG"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_V"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "fN",
+                "main-content": {
+                  "title": "🔴 NON-VEG"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_N"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "fA",
+                "main-content": {
+                  "title": "🍽️ ALL (VEG + NON-VEG)"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_A"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LIST_V",
+      "title": "🟢 VEG",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "NavigationList",
+            "name": "catsV",
+            "label": "Pick a section",
+            "description": "Tick dishes, then tap Add",
+            "list-items": [
+              {
+                "id": "done",
+                "main-content": {
+                  "title": "✅ Send my order"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CONFIRM"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g0",
+                "main-content": {
+                  "title": "🥟 Momos & Snacks"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_V_A"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g1",
+                "main-content": {
+                  "title": "🍜 Noodles, Rice & Soup"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_V_B"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g2",
+                "main-content": {
+                  "title": "🍛 Main Course & Roti"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_V_C"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g3",
+                "main-content": {
+                  "title": "🍔 Burger, Pizza & Rolls"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_V_D"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g4",
+                "main-content": {
+                  "title": "🥤 Drinks & Dessert"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_V_E"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_V_A",
+      "title": "🥟 Momos & Snacks",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel0": "${data.c0}",
+              "sel2": "${data.c2}",
+              "sel3": "${data.c3}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel0",
+                "label": "MOMOS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Veg Steam Momos",
+                    "title": "🟢 Veg Steam Momos ₹70"
+                  },
+                  {
+                    "id": "Veg Fried Momos",
+                    "title": "🟢 Veg Fried Momos ₹80"
+                  },
+                  {
+                    "id": "Kurkure Veg Momos",
+                    "title": "🟢 Kurkure Veg Momos ₹120"
+                  },
+                  {
+                    "id": "Chilli Veg Momos",
+                    "title": "🟢 Chilli Veg Momos ₹120"
+                  },
+                  {
+                    "id": "Malai Veg Momos",
+                    "title": "🟢 Malai Veg Momos ₹140"
+                  },
+                  {
+                    "id": "Steam Paneer Momos",
+                    "title": "🟢 Steam Paneer Momos ₹100"
+                  },
+                  {
+                    "id": "Paneer Fried Momos",
+                    "title": "🟢 Paneer Fried Momos ₹110"
+                  },
+                  {
+                    "id": "Kurkure Paneer Momos",
+                    "title": "🟢 Kurkure Paneer Momos ₹130"
+                  },
+                  {
+                    "id": "Chilli Paneer Momos",
+                    "title": "🟢 Chilli Paneer Momos ₹140"
+                  },
+                  {
+                    "id": "Malai Paneer Momos",
+                    "title": "🟢 Malai Paneer Momos ₹160"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel2",
+                "label": "CHINESE SNACKS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "French Fries",
+                    "title": "🟢 French Fries ₹80"
+                  },
+                  {
+                    "id": "Peri Peri Fries",
+                    "title": "🟢 Peri Peri Fries ₹100"
+                  },
+                  {
+                    "id": "Honey Chilli Potato",
+                    "title": "🟢 Honey Chilli Potato ₹150"
+                  },
+                  {
+                    "id": "Veg Manchurian Dry",
+                    "title": "🟢 Veg Manchurian Dry ₹150"
+                  },
+                  {
+                    "id": "Veg Manchurian Gravy",
+                    "title": "🟢 Veg Manchurian Gravy ₹170"
+                  },
+                  {
+                    "id": "Chilly Chaap",
+                    "title": "🟢 Chilly Chaap ₹180"
+                  },
+                  {
+                    "id": "Chilly Mushroom",
+                    "title": "🟢 Chilly Mushroom ₹200"
+                  },
+                  {
+                    "id": "Chilly Paneer",
+                    "title": "🟢 Chilly Paneer ₹210"
+                  },
+                  {
+                    "id": "Crispy Corn",
+                    "title": "🟢 Crispy Corn ₹190"
+                  },
+                  {
+                    "id": "Butterfly Paneer",
+                    "title": "🟢 Butterfly Paneer ₹220"
+                  },
+                  {
+                    "id": "Garlic Mushroom",
+                    "title": "🟢 Garlic Mushroom ₹220"
+                  },
+                  {
+                    "id": "Paneer 65",
+                    "title": "🟢 Paneer 65 ₹250"
+                  },
+                  {
+                    "id": "Mushroom Duplex",
+                    "title": "🟢 Mushroom Duplex ₹250"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel3",
+                "label": "TANDOORI SNACKS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Tandoori Chaap",
+                    "title": "🟢 Tandoori Chaap ₹150"
+                  },
+                  {
+                    "id": "Tandoori Lemon Chaap",
+                    "title": "🟢 Tandoori Lemon Chaap ₹160"
+                  },
+                  {
+                    "id": "Malai Chaap",
+                    "title": "🟢 Malai Chaap ₹180"
+                  },
+                  {
+                    "id": "Paneer Tikka",
+                    "title": "🟢 Paneer Tikka ₹200"
+                  },
+                  {
+                    "id": "Paneer Malai Tikka",
+                    "title": "🟢 Paneer Malai Tikka ₹220"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_V"
+                  },
+                  "payload": {
+                    "c0": "${form.sel0}",
+                    "c1": "${data.c1}",
+                    "c2": "${form.sel2}",
+                    "c3": "${form.sel3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_V_B",
+      "title": "🍜 Noodles, Rice & Soup",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel1": "${data.c1}",
+              "sel6": "${data.c6}",
+              "sel9": "${data.c9}",
+              "sel11": "${data.c11}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel1",
+                "label": "NOODLES",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Veg Noodles",
+                    "title": "🟢 Veg Noodles ₹100"
+                  },
+                  {
+                    "id": "Veg Hakka Noodles",
+                    "title": "🟢 Veg Hakka Noodles ₹120"
+                  },
+                  {
+                    "id": "Paneer Noodle",
+                    "title": "🟢 Paneer Noodle ₹130"
+                  },
+                  {
+                    "id": "Chilli Garlic Noodles",
+                    "title": "🟢 Chilli Garlic Noodles ₹140"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel6",
+                "label": "RICE",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Plain Rice",
+                    "title": "🟡 Plain Rice ₹80"
+                  },
+                  {
+                    "id": "Jeera Rice",
+                    "title": "🟡 Jeera Rice ₹100"
+                  },
+                  {
+                    "id": "Veg Fried Rice",
+                    "title": "🟢 Veg Fried Rice ₹120"
+                  },
+                  {
+                    "id": "Paneer Fried Rice",
+                    "title": "🟢 Paneer Fried Rice ₹150"
+                  },
+                  {
+                    "id": "Chilli Garlic Fried Rice",
+                    "title": "🟢 Chilli Garlic Fried R… ₹140"
+                  },
+                  {
+                    "id": "Veg Biryani",
+                    "title": "🟢 Veg Biryani ₹240"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel9",
+                "label": "PASTA",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Red Sauce Pasta",
+                    "title": "🟢 Red Sauce Pasta ₹150"
+                  },
+                  {
+                    "id": "White Sauce Pasta",
+                    "title": "🟢 White Sauce Pasta ₹170"
+                  },
+                  {
+                    "id": "Veggie Masala Pasta",
+                    "title": "🟢 Veggie Masala Pasta ₹160"
+                  },
+                  {
+                    "id": "Mexican Pasta",
+                    "title": "🟢 Mexican Pasta ₹180"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel11",
+                "label": "SOUPS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Veg Clear Soup",
+                    "title": "🟢 Veg Clear Soup ₹90"
+                  },
+                  {
+                    "id": "Sweet Corn Soup",
+                    "title": "🟢 Sweet Corn Soup ₹120"
+                  },
+                  {
+                    "id": "Manchow Soup",
+                    "title": "🟢 Manchow Soup ₹130"
+                  },
+                  {
+                    "id": "Hot & Sour Soup",
+                    "title": "🟢 Hot & Sour Soup ₹140"
+                  },
+                  {
+                    "id": "Lemon Coriander Soup",
+                    "title": "🟢 Lemon Coriander Soup ₹170"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_V"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${form.sel1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${form.sel6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${form.sel9}",
+                    "c10": "${data.c10}",
+                    "c11": "${form.sel11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_V_C",
+      "title": "🍛 Main Course & Roti",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel4": "${data.c4}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel4",
+                "label": "MAIN COURSE (1)",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Dal Fry",
+                    "title": "🟢 Dal Fry ₹200"
+                  },
+                  {
+                    "id": "Dal Makhani",
+                    "title": "🟢 Dal Makhani ₹220"
+                  },
+                  {
+                    "id": "Paneer Butter Masala",
+                    "title": "🟢 Paneer Butter Masala ₹250"
+                  },
+                  {
+                    "id": "Masala Paneer",
+                    "title": "🟢 Masala Paneer ₹230"
+                  },
+                  {
+                    "id": "Kadai Paneer",
+                    "title": "🟢 Kadai Paneer ₹230"
+                  },
+                  {
+                    "id": "Paneer Lababdar",
+                    "title": "🟢 Paneer Lababdar ₹230"
+                  },
+                  {
+                    "id": "Mushroom Do Pyaza",
+                    "title": "🟢 Mushroom Do Pyaza ₹240"
+                  },
+                  {
+                    "id": "Masala Mushroom",
+                    "title": "🟢 Masala Mushroom ₹220"
+                  },
+                  {
+                    "id": "Paneer Bhurji",
+                    "title": "🟢 Paneer Bhurji ₹220"
+                  },
+                  {
+                    "id": "Paneer Do Pyaza",
+                    "title": "🟢 Paneer Do Pyaza ₹240"
+                  },
+                  {
+                    "id": "Kadai Chaap",
+                    "title": "🟢 Kadai Chaap ₹240"
+                  },
+                  {
+                    "id": "Tawa Chaap",
+                    "title": "🟢 Tawa Chaap ₹240"
+                  },
+                  {
+                    "id": "Masala Chaap",
+                    "title": "🟢 Masala Chaap ₹230"
+                  },
+                  {
+                    "id": "Rara Paneer",
+                    "title": "🟢 Rara Paneer ₹300"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_V"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${form.sel4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_V_D",
+      "title": "🍔 Burger, Pizza & Rolls",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel7": "${data.c7}",
+              "sel8": "${data.c8}",
+              "sel10": "${data.c10}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel7",
+                "label": "BURGERS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Aloo Tikki Burger",
+                    "title": "🟢 Aloo Tikki Burger ₹70"
+                  },
+                  {
+                    "id": "Veg Cheese Burger",
+                    "title": "🟢 Veg Cheese Burger ₹90"
+                  },
+                  {
+                    "id": "Paneer Cheese Burger",
+                    "title": "🟢 Paneer Cheese Burger ₹120"
+                  },
+                  {
+                    "id": "Double Decker Burger",
+                    "title": "🟢 Double Decker Burger ₹150"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel8",
+                "label": "PIZZA",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Margherita Pizza",
+                    "title": "🟢 Margherita Pizza ₹160"
+                  },
+                  {
+                    "id": "Veg Deluxe Pizza",
+                    "title": "🟢 Veg Deluxe Pizza ₹200"
+                  },
+                  {
+                    "id": "Cheese Chilli Pizza",
+                    "title": "🟢 Cheese Chilli Pizza ₹220"
+                  },
+                  {
+                    "id": "Farm House Pizza",
+                    "title": "🟢 Farm House Pizza ₹250"
+                  },
+                  {
+                    "id": "Italian Pizza",
+                    "title": "🟢 Italian Pizza ₹270"
+                  },
+                  {
+                    "id": "Treat Signature Pizza",
+                    "title": "🟢 Treat Signature Pizza ₹300"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel10",
+                "label": "ROLLS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Spring Roll",
+                    "title": "🟢 Spring Roll ₹90"
+                  },
+                  {
+                    "id": "Veggie Roll",
+                    "title": "🟢 Veggie Roll ₹110"
+                  },
+                  {
+                    "id": "Cheese Corn Roll",
+                    "title": "🟢 Cheese Corn Roll ₹130"
+                  },
+                  {
+                    "id": "Chaap Roll",
+                    "title": "🟢 Chaap Roll ₹140"
+                  },
+                  {
+                    "id": "Paneer Roll",
+                    "title": "🟢 Paneer Roll ₹150"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_V"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${form.sel7}",
+                    "c8": "${form.sel8}",
+                    "c9": "${data.c9}",
+                    "c10": "${form.sel10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_V_E",
+      "title": "🥤 Drinks & Dessert",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel12": "${data.c12}",
+              "sel13": "${data.c13}",
+              "sel14": "${data.c14}",
+              "sel15": "${data.c15}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel12",
+                "label": "MOCKTAILS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Lime Soda",
+                    "title": "🟢 Lime Soda ₹80"
+                  },
+                  {
+                    "id": "Virgin Mojito",
+                    "title": "🟢 Virgin Mojito ₹120"
+                  },
+                  {
+                    "id": "Blue Heaven",
+                    "title": "🟢 Blue Heaven ₹120"
+                  },
+                  {
+                    "id": "Green Apple",
+                    "title": "🟢 Green Apple ₹120"
+                  },
+                  {
+                    "id": "Black Currant",
+                    "title": "🟢 Black Currant ₹120"
+                  },
+                  {
+                    "id": "Blue Berry",
+                    "title": "🟢 Blue Berry ₹120"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel13",
+                "label": "SHAKES",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Strawberry Shake",
+                    "title": "🟢 Strawberry Shake ₹120"
+                  },
+                  {
+                    "id": "Blue Berry Shake",
+                    "title": "🟢 Blue Berry Shake ₹120"
+                  },
+                  {
+                    "id": "KitKat Shake",
+                    "title": "🟢 KitKat Shake ₹120"
+                  },
+                  {
+                    "id": "Oreo Chocolate Shake",
+                    "title": "🟢 Oreo Chocolate Shake ₹140"
+                  },
+                  {
+                    "id": "Black Current Shake",
+                    "title": "🟢 Black Current Shake ₹120"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel14",
+                "label": "COFFEE & DESSERTS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Hot Coffee",
+                    "title": "🟢 Hot Coffee ₹50"
+                  },
+                  {
+                    "id": "Cold Coffee",
+                    "title": "🟢 Cold Coffee ₹120"
+                  },
+                  {
+                    "id": "Oreo Cold Coffee",
+                    "title": "🟢 Oreo Cold Coffee ₹140"
+                  },
+                  {
+                    "id": "Vanilla Ice Cream",
+                    "title": "🟢 Vanilla Ice Cream ₹40"
+                  },
+                  {
+                    "id": "Butterscotch Ice Cream",
+                    "title": "🟢 Butterscotch Ice Cream ₹60"
+                  },
+                  {
+                    "id": "Gulab Jamun (2 Pcs)",
+                    "title": "🟢 Gulab Jamun (2 Pcs) ₹60"
+                  },
+                  {
+                    "id": "Vanilla & Butterscotch Mix",
+                    "title": "🟢 Vanilla & Butterscotch… ₹70"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel15",
+                "label": "EXTRAS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Salad",
+                    "title": "🟡 Salad ₹50"
+                  },
+                  {
+                    "id": "Water",
+                    "title": "🟡 Water ₹10"
+                  },
+                  {
+                    "id": "Water Bottle",
+                    "title": "🟡 Water Bottle ₹20"
+                  },
+                  {
+                    "id": "Disposable Glass",
+                    "title": "🟡 Disposable Glass ₹5"
+                  },
+                  {
+                    "id": "Colddrink",
+                    "title": "🟡 Colddrink ₹20"
+                  },
+                  {
+                    "id": "Coke Can",
+                    "title": "🟡 Coke Can ₹30"
+                  },
+                  {
+                    "id": "Can",
+                    "title": "🟡 Can ₹50"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_V"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${form.sel12}",
+                    "c13": "${form.sel13}",
+                    "c14": "${form.sel14}",
+                    "c15": "${form.sel15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LIST_N",
+      "title": "🔴 NON-VEG",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "NavigationList",
+            "name": "catsN",
+            "label": "Pick a section",
+            "description": "Tick dishes, then tap Add",
+            "list-items": [
+              {
+                "id": "done",
+                "main-content": {
+                  "title": "✅ Send my order"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CONFIRM"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g0",
+                "main-content": {
+                  "title": "🥟 Momos & Snacks"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_N_A"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g1",
+                "main-content": {
+                  "title": "🍜 Noodles, Rice & Soup"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_N_B"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g2",
+                "main-content": {
+                  "title": "🍛 Main Course & Roti"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_N_C"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g3",
+                "main-content": {
+                  "title": "🍔 Burger, Pizza & Rolls"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_N_D"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g4",
+                "main-content": {
+                  "title": "🥤 Drinks & Dessert"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_N_E"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_N_A",
+      "title": "🥟 Momos & Snacks",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel0": "${data.c0}",
+              "sel16": "${data.c16}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel0",
+                "label": "MOMOS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Chicken Steam Momos",
+                    "title": "🔴 Chicken Steam Momos ₹120"
+                  },
+                  {
+                    "id": "Chicken Fried Momos",
+                    "title": "🔴 Chicken Fried Momos ₹140"
+                  },
+                  {
+                    "id": "Chicken Chilli Momos",
+                    "title": "🔴 Chicken Chilli Momos ₹160"
+                  },
+                  {
+                    "id": "Chicken Malai Momos",
+                    "title": "🔴 Chicken Malai Momos ₹180"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel16",
+                "label": "CHICKEN SNACKS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Crispy Chicken|H",
+                    "title": "🔴 Crispy Chicken (Half) ₹260"
+                  },
+                  {
+                    "id": "Crispy Chicken|F",
+                    "title": "🔴 Crispy Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Chilli Chicken|H",
+                    "title": "🔴 Chilli Chicken (Half) ₹250"
+                  },
+                  {
+                    "id": "Chilli Chicken|F",
+                    "title": "🔴 Chilli Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Garlic Chicken|H",
+                    "title": "🔴 Garlic Chicken (Half) ₹250"
+                  },
+                  {
+                    "id": "Garlic Chicken|F",
+                    "title": "🔴 Garlic Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Lemon Chicken (Dry/Gravy)",
+                    "title": "🔴 Lemon Chicken (Dry/Gr… ₹380"
+                  },
+                  {
+                    "id": "Chicken 65 (Boneless)",
+                    "title": "🔴 Chicken 65 (Boneless) ₹380"
+                  },
+                  {
+                    "id": "Dragon Chicken (Boneless)",
+                    "title": "🔴 Dragon Chicken (Bonel… ₹380"
+                  },
+                  {
+                    "id": "Chicken Lollipop (6 Pcs)",
+                    "title": "🔴 Chicken Lollipop (6 P… ₹380"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_N"
+                  },
+                  "payload": {
+                    "c0": "${form.sel0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${form.sel16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_N_B",
+      "title": "🍜 Noodles, Rice & Soup",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel1": "${data.c1}",
+              "sel6": "${data.c6}",
+              "sel11": "${data.c11}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel1",
+                "label": "NOODLES",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Egg Noodles",
+                    "title": "🔴 Egg Noodles ₹130"
+                  },
+                  {
+                    "id": "Chicken Noodles",
+                    "title": "🔴 Chicken Noodles ₹150"
+                  },
+                  {
+                    "id": "Schezwan Noodles",
+                    "title": "🔴 Schezwan Noodles ₹170"
+                  },
+                  {
+                    "id": "Chicken Hakka Noodles",
+                    "title": "🔴 Chicken Hakka Noodles ₹180"
+                  },
+                  {
+                    "id": "Chicken Garlic Noodles",
+                    "title": "🔴 Chicken Garlic Noodles ₹180"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel6",
+                "label": "RICE",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Plain Rice",
+                    "title": "🟡 Plain Rice ₹80"
+                  },
+                  {
+                    "id": "Jeera Rice",
+                    "title": "🟡 Jeera Rice ₹100"
+                  },
+                  {
+                    "id": "Egg Fried Rice",
+                    "title": "🔴 Egg Fried Rice ₹130"
+                  },
+                  {
+                    "id": "Chicken Fried Rice",
+                    "title": "🔴 Chicken Fried Rice ₹150"
+                  },
+                  {
+                    "id": "Garlic Chicken Fried Rice",
+                    "title": "🔴 Garlic Chicken Fried … ₹170"
+                  },
+                  {
+                    "id": "Egg + Chicken Fried Rice",
+                    "title": "🔴 Egg + Chicken Fried R… ₹200"
+                  },
+                  {
+                    "id": "Matka Chicken Biryani",
+                    "title": "🔴 Matka Chicken Biryani ₹420"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel11",
+                "label": "SOUPS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Egg Soup",
+                    "title": "🔴 Egg Soup ₹90"
+                  },
+                  {
+                    "id": "Chicken Manchow Soup",
+                    "title": "🔴 Chicken Manchow Soup ₹130"
+                  },
+                  {
+                    "id": "Chicken Hot & Sour Soup",
+                    "title": "🔴 Chicken Hot & Sour So… ₹120"
+                  },
+                  {
+                    "id": "Chicken Clear Soup",
+                    "title": "🔴 Chicken Clear Soup ₹140"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_N"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${form.sel1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${form.sel6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${form.sel11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_N_C",
+      "title": "🍛 Main Course & Roti",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel4": "${data.c4}",
+              "sel5": "${data.c5}",
+              "sel17": "${data.c17}",
+              "sel18": "${data.c18}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel4",
+                "label": "MAIN COURSE (1)",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Masala Chicken|H",
+                    "title": "🔴 Masala Chicken (Half) ₹260"
+                  },
+                  {
+                    "id": "Masala Chicken|F",
+                    "title": "🔴 Masala Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Kadai Chicken|H",
+                    "title": "🔴 Kadai Chicken (Half) ₹260"
+                  },
+                  {
+                    "id": "Kadai Chicken|F",
+                    "title": "🔴 Kadai Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Rara Chicken|H",
+                    "title": "🔴 Rara Chicken (Half) ₹300"
+                  },
+                  {
+                    "id": "Rara Chicken|F",
+                    "title": "🔴 Rara Chicken (Full) ₹500"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel5",
+                "label": "MAIN COURSE (2)",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Butter Chicken|H",
+                    "title": "🔴 Butter Chicken (Half) ₹280"
+                  },
+                  {
+                    "id": "Butter Chicken|F",
+                    "title": "🔴 Butter Chicken (Full) ₹490"
+                  },
+                  {
+                    "id": "Chicken Do Pyaza|H",
+                    "title": "🔴 Chicken Do Pyaza (Hal… ₹270"
+                  },
+                  {
+                    "id": "Chicken Do Pyaza|F",
+                    "title": "🔴 Chicken Do Pyaza (Ful… ₹480"
+                  },
+                  {
+                    "id": "Chicken Lababdar|H",
+                    "title": "🔴 Chicken Lababdar (Hal… ₹270"
+                  },
+                  {
+                    "id": "Chicken Lababdar|F",
+                    "title": "🔴 Chicken Lababdar (Ful… ₹480"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel17",
+                "label": "BREADS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Plain Roti",
+                    "title": "🔴 Plain Roti ₹15"
+                  },
+                  {
+                    "id": "Butter Roti",
+                    "title": "🔴 Butter Roti ₹20"
+                  },
+                  {
+                    "id": "Garlic Naan",
+                    "title": "🔴 Garlic Naan ₹60"
+                  },
+                  {
+                    "id": "Lacchha Paratha",
+                    "title": "🔴 Lacchha Paratha ₹70"
+                  },
+                  {
+                    "id": "Butter Naan",
+                    "title": "🔴 Butter Naan ₹40"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel18",
+                "label": "TANDOORI",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Tandoori Chicken|H",
+                    "title": "🔴 Tandoori Chicken (Hal… ₹240"
+                  },
+                  {
+                    "id": "Tandoori Chicken|F",
+                    "title": "🔴 Tandoori Chicken (Ful… ₹450"
+                  },
+                  {
+                    "id": "Tandoori Lemon Chicken|H",
+                    "title": "🔴 Tandoori Lemon Chicke… ₹250"
+                  },
+                  {
+                    "id": "Tandoori Lemon Chicken|F",
+                    "title": "🔴 Tandoori Lemon Chicke… ₹470"
+                  },
+                  {
+                    "id": "Afghani Chicken|H",
+                    "title": "🔴 Afghani Chicken (Half) ₹270"
+                  },
+                  {
+                    "id": "Afghani Chicken|F",
+                    "title": "🔴 Afghani Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Chicken Tikka (8 pcs)",
+                    "title": "🔴 Chicken Tikka (8 pcs) ₹280"
+                  },
+                  {
+                    "id": "Chicken Seekh Kebab",
+                    "title": "🔴 Chicken Seekh Kebab ₹220"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_N"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${form.sel4}",
+                    "c5": "${form.sel5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${form.sel17}",
+                    "c18": "${form.sel18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_N_D",
+      "title": "🍔 Burger, Pizza & Rolls",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel10": "${data.c10}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel10",
+                "label": "ROLLS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Egg Roll",
+                    "title": "🔴 Egg Roll ₹120"
+                  },
+                  {
+                    "id": "Chicken Roll",
+                    "title": "🔴 Chicken Roll ₹140"
+                  },
+                  {
+                    "id": "Chicken Chilli Roll",
+                    "title": "🔴 Chicken Chilli Roll ₹160"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_N"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${form.sel10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_N_E",
+      "title": "🥤 Drinks & Dessert",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel15": "${data.c15}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel15",
+                "label": "EXTRAS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Salad",
+                    "title": "🟡 Salad ₹50"
+                  },
+                  {
+                    "id": "Water",
+                    "title": "🟡 Water ₹10"
+                  },
+                  {
+                    "id": "Water Bottle",
+                    "title": "🟡 Water Bottle ₹20"
+                  },
+                  {
+                    "id": "Disposable Glass",
+                    "title": "🟡 Disposable Glass ₹5"
+                  },
+                  {
+                    "id": "Colddrink",
+                    "title": "🟡 Colddrink ₹20"
+                  },
+                  {
+                    "id": "Coke Can",
+                    "title": "🟡 Coke Can ₹30"
+                  },
+                  {
+                    "id": "Can",
+                    "title": "🟡 Can ₹50"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_N"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${form.sel15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "LIST_A",
+      "title": "ALL (VEG + NON-VEG)",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "NavigationList",
+            "name": "catsA",
+            "label": "Pick a section",
+            "description": "Tick dishes, then tap Add",
+            "list-items": [
+              {
+                "id": "done",
+                "main-content": {
+                  "title": "✅ Send my order"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "CONFIRM"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g0",
+                "main-content": {
+                  "title": "🥟 Momos & Snacks"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_A_A"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g1",
+                "main-content": {
+                  "title": "🍜 Noodles, Rice & Soup"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_A_B"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g2",
+                "main-content": {
+                  "title": "🍛 Main Course & Roti"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_A_C"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g3",
+                "main-content": {
+                  "title": "🍔 Burger, Pizza & Rolls"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_A_D"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              },
+              {
+                "id": "g4",
+                "main-content": {
+                  "title": "🥤 Drinks & Dessert"
+                },
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "GROUP_A_E"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_A_A",
+      "title": "🥟 Momos & Snacks",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel0": "${data.c0}",
+              "sel2": "${data.c2}",
+              "sel3": "${data.c3}",
+              "sel16": "${data.c16}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel0",
+                "label": "MOMOS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Veg Steam Momos",
+                    "title": "🟢 Veg Steam Momos ₹70"
+                  },
+                  {
+                    "id": "Veg Fried Momos",
+                    "title": "🟢 Veg Fried Momos ₹80"
+                  },
+                  {
+                    "id": "Kurkure Veg Momos",
+                    "title": "🟢 Kurkure Veg Momos ₹120"
+                  },
+                  {
+                    "id": "Chilli Veg Momos",
+                    "title": "🟢 Chilli Veg Momos ₹120"
+                  },
+                  {
+                    "id": "Malai Veg Momos",
+                    "title": "🟢 Malai Veg Momos ₹140"
+                  },
+                  {
+                    "id": "Steam Paneer Momos",
+                    "title": "🟢 Steam Paneer Momos ₹100"
+                  },
+                  {
+                    "id": "Paneer Fried Momos",
+                    "title": "🟢 Paneer Fried Momos ₹110"
+                  },
+                  {
+                    "id": "Kurkure Paneer Momos",
+                    "title": "🟢 Kurkure Paneer Momos ₹130"
+                  },
+                  {
+                    "id": "Chilli Paneer Momos",
+                    "title": "🟢 Chilli Paneer Momos ₹140"
+                  },
+                  {
+                    "id": "Malai Paneer Momos",
+                    "title": "🟢 Malai Paneer Momos ₹160"
+                  },
+                  {
+                    "id": "Chicken Steam Momos",
+                    "title": "🔴 Chicken Steam Momos ₹120"
+                  },
+                  {
+                    "id": "Chicken Fried Momos",
+                    "title": "🔴 Chicken Fried Momos ₹140"
+                  },
+                  {
+                    "id": "Chicken Chilli Momos",
+                    "title": "🔴 Chicken Chilli Momos ₹160"
+                  },
+                  {
+                    "id": "Chicken Malai Momos",
+                    "title": "🔴 Chicken Malai Momos ₹180"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel2",
+                "label": "CHINESE SNACKS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "French Fries",
+                    "title": "🟢 French Fries ₹80"
+                  },
+                  {
+                    "id": "Peri Peri Fries",
+                    "title": "🟢 Peri Peri Fries ₹100"
+                  },
+                  {
+                    "id": "Honey Chilli Potato",
+                    "title": "🟢 Honey Chilli Potato ₹150"
+                  },
+                  {
+                    "id": "Veg Manchurian Dry",
+                    "title": "🟢 Veg Manchurian Dry ₹150"
+                  },
+                  {
+                    "id": "Veg Manchurian Gravy",
+                    "title": "🟢 Veg Manchurian Gravy ₹170"
+                  },
+                  {
+                    "id": "Chilly Chaap",
+                    "title": "🟢 Chilly Chaap ₹180"
+                  },
+                  {
+                    "id": "Chilly Mushroom",
+                    "title": "🟢 Chilly Mushroom ₹200"
+                  },
+                  {
+                    "id": "Chilly Paneer",
+                    "title": "🟢 Chilly Paneer ₹210"
+                  },
+                  {
+                    "id": "Crispy Corn",
+                    "title": "🟢 Crispy Corn ₹190"
+                  },
+                  {
+                    "id": "Butterfly Paneer",
+                    "title": "🟢 Butterfly Paneer ₹220"
+                  },
+                  {
+                    "id": "Garlic Mushroom",
+                    "title": "🟢 Garlic Mushroom ₹220"
+                  },
+                  {
+                    "id": "Paneer 65",
+                    "title": "🟢 Paneer 65 ₹250"
+                  },
+                  {
+                    "id": "Mushroom Duplex",
+                    "title": "🟢 Mushroom Duplex ₹250"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel3",
+                "label": "TANDOORI SNACKS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Tandoori Chaap",
+                    "title": "🟢 Tandoori Chaap ₹150"
+                  },
+                  {
+                    "id": "Tandoori Lemon Chaap",
+                    "title": "🟢 Tandoori Lemon Chaap ₹160"
+                  },
+                  {
+                    "id": "Malai Chaap",
+                    "title": "🟢 Malai Chaap ₹180"
+                  },
+                  {
+                    "id": "Paneer Tikka",
+                    "title": "🟢 Paneer Tikka ₹200"
+                  },
+                  {
+                    "id": "Paneer Malai Tikka",
+                    "title": "🟢 Paneer Malai Tikka ₹220"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel16",
+                "label": "CHICKEN SNACKS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Crispy Chicken|H",
+                    "title": "🔴 Crispy Chicken (Half) ₹260"
+                  },
+                  {
+                    "id": "Crispy Chicken|F",
+                    "title": "🔴 Crispy Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Chilli Chicken|H",
+                    "title": "🔴 Chilli Chicken (Half) ₹250"
+                  },
+                  {
+                    "id": "Chilli Chicken|F",
+                    "title": "🔴 Chilli Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Garlic Chicken|H",
+                    "title": "🔴 Garlic Chicken (Half) ₹250"
+                  },
+                  {
+                    "id": "Garlic Chicken|F",
+                    "title": "🔴 Garlic Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Lemon Chicken (Dry/Gravy)",
+                    "title": "🔴 Lemon Chicken (Dry/Gr… ₹380"
+                  },
+                  {
+                    "id": "Chicken 65 (Boneless)",
+                    "title": "🔴 Chicken 65 (Boneless) ₹380"
+                  },
+                  {
+                    "id": "Dragon Chicken (Boneless)",
+                    "title": "🔴 Dragon Chicken (Bonel… ₹380"
+                  },
+                  {
+                    "id": "Chicken Lollipop (6 Pcs)",
+                    "title": "🔴 Chicken Lollipop (6 P… ₹380"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_A"
+                  },
+                  "payload": {
+                    "c0": "${form.sel0}",
+                    "c1": "${data.c1}",
+                    "c2": "${form.sel2}",
+                    "c3": "${form.sel3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${form.sel16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_A_B",
+      "title": "🍜 Noodles, Rice & Soup",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel1": "${data.c1}",
+              "sel6": "${data.c6}",
+              "sel9": "${data.c9}",
+              "sel11": "${data.c11}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel1",
+                "label": "NOODLES",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Veg Noodles",
+                    "title": "🟢 Veg Noodles ₹100"
+                  },
+                  {
+                    "id": "Veg Hakka Noodles",
+                    "title": "🟢 Veg Hakka Noodles ₹120"
+                  },
+                  {
+                    "id": "Paneer Noodle",
+                    "title": "🟢 Paneer Noodle ₹130"
+                  },
+                  {
+                    "id": "Chilli Garlic Noodles",
+                    "title": "🟢 Chilli Garlic Noodles ₹140"
+                  },
+                  {
+                    "id": "Egg Noodles",
+                    "title": "🔴 Egg Noodles ₹130"
+                  },
+                  {
+                    "id": "Chicken Noodles",
+                    "title": "🔴 Chicken Noodles ₹150"
+                  },
+                  {
+                    "id": "Schezwan Noodles",
+                    "title": "🔴 Schezwan Noodles ₹170"
+                  },
+                  {
+                    "id": "Chicken Hakka Noodles",
+                    "title": "🔴 Chicken Hakka Noodles ₹180"
+                  },
+                  {
+                    "id": "Chicken Garlic Noodles",
+                    "title": "🔴 Chicken Garlic Noodles ₹180"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel6",
+                "label": "RICE",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Plain Rice",
+                    "title": "🟡 Plain Rice ₹80"
+                  },
+                  {
+                    "id": "Jeera Rice",
+                    "title": "🟡 Jeera Rice ₹100"
+                  },
+                  {
+                    "id": "Veg Fried Rice",
+                    "title": "🟢 Veg Fried Rice ₹120"
+                  },
+                  {
+                    "id": "Paneer Fried Rice",
+                    "title": "🟢 Paneer Fried Rice ₹150"
+                  },
+                  {
+                    "id": "Chilli Garlic Fried Rice",
+                    "title": "🟢 Chilli Garlic Fried R… ₹140"
+                  },
+                  {
+                    "id": "Veg Biryani",
+                    "title": "🟢 Veg Biryani ₹240"
+                  },
+                  {
+                    "id": "Egg Fried Rice",
+                    "title": "🔴 Egg Fried Rice ₹130"
+                  },
+                  {
+                    "id": "Chicken Fried Rice",
+                    "title": "🔴 Chicken Fried Rice ₹150"
+                  },
+                  {
+                    "id": "Garlic Chicken Fried Rice",
+                    "title": "🔴 Garlic Chicken Fried … ₹170"
+                  },
+                  {
+                    "id": "Egg + Chicken Fried Rice",
+                    "title": "🔴 Egg + Chicken Fried R… ₹200"
+                  },
+                  {
+                    "id": "Matka Chicken Biryani",
+                    "title": "🔴 Matka Chicken Biryani ₹420"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel9",
+                "label": "PASTA",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Red Sauce Pasta",
+                    "title": "🟢 Red Sauce Pasta ₹150"
+                  },
+                  {
+                    "id": "White Sauce Pasta",
+                    "title": "🟢 White Sauce Pasta ₹170"
+                  },
+                  {
+                    "id": "Veggie Masala Pasta",
+                    "title": "🟢 Veggie Masala Pasta ₹160"
+                  },
+                  {
+                    "id": "Mexican Pasta",
+                    "title": "🟢 Mexican Pasta ₹180"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel11",
+                "label": "SOUPS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Veg Clear Soup",
+                    "title": "🟢 Veg Clear Soup ₹90"
+                  },
+                  {
+                    "id": "Sweet Corn Soup",
+                    "title": "🟢 Sweet Corn Soup ₹120"
+                  },
+                  {
+                    "id": "Manchow Soup",
+                    "title": "🟢 Manchow Soup ₹130"
+                  },
+                  {
+                    "id": "Hot & Sour Soup",
+                    "title": "🟢 Hot & Sour Soup ₹140"
+                  },
+                  {
+                    "id": "Lemon Coriander Soup",
+                    "title": "🟢 Lemon Coriander Soup ₹170"
+                  },
+                  {
+                    "id": "Egg Soup",
+                    "title": "🔴 Egg Soup ₹90"
+                  },
+                  {
+                    "id": "Chicken Manchow Soup",
+                    "title": "🔴 Chicken Manchow Soup ₹130"
+                  },
+                  {
+                    "id": "Chicken Hot & Sour Soup",
+                    "title": "🔴 Chicken Hot & Sour So… ₹120"
+                  },
+                  {
+                    "id": "Chicken Clear Soup",
+                    "title": "🔴 Chicken Clear Soup ₹140"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_A"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${form.sel1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${form.sel6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${form.sel9}",
+                    "c10": "${data.c10}",
+                    "c11": "${form.sel11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_A_C",
+      "title": "🍛 Main Course & Roti",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel4": "${data.c4}",
+              "sel5": "${data.c5}",
+              "sel17": "${data.c17}",
+              "sel18": "${data.c18}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel4",
+                "label": "MAIN COURSE (1)",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Dal Fry",
+                    "title": "🟢 Dal Fry ₹200"
+                  },
+                  {
+                    "id": "Dal Makhani",
+                    "title": "🟢 Dal Makhani ₹220"
+                  },
+                  {
+                    "id": "Paneer Butter Masala",
+                    "title": "🟢 Paneer Butter Masala ₹250"
+                  },
+                  {
+                    "id": "Masala Paneer",
+                    "title": "🟢 Masala Paneer ₹230"
+                  },
+                  {
+                    "id": "Kadai Paneer",
+                    "title": "🟢 Kadai Paneer ₹230"
+                  },
+                  {
+                    "id": "Paneer Lababdar",
+                    "title": "🟢 Paneer Lababdar ₹230"
+                  },
+                  {
+                    "id": "Mushroom Do Pyaza",
+                    "title": "🟢 Mushroom Do Pyaza ₹240"
+                  },
+                  {
+                    "id": "Masala Mushroom",
+                    "title": "🟢 Masala Mushroom ₹220"
+                  },
+                  {
+                    "id": "Paneer Bhurji",
+                    "title": "🟢 Paneer Bhurji ₹220"
+                  },
+                  {
+                    "id": "Paneer Do Pyaza",
+                    "title": "🟢 Paneer Do Pyaza ₹240"
+                  },
+                  {
+                    "id": "Kadai Chaap",
+                    "title": "🟢 Kadai Chaap ₹240"
+                  },
+                  {
+                    "id": "Tawa Chaap",
+                    "title": "🟢 Tawa Chaap ₹240"
+                  },
+                  {
+                    "id": "Masala Chaap",
+                    "title": "🟢 Masala Chaap ₹230"
+                  },
+                  {
+                    "id": "Rara Paneer",
+                    "title": "🟢 Rara Paneer ₹300"
+                  },
+                  {
+                    "id": "Masala Chicken|H",
+                    "title": "🔴 Masala Chicken (Half) ₹260"
+                  },
+                  {
+                    "id": "Masala Chicken|F",
+                    "title": "🔴 Masala Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Kadai Chicken|H",
+                    "title": "🔴 Kadai Chicken (Half) ₹260"
+                  },
+                  {
+                    "id": "Kadai Chicken|F",
+                    "title": "🔴 Kadai Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Rara Chicken|H",
+                    "title": "🔴 Rara Chicken (Half) ₹300"
+                  },
+                  {
+                    "id": "Rara Chicken|F",
+                    "title": "🔴 Rara Chicken (Full) ₹500"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel5",
+                "label": "MAIN COURSE (2)",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Butter Chicken|H",
+                    "title": "🔴 Butter Chicken (Half) ₹280"
+                  },
+                  {
+                    "id": "Butter Chicken|F",
+                    "title": "🔴 Butter Chicken (Full) ₹490"
+                  },
+                  {
+                    "id": "Chicken Do Pyaza|H",
+                    "title": "🔴 Chicken Do Pyaza (Hal… ₹270"
+                  },
+                  {
+                    "id": "Chicken Do Pyaza|F",
+                    "title": "🔴 Chicken Do Pyaza (Ful… ₹480"
+                  },
+                  {
+                    "id": "Chicken Lababdar|H",
+                    "title": "🔴 Chicken Lababdar (Hal… ₹270"
+                  },
+                  {
+                    "id": "Chicken Lababdar|F",
+                    "title": "🔴 Chicken Lababdar (Ful… ₹480"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel17",
+                "label": "BREADS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Plain Roti",
+                    "title": "🔴 Plain Roti ₹15"
+                  },
+                  {
+                    "id": "Butter Roti",
+                    "title": "🔴 Butter Roti ₹20"
+                  },
+                  {
+                    "id": "Garlic Naan",
+                    "title": "🔴 Garlic Naan ₹60"
+                  },
+                  {
+                    "id": "Lacchha Paratha",
+                    "title": "🔴 Lacchha Paratha ₹70"
+                  },
+                  {
+                    "id": "Butter Naan",
+                    "title": "🔴 Butter Naan ₹40"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel18",
+                "label": "TANDOORI",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Tandoori Chicken|H",
+                    "title": "🔴 Tandoori Chicken (Hal… ₹240"
+                  },
+                  {
+                    "id": "Tandoori Chicken|F",
+                    "title": "🔴 Tandoori Chicken (Ful… ₹450"
+                  },
+                  {
+                    "id": "Tandoori Lemon Chicken|H",
+                    "title": "🔴 Tandoori Lemon Chicke… ₹250"
+                  },
+                  {
+                    "id": "Tandoori Lemon Chicken|F",
+                    "title": "🔴 Tandoori Lemon Chicke… ₹470"
+                  },
+                  {
+                    "id": "Afghani Chicken|H",
+                    "title": "🔴 Afghani Chicken (Half) ₹270"
+                  },
+                  {
+                    "id": "Afghani Chicken|F",
+                    "title": "🔴 Afghani Chicken (Full) ₹480"
+                  },
+                  {
+                    "id": "Chicken Tikka (8 pcs)",
+                    "title": "🔴 Chicken Tikka (8 pcs) ₹280"
+                  },
+                  {
+                    "id": "Chicken Seekh Kebab",
+                    "title": "🔴 Chicken Seekh Kebab ₹220"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_A"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${form.sel4}",
+                    "c5": "${form.sel5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${form.sel17}",
+                    "c18": "${form.sel18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_A_D",
+      "title": "🍔 Burger, Pizza & Rolls",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel7": "${data.c7}",
+              "sel8": "${data.c8}",
+              "sel10": "${data.c10}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel7",
+                "label": "BURGERS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Aloo Tikki Burger",
+                    "title": "🟢 Aloo Tikki Burger ₹70"
+                  },
+                  {
+                    "id": "Veg Cheese Burger",
+                    "title": "🟢 Veg Cheese Burger ₹90"
+                  },
+                  {
+                    "id": "Paneer Cheese Burger",
+                    "title": "🟢 Paneer Cheese Burger ₹120"
+                  },
+                  {
+                    "id": "Double Decker Burger",
+                    "title": "🟢 Double Decker Burger ₹150"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel8",
+                "label": "PIZZA",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Margherita Pizza",
+                    "title": "🟢 Margherita Pizza ₹160"
+                  },
+                  {
+                    "id": "Veg Deluxe Pizza",
+                    "title": "🟢 Veg Deluxe Pizza ₹200"
+                  },
+                  {
+                    "id": "Cheese Chilli Pizza",
+                    "title": "🟢 Cheese Chilli Pizza ₹220"
+                  },
+                  {
+                    "id": "Farm House Pizza",
+                    "title": "🟢 Farm House Pizza ₹250"
+                  },
+                  {
+                    "id": "Italian Pizza",
+                    "title": "🟢 Italian Pizza ₹270"
+                  },
+                  {
+                    "id": "Treat Signature Pizza",
+                    "title": "🟢 Treat Signature Pizza ₹300"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel10",
+                "label": "ROLLS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Spring Roll",
+                    "title": "🟢 Spring Roll ₹90"
+                  },
+                  {
+                    "id": "Veggie Roll",
+                    "title": "🟢 Veggie Roll ₹110"
+                  },
+                  {
+                    "id": "Cheese Corn Roll",
+                    "title": "🟢 Cheese Corn Roll ₹130"
+                  },
+                  {
+                    "id": "Chaap Roll",
+                    "title": "🟢 Chaap Roll ₹140"
+                  },
+                  {
+                    "id": "Paneer Roll",
+                    "title": "🟢 Paneer Roll ₹150"
+                  },
+                  {
+                    "id": "Egg Roll",
+                    "title": "🔴 Egg Roll ₹120"
+                  },
+                  {
+                    "id": "Chicken Roll",
+                    "title": "🔴 Chicken Roll ₹140"
+                  },
+                  {
+                    "id": "Chicken Chilli Roll",
+                    "title": "🔴 Chicken Chilli Roll ₹160"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_A"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${form.sel7}",
+                    "c8": "${form.sel8}",
+                    "c9": "${data.c9}",
+                    "c10": "${form.sel10}",
+                    "c11": "${data.c11}",
+                    "c12": "${data.c12}",
+                    "c13": "${data.c13}",
+                    "c14": "${data.c14}",
+                    "c15": "${data.c15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "GROUP_A_E",
+      "title": "🥤 Drinks & Dessert",
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "Form",
+            "name": "form",
+            "init-values": {
+              "sel12": "${data.c12}",
+              "sel13": "${data.c13}",
+              "sel14": "${data.c14}",
+              "sel15": "${data.c15}"
+            },
+            "children": [
+              {
+                "type": "CheckboxGroup",
+                "name": "sel12",
+                "label": "MOCKTAILS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Lime Soda",
+                    "title": "🟢 Lime Soda ₹80"
+                  },
+                  {
+                    "id": "Virgin Mojito",
+                    "title": "🟢 Virgin Mojito ₹120"
+                  },
+                  {
+                    "id": "Blue Heaven",
+                    "title": "🟢 Blue Heaven ₹120"
+                  },
+                  {
+                    "id": "Green Apple",
+                    "title": "🟢 Green Apple ₹120"
+                  },
+                  {
+                    "id": "Black Currant",
+                    "title": "🟢 Black Currant ₹120"
+                  },
+                  {
+                    "id": "Blue Berry",
+                    "title": "🟢 Blue Berry ₹120"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel13",
+                "label": "SHAKES",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Strawberry Shake",
+                    "title": "🟢 Strawberry Shake ₹120"
+                  },
+                  {
+                    "id": "Blue Berry Shake",
+                    "title": "🟢 Blue Berry Shake ₹120"
+                  },
+                  {
+                    "id": "KitKat Shake",
+                    "title": "🟢 KitKat Shake ₹120"
+                  },
+                  {
+                    "id": "Oreo Chocolate Shake",
+                    "title": "🟢 Oreo Chocolate Shake ₹140"
+                  },
+                  {
+                    "id": "Black Current Shake",
+                    "title": "🟢 Black Current Shake ₹120"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel14",
+                "label": "COFFEE & DESSERTS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Hot Coffee",
+                    "title": "🟢 Hot Coffee ₹50"
+                  },
+                  {
+                    "id": "Cold Coffee",
+                    "title": "🟢 Cold Coffee ₹120"
+                  },
+                  {
+                    "id": "Oreo Cold Coffee",
+                    "title": "🟢 Oreo Cold Coffee ₹140"
+                  },
+                  {
+                    "id": "Vanilla Ice Cream",
+                    "title": "🟢 Vanilla Ice Cream ₹40"
+                  },
+                  {
+                    "id": "Butterscotch Ice Cream",
+                    "title": "🟢 Butterscotch Ice Cream ₹60"
+                  },
+                  {
+                    "id": "Gulab Jamun (2 Pcs)",
+                    "title": "🟢 Gulab Jamun (2 Pcs) ₹60"
+                  },
+                  {
+                    "id": "Vanilla & Butterscotch Mix",
+                    "title": "🟢 Vanilla & Butterscotch… ₹70"
+                  }
+                ]
+              },
+              {
+                "type": "CheckboxGroup",
+                "name": "sel15",
+                "label": "EXTRAS",
+                "required": false,
+                "data-source": [
+                  {
+                    "id": "Salad",
+                    "title": "🟡 Salad ₹50"
+                  },
+                  {
+                    "id": "Water",
+                    "title": "🟡 Water ₹10"
+                  },
+                  {
+                    "id": "Water Bottle",
+                    "title": "🟡 Water Bottle ₹20"
+                  },
+                  {
+                    "id": "Disposable Glass",
+                    "title": "🟡 Disposable Glass ₹5"
+                  },
+                  {
+                    "id": "Colddrink",
+                    "title": "🟡 Colddrink ₹20"
+                  },
+                  {
+                    "id": "Coke Can",
+                    "title": "🟡 Coke Can ₹30"
+                  },
+                  {
+                    "id": "Can",
+                    "title": "🟡 Can ₹50"
+                  }
+                ]
+              },
+              {
+                "type": "Footer",
+                "label": "Add to order",
+                "on-click-action": {
+                  "name": "navigate",
+                  "next": {
+                    "type": "screen",
+                    "name": "LIST_A"
+                  },
+                  "payload": {
+                    "c0": "${data.c0}",
+                    "c1": "${data.c1}",
+                    "c2": "${data.c2}",
+                    "c3": "${data.c3}",
+                    "c4": "${data.c4}",
+                    "c5": "${data.c5}",
+                    "c6": "${data.c6}",
+                    "c7": "${data.c7}",
+                    "c8": "${data.c8}",
+                    "c9": "${data.c9}",
+                    "c10": "${data.c10}",
+                    "c11": "${data.c11}",
+                    "c12": "${form.sel12}",
+                    "c13": "${form.sel13}",
+                    "c14": "${form.sel14}",
+                    "c15": "${form.sel15}",
+                    "c16": "${data.c16}",
+                    "c17": "${data.c17}",
+                    "c18": "${data.c18}"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "CONFIRM",
+      "title": "Send order",
+      "terminal": true,
+      "data": {
+        "c0": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c1": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c2": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c3": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c4": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c5": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c6": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c7": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c8": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c9": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c10": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c11": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c12": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c13": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c14": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c15": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c16": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c17": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        },
+        "c18": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "__example__": []
+        }
+      },
+      "layout": {
+        "type": "SingleColumnLayout",
+        "children": [
+          {
+            "type": "TextBody",
+            "text": "Your picks will go to the chat cart. Quantity, size and payment are done there."
+          },
+          {
+            "type": "Footer",
+            "label": "Send to WhatsApp",
+            "on-click-action": {
+              "name": "complete",
+              "payload": {
+                "c0": "${data.c0}",
+                "c1": "${data.c1}",
+                "c2": "${data.c2}",
+                "c3": "${data.c3}",
+                "c4": "${data.c4}",
+                "c5": "${data.c5}",
+                "c6": "${data.c6}",
+                "c7": "${data.c7}",
+                "c8": "${data.c8}",
+                "c9": "${data.c9}",
+                "c10": "${data.c10}",
+                "c11": "${data.c11}",
+                "c12": "${data.c12}",
+                "c13": "${data.c13}",
+                "c14": "${data.c14}",
+                "c15": "${data.c15}",
+                "c16": "${data.c16}",
+                "c17": "${data.c17}",
+                "c18": "${data.c18}"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
