@@ -28,9 +28,9 @@ const S = {
     hg: "Pehle choose karo ki order kaise lena hai 👇"
   },
   closed: {
-    en: "😴 Sorry, TREAT RESTAURANT is closed right now.\n\n🕥 Timings: 10:30 AM – 10:30 PM (every day)\n\nPlease message us again during opening hours. 🙏",
-    hi: "😴 क्षमा करें, TREAT RESTAURANT अभी बंद है।\n\n🕥 समय: सुबह 10:30 से रात 10:30 तक (रोज़)\n\nकृपया खुलने के समय में दोबारा मैसेज करें। 🙏",
-    hg: "😴 Sorry, TREAT RESTAURANT abhi band hai.\n\n🕥 Timing: subah 10:30 se raat 10:30 tak (roz)\n\nPlease khulne ke time pe dobara message karo. 🙏"
+    en: (o = "10:30 AM", c = "10:30 PM") => `😴 Sorry, TREAT RESTAURANT is closed right now.\n\n🕥 Timings: ${o} – ${c} (every day)\n\nPlease message us again during opening hours. 🙏`,
+    hi: (o = "10:30 AM", c = "10:30 PM") => `😴 क्षमा करें, TREAT RESTAURANT अभी बंद है।\n\n🕥 समय: ${o} से ${c} तक (रोज़)\n\nकृपया खुलने के समय में दोबारा मैसेज करें। 🙏`,
+    hg: (o = "10:30 AM", c = "10:30 PM") => `😴 Sorry, TREAT RESTAURANT abhi band hai.\n\n🕥 Timing: ${o} se ${c} tak (roz)\n\nPlease khulne ke time pe dobara message karo. 🙏`
   },
   callBusy: {
     en: "Sorry, we're on another call right now - please try again in a few minutes, or order here on WhatsApp chat.",

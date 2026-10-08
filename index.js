@@ -94,10 +94,23 @@ const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-// Opening hours (Indian time): 10:30 AM - 10:30 PM. Closed otherwise.
-// Set BYPASS_HOURS=true on Render to test outside timings.
-const OPEN_MINUTES = 10 * 60 + 30;
-const CLOSE_MINUTES = 22 * 60 + 30;
+// Opening hours (Indian time). Default 10:30 AM - 10:30 PM. Change WITHOUT code on Render -> Environment:
+//   OPEN_TIME=10:30   CLOSE_TIME=22:30     (24-hour HH:MM; a close time after midnight like 01:00 also works)
+//   BYPASS_HOURS=true  -> always open (for testing); remove it afterwards
+function parseHM(v, fallbackMinutes) {
+  const m = /^\s*(\d{1,2}):(\d{2})\s*$/.exec(String(v || ""));
+  if (!m) return fallbackMinutes;
+  const h = Number(m[1]), mi = Number(m[2]);
+  return h <= 24 && mi < 60 ? (h * 60 + mi) % 1440 : fallbackMinutes;
+}
+const OPEN_MINUTES = parseHM(process.env.OPEN_TIME, 10 * 60 + 30);
+const CLOSE_MINUTES = parseHM(process.env.CLOSE_TIME, 22 * 60 + 30);
+const hmLabel = (mins) => {
+  const h = Math.floor(mins / 60), m = mins % 60;
+  return `${((h + 11) % 12) + 1}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`;
+};
+const OPEN_LABEL = hmLabel(OPEN_MINUTES);
+const CLOSE_LABEL = hmLabel(CLOSE_MINUTES);
 
 function isOpenNow(date = new Date()) {
   if (process.env.BYPASS_HOURS === "true") return true;
@@ -113,7 +126,10 @@ function isOpenNow(date = new Date()) {
   const m = Number(parts.find((p) => p.type === "minute").value);
   const mins = h * 60 + m;
 
-  return mins >= OPEN_MINUTES && mins < CLOSE_MINUTES;
+  // overnight window (e.g. 18:00 -> 01:00) supported
+  return OPEN_MINUTES <= CLOSE_MINUTES
+    ? mins >= OPEN_MINUTES && mins < CLOSE_MINUTES
+    : mins >= OPEN_MINUTES || mins < CLOSE_MINUTES;
 }
 
 const MENU_PDF_PATH = fs.existsSync(path.join(__dirname, "menu.pdf"))
@@ -545,9 +561,9 @@ async function processIncomingInner(value, message) {
     const profileName = value.contacts?.[0]?.profile?.name;
     if (profileName) session.name = cleanText(profileName, 60);
 
-    // Closed outside 10:30 AM - 10:30 PM
+    // Closed outside opening hours (OPEN_TIME / CLOSE_TIME)
     if (!isOpenNow()) {
-      await sendText(from, t(session.lang || "hg", "closed"));
+      await sendText(from, t(session.lang || "hg", "closed", OPEN_LABEL, CLOSE_LABEL));
       return;
     }
 
