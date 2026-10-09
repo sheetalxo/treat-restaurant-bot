@@ -10,8 +10,11 @@
     "node": ">=20"
   },
   "dependencies": {
+    "cors": "^2.8.6",
     "express": "^4.21.2",
-    "pdfkit": "^0.17.2",
-    "livekit-server-sdk": "^2.9.4"
+    "express-rate-limit": "^7.5.1",
+    "jsonwebtoken": "^9.0.3",
+    "livekit-server-sdk": "^2.9.4",
+    "pdfkit": "^0.17.2"
   }
 }
