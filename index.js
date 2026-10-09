@@ -25,6 +25,7 @@ const { LiveKitAPI, DisconnectWhatsAppCallRequest_DisconnectReason } = require("
 
 const app = express();
 app.disable("x-powered-by");
+app.set("trust proxy", 1); // needed on Render so rate limiting sees the real client IP
 
 // Keep raw body: needed to verify the Meta (WhatsApp) AND Razorpay webhook signatures
 app.use(
@@ -2599,6 +2600,9 @@ async function sendFlowMenu(to) {
 // ======================================================
 // START SERVER
 // ======================================================
+
+// Owner app API (login, orders, update-order)
+app.use("/api/owner", require("./ownerApi"));
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`TREAT RESTAURANT bot running on port ${PORT}`);
